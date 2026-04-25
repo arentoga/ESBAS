@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Estudio – CFBB 2026 (Lecciones 10–21)</title>
+<style>
+  :root {
+    --rojo: #D85A30;
+    --rojo-claro: #FAECE7;
+    --azul: #185FA5;
+    --azul-claro: #E6F1FB;
+    --verde: #3B6D11;
+    --verde-claro: #EAF3DE;
+    --ambar: #BA7517;
+    --ambar-claro: #FAEEDA;
+    --gris: #444441;
+    --gris-claro: #F1EFE8;
+    --morado: #534AB7;
+    --morado-claro: #EEEDFE;
+    --teal: #0F6E56;
+    --teal-claro: #E1F5EE;
+    --coral: #993C1D;
+    --coral-claro: #FAECE7;
+    --texto: #1a1a18;
+    --texto-muted: #5F5E5A;
+    --borde: #d3d1c7;
+    --bg: #ffffff;
+    --bg2: #f9f8f4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--bg2);
+    color: var(--texto);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  header {
+    background: #1a1a18;
+    color: #f9f8f4;
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+  }
+  header .escudo {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.3rem;
+    font-family: 'Georgia', serif;
+  }
+  header p {
+    color: #b4b2a9;
+    font-size: 0.92rem;
+    font-family: Arial, sans-serif;
+  }
+  .nav-pills {
+    background: #2c2c2a;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-pills a {
+    color: #d3d1c7;
+    text-decoration: none;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid #444441;
+    font-family: Arial, sans-serif;
+    transition: background 0.15s;
+  }
+  .nav-pills a:hover { background: #444441; color: #f1efe8; }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+  .leccion {
+    background: var(--bg);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .leccion-header {
+    padding: 1rem 1.5rem 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid var(--borde);
+  }
+  .leccion-num {
+    font-size: 2rem;
+    font-weight: 900;
+    font-family: Arial, sans-serif;
+    line-height: 1;
+    min-width: 50px;
+    text-align: center;
+  }
+  .leccion-titulo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--texto);
+  }
+  .leccion-meta {
+    font-size: 0.8rem;
+    color: var(--texto-muted);
+    font-family: Arial, sans-serif;
+    margin-top: 2px;
+  }
+  .leccion-body {
+    padding: 1.2rem 1.5rem;
+  }
+  .objetivos {
+    background: var(--bg2);
+    border-left: 3px solid var(--rojo);
+    border-radius: 0 6px 6px 0;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1.2rem;
+  }
+  .objetivos h4 {
+    font-family: Arial, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--rojo);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+  .objetivos ol {
+    padding-left: 1.2rem;
+    font-size: 0.87rem;
+    color: var(--gris);
+    font-family: Arial, sans-serif;
+  }
+  .objetivos li { margin-bottom: 2px; }
+  .seccion { margin-bottom: 1.2rem; }
+  .seccion h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--texto);
+    border-bottom: 1px solid var(--borde);
+    padding-bottom: 3px;
+    margin-bottom: 0.6rem;
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.8rem;
+  }
+  .seccion p {
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+    font-family: Arial, sans-serif;
+    line-height: 1.65;
+  }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px;
+    margin: 0.8rem 0;
+  }
+  .card {
+    border-radius: 7px;
+    padding: 0.75rem;
+    font-family: Arial, sans-serif;
+    font-size: 0.83rem;
+  }
+  .card strong {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 3px;
+  }
+  .card-rojo { background: var(--rojo-claro); color: var(--coral); }
+  .card-azul { background: var(--azul-claro); color: var(--azul); }
+  .card-verde { background: var(--verde-claro); color: var(--verde); }
+  .card-ambar { background: var(--ambar-claro); color: var(--ambar); }
+  .card-morado { background: var(--morado-claro); color: var(--morado); }
+  .card-teal { background: var(--teal-claro); color: var(--teal); }
+  .card-gris { background: var(--gris-claro); color: var(--gris); }
+  .alerta {
+    border-radius: 7px;
+    padding: 0.7rem 0.9rem;
+    margin: 0.6rem 0;
+    font-family: Arial, sans-serif;
+    font-size: 0.85rem;
+    border-left: 3px solid;
+    line-height: 1.5;
+  }
+  .alerta-rojo { background: var(--rojo-claro); border-color: var(--rojo); color: var(--coral); }
+  .alerta-ambar { background: var(--ambar-claro); border-color: var(--ambar); color: var(--ambar); }
+  .alerta-verde { background: var(--verde-claro); border-color: var(--verde); color: var(--verde); }
+  .alerta-azul { background: var(--azul-claro); border-color: var(--azul); color: var(--azul); }
+  ul.lista {
+    padding-left: 1.3rem;
+    font-family: Arial, sans-serif;
+    font-size: 0.87rem;
+    margin: 0.4rem 0;
+  }
+  ul.lista li { margin-bottom: 3px; }
+  .tabla-mini {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    font-size: 0.82rem;
+    margin: 0.6rem 0;
+  }
+  .tabla-mini th {
+    background: #1a1a18;
+    color: #f1efe8;
+    padding: 6px 10px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .tabla-mini td {
+    padding: 5px 10px;
+    border-bottom: 1px solid var(--borde);
+    vertical-align: top;
+  }
+  .tabla-mini tr:nth-child(even) td { background: var(--bg2); }
+  .badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .badge-rojo { background: var(--rojo-claro); color: var(--coral); }
+  .badge-verde { background: var(--verde-claro); color: var(--verde); }
+  .badge-ambar { background: var(--ambar-claro); color: var(--ambar); }
+  .badge-azul { background: var(--azul-claro); color: var(--azul); }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 0.6rem 0;
+  }
+  @media (max-width: 600px) {
+    .two-col { grid-template-columns: 1fr; }
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+  .formula {
+    background: #1a1a18;
+    color: #fac775;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    margin: 0.5rem 0;
+    display: inline-block;
+  }
+  .sep { border: none; border-top: 1px dashed var(--borde); margin: 1rem 0; }
+  footer {
+    background: #1a1a18;
+    color: #888780;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+    padding: 1.5rem;
+  }
+  .fase-list { counter-reset: fase; list-style: none; padding: 0; }
+  .fase-list li {
+    counter-increment: fase;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 0.87rem;
+  }
+  .fase-list li::before {
+    content: counter(fase);
+    background: var(--rojo);
+    color: white;
+    border-radius: 50%;
+    min-width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 1px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="escudo">🚒</div>
+  <h1>Guía de Estudio – MP CFBB 2026</h1>
+  <p>Cuerpo General de Bomberos Voluntarios del Perú &nbsp;·&nbsp; Módulo II &nbsp;·&nbsp; Lecciones 10 al 21</p>
+</header>
+
+<nav class="nav-pills">
+  <a href="#l10">L10 Fuego I</a>
+  <a href="#l11">L11 Fuego II</a>
+  <a href="#l12">L12 Extintores</a>
+  <a href="#l13">L13 Abastecimiento</a>
+  <a href="#l14">L14 Hidráulica</a>
+  <a href="#l15">L15 Chorros</a>
+  <a href="#l16">L16 Técnicas</a>
+  <a href="#l17">L17 Ent. Forzada</a>
+  <a href="#l18">L18 Ventilación</a>
+  <a href="#l19">L19 Escaleras</a>
+  <a href="#l20">L20 Conservación</a>
+  <a href="#l21">L21 Estructuras</a>
+</nav>
+
+<div class="container">
+
+<!-- ═══════════════════════════════ LECCIÓN 10 ═══════════════════════════════ -->
+<div class="leccion" id="l10">
+  <div class="leccion-header" style="border-left: 5px solid var(--rojo);">
+    <div class="leccion-num" style="color:var(--rojo);">10</div>
+    <div>
+      <div class="leccion-titulo">Comportamiento del Fuego I</div>
+      <div class="leccion-meta">3 horas &nbsp;·&nbsp; Módulo II</div>
+    </div>
+  </div>
+  <div class="leccion-body">
+    <div class="objetivos">
+      <h4>Objetivos de aprendizaje</h4>
+      <ol>
+        <li>Mencionar los tipos de energía</li>
+        <li>Explicar las formas de transferencia de calor</li>
+        <li>Explicar los tipos de combustión</li>
+        <li>Definir fuego, incendio y pirólisis</li>
+        <li>Describir los elementos del fuego (Tetraedro)</li>
+        <li>Nombrar los productos de la combustión</li>
+        <li>Enumerar las fuentes de energía calórica</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Tipos de Energía</h3>
+      <div class="cards-grid">
+        <div class="card card-rojo"><strong>Química</strong>Liberada en reacciones químicas (ej. combustión)</div>
+        <div class="card card-azul"><strong>Eléctrica</strong>Electrones moviéndose por un conductor</div>
+        <div class="card card-ambar"><strong>Mecánica</strong>Objeto en movimiento (roca rodando)</div>
+        <div class="card card-verde"><strong>Nuclear</strong>Fisión (separar átomos) o fusión (unirlos)</div>
+        <div class="card card-morado"><strong>Calorífica</strong>Transferencia entre cuerpos de distinta temperatura</div>
+        <div class="card card-teal"><strong>Electromagnética</strong>Se propaga como onda (incluye la luz)</div>
+      </div>
+      <p><strong>Energía potencial</strong> = almacenada (ej. combustible antes de arder). <strong>Energía cinética</strong> = en movimiento activo (moléculas vibrando con calor).</p>
+    </div>
+
+    <div class="seccion">
+      <h3>Transmisión de Calor</h3>
+      <div class="cards-grid">
+        <div class="card card-rojo"><strong>Conducción</strong>Contacto directo entre dos cuerpos o a través de un conductor sólido.</div>
+        <div class="card card-ambar"><strong>Convección</strong>A través de fluidos (gases o líquidos). El caliente sube, el frío baja.</div>
+        <div class="card card-azul"><strong>Radiación</strong>Energía que viaja por el espacio sin contacto. Principal fuente de propagación.</div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>Combustión y Fuego</h3>
+      <p><strong>Fuego:</strong> reacción química de oxidación que produce luz y calor. <strong>Incendio:</strong> fuego fuera de control.</p>
+      <p><strong>Pirólisis:</strong> descomposición química de sólidos por acción del calor, que libera gases combustibles. En líquidos el equivalente es la <strong>vaporización</strong>.</p>
+      <div class="two-col">
+        <div class="alerta-ambar alerta"><strong>Combustión SIN llamas:</strong> incandescente, más lenta, menor temperatura. Triángulo del fuego. Ej: carbón vegetal.</div>
+        <div class="alerta-rojo alerta"><strong>Combustión CON llamas:</strong> el combustible gaseoso se mezcla con O₂ y alcanza punto de ignición. Tetraedro del fuego.</div>
+      </div>
+      <p><strong>Flashpoint (Temperatura de Inflamación):</strong> temperatura mínima para emitir vapores inflamables (necesita fuente de ignición).<br>
+      <strong>Ignition Point:</strong> temperatura mínima para inflamarse y MANTENER la combustión. Siempre mayor al flashpoint.</p>
+    </div>
+
+    <div class="seccion">
+      <h3>Triángulo vs. Tetraedro del Fuego</h3>
+      <div class="two-col">
+        <div class="card card-gris"><strong>Triángulo del Fuego (3 lados)</strong>Combustible + Calor + Oxígeno → brasas sin llama</div>
+        <div class="card card-rojo"><strong>Tetraedro del Fuego (4 caras)</strong>Combustible + Calor + Oxígeno + Reacción en cadena → llama</div>
+      </div>
+      <div class="alerta-azul alerta">Eliminando CUALQUIERA de los 4 elementos del tetraedro, el fuego se extingue.</div>
+    </div>
+
+    <div class="seccion">
+      <h3>Productos de la Combustión</h3>
+      <ul class="lista">
+        <li><strong>Temperatura</strong> (calor)</li>
+        <li><strong>Gases de combustión</strong> (CO, CO₂, SO₂…)</li>
+        <li><strong>Llamas / Flamas</strong></li>
+        <li><strong>Humo y cenizas</strong> (combustión incompleta)</li>
+      </ul>
+      <p>La combustión es <em>completa</em> cuando todo el combustible se convierte en CO₂ y H₂O. Es <em>incompleta</em> cuando queda humo/ceniza sin quemar (como en incendios estructurales).</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ LECCIÓN 11 ═══════════════════════════════ -->
+<div class="leccion" id="l11">
+  <div class="leccion-header" style="border-left: 5px solid #D85A30;">
+    <div class="leccion-num" style="color:#D85A30;">11</div>
+    <div>
+      <div class="leccion-titulo">Comportamiento del Fuego II</div>
+      <div class="leccion-meta">3 horas &nbsp;·&nbsp; Módulo II</div>
+    </div>
+  </div>
+  <div class="leccion-body">
+    <div class="objetivos">
+      <h4>Objetivos de aprendizaje</h4>
+      <ol>
+        <li>Explicar los métodos de extinción</li>
+        <li>Enumerar las clases de incendios</li>
+        <li>Enumerar las fases del incendio</li>
+        <li>Definir Rollover, Flashover y Backdraft</li>
+        <li>Nombrar signos y síntomas de Backdraft</li>
+        <li>Describir los componentes de un incendio interior</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Métodos de Extinción (atacar el Tetraedro)</h3>
+      <div class="cards-grid">
+        <div class="card card-azul"><strong>Enfriamiento</strong>Reducir temperatura del combustible por debajo del punto de ignición (ej. agua).</div>
+        <div class="card card-ambar"><strong>Separación</strong>Eliminar el combustible: cortar flujo de gas/líquido o remover sólidos del camino.</div>
+        <div class="card card-verde"><strong>Sofocación</strong>Reducir o desplazar el O₂ por debajo del % mínimo para la combustión.</div>
+        <div class="card card-morado"><strong>Inhibición</strong>Interrumpir la reacción química en cadena (agentes extintores de polvo químico).</div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>Clases de Incendios</h3>
+      <table class="tabla-mini">
+        <tr><th>Clase</th><th>Material</th><th>Símbolo</th><th>Nota especial</th></tr>
+        <tr><td><span class="badge badge-verde">A</span></td><td>Sólidos: madera, papel, ropa, plásticos</td><td>Triángulo verde</td><td>Deja brasas, puede re-encenderse</td></tr>
+        <tr><td><span class="badge badge-rojo">B</span></td><td>Líquidos/gases inflamables: gasolina, aceite, alcohol</td><td>Cuadrado rojo</td><td>Humo negro, sin residuo</td></tr>
+        <tr><td><span class="badge badge-azul">C</span></td><td>Equipos eléctricos energizados</td><td>Círculo azul</td><td>Al desconectar la energía → se convierte en A, B, D o K</td></tr>
+        <tr><td><span class="badge badge-ambar">D</span></td><td>Metales combustibles: magnesio, sodio, titanio…</td><td>Estrella amarilla</td><td>Hasta 2700–3300°C. NUNCA agua.</td></tr>
+        <tr><td><span class="badge" style="background:#f1efe8;color:#444;">K</span></td><td>Aceites y grasas animales/vegetales en cocinas</td><td>Hexágono blanco</td><td>NUNCA agua (produce explosiones)</td></tr>
+      </table>
+    </div>
+
+    <div class="seccion">
+      <h3>Fases del Incendio</h3>
+      <ol class="fase-list">
+        <li><strong>Fase Inicial:</strong> llama o brasa incipiente. Oxígeno normal. Temperatura &lt;40°C ambiente. Llama hasta 530°C.</li>
+        <li><strong>Fase de Crecimiento:</strong> fuego libre, O₂ comienza a disminuir, temperatura sube (techo puede superar 700°C). Aparece CO.</li>
+        <li><strong>Fase de Desarrollo Generalizado:</strong> todo el combustible involucrado. Plano neutral visible. Riesgo de Flashover. Gases &gt;600°C.</li>
+        <li><strong>Fase de Decaimiento:</strong> combustible casi agotado. O₂ &lt;15%. Brasas. Riesgo de Backdraft.</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Fenómenos en Incendios Interiores</h3>
+      <div class="alerta-ambar alerta"><strong>ROLLOVER (Flameover):</strong> los gases acumulados bajo el techo se inflaman, las llamas "corren" por el techo. Precursor del Flashover.</div>
+      <div class="alerta-rojo alerta"><strong>FLASHOVER (Ignición súbita):</strong> todo el contenido del recinto alcanza su punto de ignición simultáneamente. Temperatura ambiente alcanza &gt;600°C. Sin escapatoria.</div>
+      <div class="alerta-ambar alerta">
+        <strong>BACKDRAFT (Explosión de humo):</strong> entra aire fresco a recinto con combustión deficiente en O₂. Los gases combustibles acumulados se inflaman violentamente. Puede tardar hasta 20 segundos en desarrollarse.<br><br>
+        <strong>Signos externos:</strong> humo bajo presión o en bocanadas, humo negro que se vuelve grisáceo-amarillento, vidrios ennegrecidos y engrasados, sin llamas visibles, ruidos sordos, aire que entra bruscamente al hacer una apertura.<br><br>
+        <strong>Signos internos:</strong> plano neutral a 20–25 cm del piso, fuego aspira el aire al abrir ventilación, posible Rollover.<br><br>
+        <strong>Prevención:</strong> realizar ventilación en el punto MÁS ALTO de la edificación para liberar gases calientes antes de abrir.
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>Escalas de Temperatura</h3>
+      <div class="two-col">
+        <div class="card card-azul"><strong>Celsius (°C)</strong>Congelación: 0°C &nbsp;·&nbsp; Ebullición: 100°C</div>
+        <div class="card card-ambar"><strong>Fahrenheit (°F)</strong>Congelación: 32°F &nbsp;·&nbsp; Ebullición: 212°F</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ LECCIÓN 12 ═══════════════════════════════ -->
+<div class="leccion" id="l12">
+  <div class="leccion-header" style="border-left: 5px solid var(--ambar);">
+    <div class="leccion-num" style="color:var(--ambar);">12</div>
+    <div>
+      <div class="leccion-titulo">Extintores Portátiles</div>
+      <div class="leccion-meta">3 horas &nbsp;·&nbsp; Módulo I</div>
+    </div>
+  </div>
+  <div class="leccion-body">
+    <div class="objetivos">
+      <h4>Objetivos de aprendizaje</h4>
+      <ol>
+        <li>Definir extintor y agente extintor</li>
+        <li>Características por forma de desplazarse</li>
+        <li>Clasificación por agente extintor</li>
+        <li>Clasificación por rango de desempeño</li>
+        <li>Clases de fuegos</li>
+        <li>Pasos para uso correcto (método PASS)</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Definiciones Clave</h3>
+      <p><strong>Extintor:</strong> dispositivo portátil para extinguir fuegos en su ETAPA INICIAL antes de que se conviertan en incendio. <strong>Agente extintor:</strong> compuesto ignífugo que forma la carga del extintor.</p>
+    </div>
+
+    <div class="seccion">
+      <h3>Por forma de desplazarse</h3>
+      <div class="two-col">
+        <div class="card card-gris"><strong>Manual</strong>Transportado por una sola persona.</div>
+        <div class="card card-ambar"><strong>Sobre ruedas</strong>Para riesgos grandes; mayor capacidad, flujo y alcance.</div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>Por su diseño (operación)</h3>
+      <div class="two-col">
+        <div class="card card-azul"><strong>Presión incorporada</strong>Agente + gas expelente en el MISMO recipiente. Tiene manómetro.</div>
+        <div class="card card-morado"><strong>Cartucho impulsor externo</strong>Gas expelente en recipiente SEPARADO del cilindro del agente.</div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>Tipos de Extintores por Agente</h3>
+      <table class="tabla-mini">
+        <tr><th>Agente</th><th>Clases</th><th>Acción</th><th>Precauciones</th></tr>
+        <tr><td>Agua</td><td>A</td><td>Enfriamiento</td><td>Cilindro acero, 2½ gal, 55 s de descarga</td></tr>
+        <tr><td>CO₂ (Anhídrido carbónico)</td><td>B y C</td><td>Sofocación (desplaza O₂)</td><td>No usar en espacios cerrados. 8–30 s descarga. Alcance 1–2.1 m.</td></tr>
+        <tr><td>PQS – Polvo Químico Seco ABC</td><td>A, B y C</td><td>Inhibición en cadena</td><td>Más comunes. Alcance 4–9 m. Bicarbonato sodio/potasio, cloruro potasio o fosfato amonio.</td></tr>
+        <tr><td>Polvo Seco</td><td>D</td><td>Capa sofocante</td><td>Cloruro de sodio con aditivos. Capa 1–2 pulgadas. Alcance 1–2.4 m.</td></tr>
+        <tr><td>Espuma</td><td>A y B</td><td>Sofocación (capa más liviana)</td><td>Alcohol disuelve la espuma. Ecológico.</td></tr>
+        <tr><td>Químico húmedo (acetato de potasio)</td><td>K</td><td>Enfriamiento + saponificación</td><td>Para cocinas. Descarga pulverizada. Forma capa anti-reignición.</td></tr>
+      </table>
+    </div>
+
+    <div class="seccion">
+      <h3>Extintores NO Permitidos</h3>
+      <ul class="lista">
+        <li>Soda ácida</li>
+        <li>Tetracloruro de carbono</li>
+        <li>Los que se invierten para operar</li>
+        <li>Sin identificación del fabricante, número de serie o prueba hidrostática</li>
+        <li>Con más de 20 años de fabricación</li>
+      </ul>
+    </div>
+
+    <div class="seccion">
+      <h3>Clasificación por Rango (NTP 350.062)</h3>
+      <p>Clase A: 1-A a 40-A. Clase B: 1-B a 640-B. Solo A y B llevan número. C, D y K no llevan numeral (pruebas especiales).</p>
+      <p>Ejemplo: un extintor <strong>60-B</strong> puede apagar 60 ft² de líquido inflamable (40% de 150 ft² que apaga un experto).</p>
+    </div>
+
+    <div class="seccion">
+      <h3>Pasos para Usar un Extintor (PASS)</h3>
+      <ol class="fase-list">
+        <li><strong>Descolgar</strong> el extintor por la manija, poner en el suelo vertical y retirar el pasador de seguridad.</li>
+        <li><strong>Apuntar</strong> la boquilla hacia la base del fuego desde unos metros, hacer descarga de prueba.</li>
+        <li><strong>Apretar</strong> la palanca y apuntar a la BASE del fuego.</li>
+        <li><strong>Barrer</strong> con movimiento de barrido, acercándose lentamente hasta ~1 metro.</li>
+      </ol>
+      <div class="alerta-verde alerta">Combatir en dirección del viento. Fuegos planos → comenzar por la base. Goteos → de arriba hacia abajo. Usar suficientes extintores a la vez. Asegurarse de apagar bien (cuidar reignición).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ LECCIÓN 13 ═══════════════════════════════ -->
+<div class="leccion" id="l13">
+  <div class="leccion-header" style="border-left: 5px solid var(--azul);">
+    <div class="leccion-num" style="color:var(--azul);">13</div>
+    <div>
+      <div class="leccion-titulo">Métodos de Abastecimiento de Agua</div>
+      <div class="leccion-meta">3 horas &nbsp;·&nbsp; Módulo II</div>
+    </div>
+  </div>
+  <div class="leccion-body">
+    <div class="objetivos">
+      <h4>Objetivos de aprendizaje</h4>
+      <ol>
+        <li>Describir tipos de hidrantes existentes</li>
+        <li>Enumerar pasos para abastecer desde hidrante</li>
+        <li>Enumerar pasos para abastecer desde napa/piscina</li>
+        <li>Formular maniobras de abastecimiento con una o varias unidades</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Fuentes de Abastecimiento</h3>
+      <div class="cards-grid">
+        <div class="card card-azul"><strong>Hidrantes</strong>Red fija de distribución. Presión de entrada a bomba: 20–80 PSI.</div>
+        <div class="card card-teal"><strong>Napas de agua</strong>Lagos, ríos, estanques. Se usa por succión/aspiración.</div>
+        <div class="card card-morado"><strong>Cisternas</strong>Carros cisterna. Caudal: 200–230 GPM.</div>
+        <div class="card card-verde"><strong>Piscinas portátiles</strong>1 000–6 000 galones. Sobre superficie plana y nivelada.</div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>Tipos de Hidrantes</h3>
+      <div class="two-col">
+        <div class="card card-azul"><strong>Aéreos</strong>Cilindro seco (válvula en la base; para zonas de congelación) o cilindro húmedo (válvula en cada salida o en la punta).</div>
+        <div class="card card-gris"><strong>Subterráneos</strong>Rosca macho 2½" con tuerca de vástago en caja rectangular. Comunes en zonas antiguas y mercados.</div>
+      </div>
+      <div class="alerta-azul alerta">Según el RNE (Norma A.130), los hidrantes deben instalarse en las ESQUINAS de las calles, con distancia no mayor de 100 metros entre ellos.</div>
+    </div>
+
+    <div class="seccion">
+      <h3>Aspiración desde Napa – Conceptos Clave</h3>
+      <p><strong>Altura geométrica de aspiración (HGA):</strong> diferencia de nivel entre la fuente de agua y el eje de la bomba.</p>
+      <p><strong>Altura máxima teórica:</strong> 10.33 m (al nivel del mar). <strong>Altura práctica máxima:</strong> 7.5 m (limitaciones reales: temperatura, presión atmosférica, hermeticidad).</p>
+      <div class="alerta-ambar alerta"><strong>Cavitación:</strong> fenómeno destructivo cuando el caudal de descarga supera el de aspiración. El agua hierve a temperatura ambiente, generando burbujas que erosionan los impulsores de la bomba.</div>
+    </div>
+
+    <div class="seccion">
+      <h3>Maniobras de Abastecimiento</h3>
+      <ul class="lista">
+        <li><strong>Tendido hacia el incendio desde hidrante:</strong> vehículo se detiene frente al hidrante, tiende manguera, avanza al incendio.</li>
+        <li><strong>Tendido hacia hidrante desde el incendio:</strong> vehículo va al incendio, luego tiende hacia el hidrante (3 alternativas con conexiones de 2½" o 4½").</li>
+        <li><strong>Tendido entre unidades:</strong> unidad de ataque + unidad de abastecimiento enlazadas.</li>
+        <li><strong>Succión y ataque:</strong> vehículo succiona directamente desde fuente natural o cisterna.</li>
+        <li><strong>Varias unidades en serie/paralelo:</strong> serie hasta 1000 GPM; paralelo para más de 1000 GPM.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ LECCIÓN 14 ═══════════════════════════════ -->
+<div class="leccion" id="l14">
+  <div class="leccion-header" style="border-left: 5px solid var(--morado);">
+    <div class="leccion-num" style="color:var(--morado);">14</div>
+    <div>
+      <div class="leccion-titulo">Hidráulica Contraincendios</div>
+      <div class="leccion-meta">3 horas &nbsp;·&nbsp; Módulo II</div>
+    </div>
+  </div>
+  <div class="leccion-body">
+    <div class="objetivos">
+      <h4>Objetivos de aprendizaje</h4>
+      <ol>
+        <li>Definir hidráulica, caudal y presión</li>
+        <li>Señalar las unidades de presión</li>
+        <li>Mencionar los principios y tipos de presión</li>
+        <li>Explicar el efecto Venturi y su aplicación</li>
+        <li>Explicar golpe de ariete y cavitación</li>
+        <li>Calcular pérdida de presión</li>
+        <li>Mencionar acciones para reducir pérdidas de presión</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Conceptos Fundamentales</h3>
+      <div class="cards-grid">
+        <div class="card card-azul"><strong>Caudal (Q)</strong>Cantidad de líquido que pasa por una sección en la unidad de tiempo. Q = S × V</div>
+        <div class="card card-morado"><strong>Presión (P)</strong>Fuerza por unidad de superficie. P = F / S</div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>6 Principios de la Presión</h3>
+      <ol class="fase-list">
+        <li>La presión es <strong>perpendicular</strong> a la superficie donde actúa.</li>
+        <li>En un punto de reposo tiene la misma intensidad en <strong>todas las direcciones</strong>.</li>
+        <li>Aplicada externamente en espacio cerrado, se transmite por igual en <strong>todas las direcciones</strong> (Principio de Pascal).</li>
+        <li>En recipiente abierto es proporcional a la <strong>profundidad</strong>.</li>
+        <li>En recipiente abierto es proporcional a la <strong>densidad</strong> del líquido.</li>
+        <li>En el fondo es independiente de la <strong>forma</strong> del recipiente (vasos comunicantes).</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Tipos de Presión en Sistemas CI</h3>
+      <table class="tabla-mini">
+        <tr><th>Tipo</th><th>Descripción</th></tr>
+        <tr><td>Atmosférica</td><td>Fuerza del aire sobre la superficie terrestre (14.7 PSI al nivel del mar)</td></tr>
+        <tr><td>Normal/de trabajo</td><td>Presión durante demandas habituales del sistema</td></tr>
+        <tr><td>Estática</td><td>Fluido en reposo</td></tr>
+        <tr><td>Dinámica (velocidad)</td><td>Agua en movimiento; la presión puede hacer subir el agua a cierta altura</td></tr>
+        <tr><td>Residual</td><td>Presión que queda en el sistema cuando hay flujo</td></tr>
+      </table>
+    </div>
+
+    <div class="seccion">
+      <h3>Fórmula de Presión Total en Bomba</h3>
+      <div class="formula">PB = PP + PF ± PH + PS</div>
+      <p style="font-family:Arial,sans-serif;font-size:0.85rem;margin-top:6px;">PB=Presión bomba &nbsp;·&nbsp; PP=Presión pitón &nbsp;·&nbsp; PF=Pérd. fricción &nbsp;·&nbsp; PH=Pérd/ganancia altura &nbsp;·&nbsp; PS=Pérd. sistema</p>
+    </div>
+
+    <div class="seccion">
+      <h3>Pérdida por Fricción</h3>
+      <div class="formula">PF = C × Q² × L</div>
+      <p style="font-family:Arial,sans-serif;font-size:0.85rem;margin-top:6px;">C=constante &nbsp;·&nbsp; Q=GPM/100 &nbsp;·&nbsp; L=pies/100 (30m = 100 pies)</p>
+      <table class="tabla-mini" style="margin-top:8px;">
+        <tr><th>Diámetro</th><th>Constante C</th></tr>
+        <tr><td>1½"</td><td>24</td></tr>
+        <tr><td>1¾"</td><td>15.5</td></tr>
+        <tr><td>2½"</td><td>2</td></tr>
+        <tr><td>3"</td><td>0.8</td></tr>
+        <tr><td>4"</td><td>0.2</td></tr>
+      </table>
+    </div>
+
+    <div class="seccion">
+      <h3>Pérdida / Ganancia por Altura</h3>
+      <div class="cards-grid">
+        <div class="card card-ambar"><strong>1 metro arriba</strong>= 1.5 PSI en contra</div>
+        <div class="card card-verde"><strong>1 piso arriba</strong>= 5 PSI pérdida</div>
+        <div class="card card-teal"><strong>1 sótano abajo</strong>= 5 PSI ganancia</div>
+      </div>
+      <p style="font-family:Arial,sans-serif;font-size:0.85rem;margin-top:8px;">Fórmulas: Pérd. = (#pisos – 1) × 5 PSI &nbsp;|&nbsp; Ganancia = – (#sótano × 5 PSI). Regla práctica para tuberías 4" con siamesa: partir de 150 PSI + 10 PSI (siamesa) + 5 PSI/piso.</p>
+    </div>
+
+    <div class="seccion">
+      <h3>Fenómenos Especiales</h3>
+      <div class="alerta-azul alerta"><strong>Efecto Venturi:</strong> al disminuir la sección de una tubería, aumenta la velocidad y disminuye la presión (depresión), generando succión. Aplicación: proporcionador de espuma.</div>
+      <div class="alerta-rojo alerta"><strong>Golpe de ariete:</strong> cierre brusco de una válvula o lanza convierte la presión dinámica en presión estática de forma violenta, pudiendo romper mangueras. Prevención: cerrar válvulas PROGRESIVAMENTE.</div>
+      <div class="alerta-ambar alerta"><strong>Cavitación:</strong> se descarga más agua de la que entra. Las burbujas de vapor erosionan los impulsores. Evitar cerrar demasiado el caudal de descarga.</div>
+    </div>
+
+    <div class="seccion">
+      <h3>Pérdida por el Sistema (accesorios)</h3>
+      <ul class="lista">
+        <li>Pitón monitor: 10–25 PSI</li>
+        <li>Siamesa: ~10 PSI</li>
+        <li>Eductor de espuma: ~40 PSI</li>
+        <li>Accesorios: &lt;30 GPM=1 PSI; 30–60=3 PSI; 60–125=5 PSI; &gt;125=10 PSI</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ LECCIÓN 15 ═══════════════════════════════ -->
+<div class="leccion" id="l15">
+  <div class="leccion-header" style="border-left: 5px solid var(--teal);">
+    <div class="leccion-num" style="color:var(--teal);">15</div>
+    <div>
+      <div class="leccion-titulo">Chorros de Extinción</div>
+      <div class="leccion-meta">3 horas &nbsp;·&nbsp; Módulo II</div>
+    </div>
+  </div>
+  <div class="leccion-body">
+    <div class="objetivos">
+      <h4>Objetivos de aprendizaje</h4>
+      <ol>
+        <li>Propiedades extintoras del agua</li>
+        <li>Definir chorro de extinción</li>
+        <li>Tamaños de chorros y características</li>
+        <li>Patrones de chorros y sus características</li>
+        <li>Chorro pulsante</li>
+        <li>Ventajas/desventajas de pitones de combinación</li>
+        <li>Selección y aplicación</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Propiedades del Agua como Agente Extintor</h3>
+      <div class="cards-grid">
+        <div class="card card-azul"><strong>Calor específico alto</strong>1 kg absorbe 4.19 kJ por cada °C de aumento. El mejor absorbente de calor.</div>
+        <div class="card card-teal"><strong>Calor latente de evaporación</strong>2 240 kJ/kg para convertirse en vapor. La temperatura no sube de 100°C mientras se evapora.</div>
+        <div class="card card-verde"><strong>Expansión al vaporizarse</strong>A 100°C: 1 m³ agua = 1 700 m³ vapor. Expulsa gases calientes del área.</div>
+        <div class="card card-morado"><strong>Área superficial</strong>El agua nebulizada aumenta radicalmente la superficie de absorción de calor.</div>
+      </div>
+      <div class="alerta-ambar alerta"><strong>Limitaciones del agua:</strong> alta tensión superficial (no penetra fácil en materiales densos), conductora de electricidad, reacciona con metales combustibles, se congela a 0°C.</div>
+    </div>
+
+    <div class="seccion">
+      <h3>Tamaños de Chorros</h3>
+      <div class="cards-grid">
+        <div class="card card-gris"><strong>Bajo volumen</strong>Menos de 40 GPM</div>
+        <div class="card card-azul"><strong>Línea de mano</strong>40–350 GPM (mangueras 1½" a 3")</div>
+        <div class="card card-rojo"><strong>Chorro maestro</strong>Más de 350 GPM (mangueras 2½" a 3" + pitón maestro)</div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>Patrones de Chorros (6 tipos)</h3>
+      <table class="tabla-mini">
+        <tr><th>Tipo</th><th>Ángulo</th><th>Uso principal</th></tr>
+        <tr><td>Sólido</td><td>0°</td><td>Máximo alcance y penetración. Pacas, incendios forestales, áreas no accesibles. Produce reacción en el pitonero.</td></tr>
+        <tr><td>Directo/Compacto</td><td>~0–5°</td><td>Alcance y penetración moderada. Fuegos Clase A con distancia. NO en hidrocarburos ni ataques interiores sin previo enfriamiento.</td></tr>
+        <tr><td>Ataque / Barrido (Cono de poder)</td><td>0°–30°</td><td>Barrer y empujar el fuego. Efectivo en incendios incipientes a distancia media-corta.</td></tr>
+        <tr><td>Media neblina / Ventilación</td><td>30°–60°</td><td>Extrae humo por efecto Venturi (ventilación hidráulica).</td></tr>
+        <tr><td>Neblina / Protección</td><td>&gt;60°</td><td>Máxima absorción de calor y protección del pitonero. Corto alcance.</td></tr>
+        <tr><td>Pulsante (3D)</td><td>45°</td><td>Ataques en compartimientos interiores. Enfriar capa de gases sin perturbar el equilibrio térmico.</td></tr>
+      </table>
+    </div>
+
+    <div class="seccion">
+      <h3>Técnica 3DWF (Ataque Ofensivo en 3D)</h3>
+      <p style="font-family:Arial,sans-serif;font-size:0.87rem;">Desarrollada por bomberos suecos. Cono de <strong>45°</strong>, ángulo de 45° respecto al piso, apuntando a la esquina superior opuesta donde se unen paredes y techo. Pulsaciones: cortas (0.1 s), largas (0.1–0.5 s) o "pintado". Objetivo: contraer la capa de gases calientes para mejorar visibilidad y reducir temperatura sin crear el "efecto pistón" (propagar fuego a otras habitaciones).</p>
+      <div class="alerta-rojo alerta">Si la técnica 3D es mal ejecutada y produce más vapor del necesario → efecto pistón: las altas temperaturas se propagan. Aplicar el chorro contra techos o paredes (no al espacio abierto) es 2D, no 3D.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ LECCIÓN 16 ═══════════════════════════════ -->
+<div class="leccion" id="l16">
+  <div class="leccion-header" style="border-left: 5px solid var(--rojo);">
+    <div class="leccion-num" style="color:var(--rojo);">16</div>
+    <div>
+      <div class="leccion-titulo">Técnicas de Extinción de Incendios</div>
+      <div class="leccion-meta">3 horas &nbsp;·&nbsp; Módulo II</div>
+    </div>
+  </div>
+  <div class="leccion-body">
+    <div class="objetivos">
+      <h4>Objetivos de aprendizaje</h4>
+      <ol>
+        <li>Mencionar acciones prioritarias en un incendio</li>
+        <li>Señalar técnicas de aplicación con agua</li>
+        <li>Ventajas y desventajas de cada técnica</li>
+        <li>Patrones de chorros por técnica</li>
+        <li>Posiciones para acceso al compartimiento</li>
+        <li>Acciones para el control del incendio</li>
+        <li>Condiciones potencialmente peligrosas</li>
+        <li>Precauciones de seguridad</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>5 Técnicas de Aplicación de Agua</h3>
+      <table class="tabla-mini">
+        <tr><th>Técnica</th><th>Objetivo</th><th>Posición</th><th>Caudal</th><th>Cono</th></tr>
+        <tr><td><strong>Ataque Indirecto</strong></td><td>Inundar con vapor desde exterior</td><td>Interior o exterior (fuera del recinto)</td><td>Medio-alto 30–125 GPM</td><td>15°–30°. Patrones T u O.</td></tr>
+        <tr><td><strong>Ataque Directo</strong></td><td>Película de agua sobre combustibles</td><td>Interior o exterior</td><td>Medio 30–60 GPM</td><td>0°–15°. Aplicaciones largas.</td></tr>
+        <tr><td><strong>Enfriamiento de gases</strong></td><td>Reducir inflamabilidad del colchón de gases</td><td>Interior</td><td>Bajo-medio 15–60 GPM</td><td>30°–45°. Pulsaciones 1"–5".</td></tr>
+        <tr><td><strong>Ataque defensivo (propagación)</strong></td><td>Limitar extensión del fuego</td><td>Interior o exterior</td><td>Bajo 15–30 GPM</td><td>0°–15°. Continuo.</td></tr>
+        <tr><td><strong>Ablandamiento exterior ofensivo</strong></td><td>Reducir potencia del incendio desde exterior</td><td>Exterior</td><td>Medio 30–60 GPM</td><td>Chorro sólido al techo. Pulsaciones 5"–30".</td></tr>
+      </table>
+    </div>
+
+    <div class="seccion">
+      <h3>Acciones para el Control del Incendio</h3>
+      <p style="font-family:Arial,sans-serif;font-size:0.87rem;margin-bottom:6px;"><strong>1.ª autobomba:</strong> prioridades al colocar las primeras líneas:</p>
+      <ol class="fase-list">
+        <li>Trabajar entre ocupantes atrapados y el fuego.</li>
+        <li>Proteger los principales medios de salida.</li>
+        <li>Proteger otras habitaciones.</li>
+        <li>Proteger edificios vecinos.</li>
+        <li>Confinar el incendio.</li>
+        <li>Iniciar extinción desde el LADO SIN FUEGO.</li>
+        <li>Chorros maestros si es necesario.</li>
+      </ol>
+      <p style="font-family:Arial,sans-serif;font-size:0.87rem;margin-top:8px;"><strong>2.ª autobomba:</strong> primero asegurar abastecimiento de agua, luego: respaldar línea de ataque → proteger salidas secundarias → proteger exposiciones → confinar → ayudar en extinción.</p>
+    </div>
+
+    <div class="seccion">
+      <h3>9 Condiciones Potencialmente Peligrosas</h3>
+      <ol class="fase-list">
+        <li>Hundimiento inminente del edificio</li>
+        <li>Fuego por debajo, detrás o encima del equipo</li>
+        <li>Dobleces u obstrucciones en mangueras</li>
+        <li>Huecos, escaleras debilitadas, peligros de caída</li>
+        <li>Cargas suspendidas en soportes debilitados</li>
+        <li>Mercancías peligrosas/inflamables con riesgo de derrame</li>
+        <li>Condiciones para Backdraft o Flashover</li>
+        <li>Peligros de choque eléctrico</li>
+        <li>Exceso de esfuerzo, confusión o pánico en el equipo</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Acceso al Compartimiento (posición segura)</h3>
+      <p style="font-family:Arial,sans-serif;font-size:0.87rem;">Evaluar signos de Backdraft antes de abrir. Verificar dirección de apertura de la puerta. Proyectar pequeña cantidad de agua en la junta de la puerta para apagar fuegos en ella. Abrir protegiéndose con la pared, y dirigir el chorro hacia la zona de presión positiva (parte superior). Entrar SIEMPRE en pareja. Nunca trabajar solo en zonas peligrosas.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ LECCIÓN 17 ═══════════════════════════════ -->
+<div class="leccion" id="l17">
+  <div class="leccion-header" style="border-left: 5px solid var(--gris);">
+    <div class="leccion-num" style="color:var(--gris);">17</div>
+    <div>
+      <div class="leccion-titulo">Entrada Forzada</div>
+      <div class="leccion-meta">3 horas &nbsp;·&nbsp; Módulo II</div>
+    </div>
+  </div>
+  <div class="leccion-body">
+    <div class="objetivos">
+      <h4>Objetivos de aprendizaje</h4>
+      <ol>
+        <li>Definir entrada forzada</li>
+        <li>Enumerar tipos de herramientas</li>
+        <li>Pasos de revisión de herramientas</li>
+        <li>Transporte seguro de herramientas</li>
+        <li>Condiciones de seguridad en entrada forzada</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Definición y Principios</h3>
+      <p>Acceso a una estructura cuando los medios normales están cerrados o bloqueados, causando el mínimo daño posible y brindando acceso rápido. No usar si hay acceso normal disponible. Requiere conocimiento de construcción, comportamiento del fuego y conciencia situacional.</p>
+    </div>
+
+    <div class="seccion">
+      <h3>Clasificación de Herramientas (5 tipos)</h3>
+      <div class="cards-grid">
+        <div class="card card-rojo"><strong>Corte</strong>Hachas, sierras, cizalla, sierra circular, esmeril angular, motosierra, oxicorte.</div>
+        <div class="card card-ambar"><strong>Palanca</strong>Barreta, pata de cabra, Halligan. Las más usadas para forzar puertas y cerrojos.</div>
+        <div class="card card-azul"><strong>Separar/Apretar</strong>Mandíbula de rescate (hidráulica). También separadores hidráulicos manuales.</div>
+        <div class="card card-verde"><strong>Empujar/Tirar</strong>Ganchos y bicheros (3–6 m). Solo en elementos NO energizados, SECOS y de baja tensión.</div>
+        <div class="card card-gris"><strong>Golpear</strong>Martillos, mazos, combas, hachas de cabeza plana. Se combinan con cinceles.</div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>Tipos de Puertas y Ventanas</h3>
+      <div class="two-col">
+        <div class="card card-gris"><strong>Puertas Batientes:</strong> identificar bisagras para saber hacia dónde abre. Usar Halligan en zona de la chapa.</div>
+        <div class="card card-gris"><strong>Puertas Corredizas:</strong> rieles inferiores o superiores. Grandes ventanales templados son difíciles.</div>
+      </div>
+      <p style="font-family:Arial,sans-serif;font-size:0.87rem;margin-top:8px;">Para cortinas metálicas: corte en forma de "A" con tronzadora o esmeril angular. Para muros: técnica de "corte y penetración" solo por bomberos expertos, preferiblemente lejos de cargas y servicios.</p>
+      <div class="alerta-rojo alerta">Al romper vidrios: EPP completo, usar la parte plana de la herramienta, orientarse a favor del viento, eliminar restos en el marco.</div>
+    </div>
+
+    <div class="seccion">
+      <h3>Transporte Seguro de Herramientas</h3>
+      <ul class="lista">
+        <li><strong>Hachas:</strong> filo alejado del cuerpo, pico protegido con la mano. Nunca al hombro.</li>
+        <li><strong>Herramientas de palanca:</strong> bordes puntiagudos alejados del cuerpo.</li>
+        <li><strong>Combinaciones:</strong> atar con correa (Halligan + hacha).</li>
+        <li><strong>Pértigas y ganchos:</strong> fuera del edificio → cabeza abajo. Dentro → invertir, cabeza arriba.</li>
+        <li><strong>Herramientas con motor:</strong> NUNCA transportarlas encendidas.</li>
+      </ul>
+    </div>
+
+    <div class="seccion">
+      <h3>Condiciones de Seguridad Pre-Entrada</h3>
+      <ul class="lista">
+        <li>Verificar ausencia de cornisas o estructuras que puedan caer.</li>
+        <li>Verificar ausencia de energía eléctrica aérea o subterránea.</li>
+        <li>Verificar ausencia de gas, vapor o materiales peligrosos.</li>
+        <li>Verificar ausencia de desniveles, pozos o silos.</li>
+        <li>Confirmar ausencia de signos de Backdraft antes de abrir.</li>
+        <li>Disponer línea de agua cargada con personal equipado antes de entrar.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ LECCIÓN 18 ═══════════════════════════════ -->
+<div class="leccion" id="l18">
+  <div class="leccion-header" style="border-left: 5px solid var(--verde);">
+    <div class="leccion-num" style="color:var(--verde);">18</div>
+    <div>
+      <div class="leccion-titulo">Ventilación en Incendios</div>
+      <div class="leccion-meta">3 horas &nbsp;·&nbsp; Módulo II</div>
+    </div>
+  </div>
+  <div class="leccion-body">
+    <div class="objetivos">
+      <h4>Objetivos de aprendizaje</h4>
+      <ol>
+        <li>Definir los métodos de ventilación</li>
+        <li>Precauciones en ventilación vertical/horizontal</li>
+        <li>Precauciones en ventilación extractor/VPP/hidráulica</li>
+        <li>Equipos y herramientas para ventilación</li>
+        <li>Razones para ventilar</li>
+        <li>Consideraciones que afectan la necesidad de ventilar</li>
+        <li>Indicadores críticos para ventilación</li>
+        <li>Selección del lugar de ventilación</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Ventilación: Definición y Objetivo</h3>
+      <p>Remoción sistemática de aire caliente, humo y gases de una estructura y su sustitución por aire fresco. Término técnico: <strong>Ventilación Táctica</strong>.</p>
+    </div>
+
+    <div class="seccion">
+      <h3>Métodos de Ventilación</h3>
+      <div class="cards-grid">
+        <div class="card card-verde"><strong>Natural Vertical</strong>Aberturas en el techo (tragaluces, respiraderos). Directamente sobre el fuego. El calor y los gases suben.</div>
+        <div class="card card-teal"><strong>Natural Horizontal</strong>A través de puertas y ventanas en paredes. Abrir primero el lado SOTAVENTO (salida), luego el lado BARLOVENTO (entrada).</div>
+        <div class="card card-azul"><strong>Mecánica – VPN (Extractor)</strong>Succiona y expulsa humo. Colocar en la misma dirección del viento natural. Sistema más antiguo.</div>
+        <div class="card card-morado"><strong>Mecánica – VPP (Ventilador)</strong>Inyecta aire a presión desde el exterior. El ventilador cubre el área completa de la apertura. Sistema más eficaz.</div>
+        <div class="card card-ambar"><strong>Hidráulica</strong>Chorro de neblina (pitón) ocupa 85–90% de la apertura. Arrastra el humo hacia afuera. Requiere pitón a mínimo 0.6 m de la abertura.</div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>9 Razones para Ventilar</h3>
+      <ol class="fase-list">
+        <li>Mejora el potencial de supervivencia de la víctima</li>
+        <li>Mejora la seguridad del bombero</li>
+        <li>Reduce niveles de calor interior</li>
+        <li>Disminuye la velocidad de propagación del fuego</li>
+        <li>Mejora la visibilidad interior</li>
+        <li>Reduce los daños a la propiedad</li>
+        <li>Aumenta la concentración de oxígeno</li>
+        <li>Reduce la concentración de gases y humos tóxicos</li>
+        <li>Reduce posibilidad de Backdraft (ventilación vertical)</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Indicadores Críticos (4 categorías)</h3>
+      <div class="cards-grid">
+        <div class="card card-gris"><strong>Humo:</strong> evaluar velocidad, volumen, densidad y color.</div>
+        <div class="card card-ambar"><strong>Calor:</strong> pintura con ampollas, alquitrán burbujante, vibración en vidrios. Cámara termográfica.</div>
+        <div class="card card-rojo"><strong>Llama:</strong> tamaño y ubicación del fuego; desde una ventana vs. todas las ventanas del piso.</div>
+        <div class="card card-azul"><strong>Flujo de aire:</strong> velocidad, turbulencia, dirección y movimiento del plano neutro.</div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>Precauciones Clave en Ventilación Vertical</h3>
+      <ul class="lista">
+        <li>Trabajar con el viento a la espalda.</li>
+        <li>Salida secundaria para el personal en el techo.</li>
+        <li>No cortar apoyos estructurales principales.</li>
+        <li>Escaleras deben sobrepasar la línea del techo en 5 peldaños.</li>
+        <li>Todo el personal con EPP completo + EPRA.</li>
+        <li>Encender herramientas ANTES de subir al techo; subirlas apagadas.</li>
+      </ul>
+      <div class="alerta-rojo alerta">ADVERTENCIA: Nunca dirigir chorros de agua hacia el interior de agujeros de ventilación → forzará el descenso de gases sobrecalentados sobre los bomberos en el interior.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ LECCIÓN 19 ═══════════════════════════════ -->
+<div class="leccion" id="l19">
+  <div class="leccion-header" style="border-left: 5px solid var(--ambar);">
+    <div class="leccion-num" style="color:var(--ambar);">19</div>
+    <div>
+      <div class="leccion-titulo">Escaleras de Incendio – Tipos y Usos</div>
+      <div class="leccion-meta">3 horas &nbsp;·&nbsp; Módulo II</div>
+    </div>
+  </div>
+  <div class="leccion-body">
+    <div class="objetivos">
+      <h4>Objetivos de aprendizaje</h4>
+      <ol>
+        <li>Enumerar los tipos de escaleras de incendios</li>
+        <li>Medidas de seguridad en su uso</li>
+        <li>Procesos de transporte (1, 2, 3, 4 bomberos)</li>
+        <li>Levantamiento y bajada de escalas</li>
+        <li>Subida y bajada con equipo / material CI / material de rescate</li>
+        <li>Proceso para bajar una víctima</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Tipos de Escaleras</h3>
+      <div class="cards-grid">
+        <div class="card card-gris"><strong>Simples</strong>Uso general, un solo tramo.</div>
+        <div class="card card-gris"><strong>De techo (gancho)</strong>Ganchos en la punta para anclarse en el techo.</div>
+        <div class="card card-gris"><strong>Plegables</strong>Se doblan para acceder a espacios reducidos.</div>
+        <div class="card card-ambar"><strong>De extensión</strong>Dos o más secciones, la más usada en incendios.</div>
+        <div class="card card-gris"><strong>De bisagra</strong>Se articulan para trabajar en escaleras de edificios.</div>
+        <div class="card card-rojo"><strong>Aéreas</strong>Telescópicas o articuladas, montadas en vehículo. Torres con plataforma y pitones para altura.</div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>Medidas de Seguridad Clave</h3>
+      <ul class="lista">
+        <li>La escala debe sobrepasar al menos <strong>3 peldaños</strong> por sobre la altura a alcanzar.</li>
+        <li>Área libre de cables eléctricos, sin importar el material de la escala.</li>
+        <li>Siempre un bombero en la base haciendo pie.</li>
+        <li>No levantar una escala si no se va a usar.</li>
+        <li>Nunca correr al transportar escalas.</li>
+        <li>Al subir: fuerza de piernas, no de brazos ni espalda.</li>
+        <li>En escalas de extensión: asegurar trinquetes y anudar la driza antes de transitar.</li>
+        <li><strong>Ángulo correcto:</strong> parado erguido frente a la escala, punta de los pies toca la base y brazos extendidos a 90° alcanzan el peldaño a la altura de los hombros.</li>
+      </ul>
+    </div>
+
+    <div class="seccion">
+      <h3>Transporte por Número de Bomberos</h3>
+      <table class="tabla-mini">
+        <tr><th>Bomberos</th><th>Escaleras aptas</th><th>Posición</th></tr>
+        <tr><td>1</td><td>Simple, bisagra, techo, plegables</td><td>Al hombro, larguero hacia adelante, mano en peldaño siguiente</td></tr>
+        <tr><td>2</td><td>Simple, bisagra, extensión</td><td>Uno adelante (primer peldaño), uno atrás (penúltimo). El de adelante dirige.</td></tr>
+        <tr><td>3</td><td>Extensión, paquetes pesados</td><td>2 adelante en 3er peldaño, 1 atrás entre largueros. El de atrás dirige.</td></tr>
+        <tr><td>4</td><td>Extensión, paquetes pesados</td><td>2 adelante en 3er peldaño, 2 atrás en antepenúltimo. También "en camilla".</td></tr>
+      </table>
+    </div>
+
+    <div class="seccion">
+      <h3>Bajada de Víctimas</h3>
+      <div class="two-col">
+        <div class="card card-ambar"><strong>1 Bombero:</strong> víctima de costado sobre los brazos del bombero (un brazo bajo axila, otro entre piernas). Las manos deslizan por los largueros.</div>
+        <div class="card card-rojo"><strong>2 Bomberos:</strong> dos escalas paralelas. Un bombero toma cadera y piernas, el otro la cabeza y torso. Bajan coordinados.</div>
+      </div>
+      <p style="font-family:Arial,sans-serif;font-size:0.87rem;margin-top:8px;">Se requieren idealmente 5 bomberos: 2 en el edificio instalan la víctima, 1 la baja, 2 la reciben abajo. En víctimas conscientes: primero salen las piernas (igual posición que el bombero).</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ LECCIÓN 20 ═══════════════════════════════ -->
+<div class="leccion" id="l20">
+  <div class="leccion-header" style="border-left: 5px solid var(--morado);">
+    <div class="leccion-num" style="color:var(--morado);">20</div>
+    <div>
+      <div class="leccion-titulo">Conservación de la Propiedad</div>
+      <div class="leccion-meta">3 horas &nbsp;·&nbsp; Módulo II</div>
+    </div>
+  </div>
+  <div class="leccion-body">
+    <div class="objetivos">
+      <h4>Objetivos de aprendizaje</h4>
+      <ol>
+        <li>Definir el método de Salvamento</li>
+        <li>Describir daños primarios y secundarios</li>
+        <li>Definir el método de Reacondicionamiento</li>
+        <li>Objetivos de las operaciones de conservación</li>
+        <li>Consideraciones para detener pérdidas adicionales</li>
+        <li>Técnicas de salvamento</li>
+        <li>Objetivo de la remoción de escombros</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Salvamento y Daños</h3>
+      <div class="two-col">
+        <div class="alerta-rojo alerta"><strong>Daños primarios:</strong> causados por los productos de la combustión: llama, calor y humo. El fuego los genera.</div>
+        <div class="alerta-ambar alerta"><strong>Daños secundarios:</strong> causados por las OPERACIONES para extinguirlo: entrada forzada, ventilación, aplicación del agua. Pueden causar tanto daño como el fuego mismo.</div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>4 Objetivos de la Conservación</h3>
+      <ol class="fase-list">
+        <li>Detener pérdidas adicionales</li>
+        <li>Verificar que el incendio esté completamente extinguido</li>
+        <li>Determinar la causa y origen del fuego</li>
+        <li>Retornar la ocupación a su uso cuando sea posible</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Reacondicionamiento</h3>
+      <p>Búsqueda y extinción de focos ocultos o remanentes + revisión post-extinción + conservación de pruebas para determinar origen y causa. No se inicia hasta que el incendio esté bajo control.</p>
+      <div class="alerta-verde alerta"><strong>Remoción de escombros:</strong> investigación profunda de toda la zona para eliminar el peligro de REIGNICIÓN. Nunca retirar dotaciones prematuramente (evita una segunda respuesta al mismo lugar).</div>
+    </div>
+
+    <div class="seccion">
+      <h3>Mente Conservadora del Bombero</h3>
+      <div class="cards-grid">
+        <div class="card card-azul"><strong>Visionar los daños del fuego</strong>Planear el ataque considerando el control de pérdidas.</div>
+        <div class="card card-teal"><strong>Pensar como el agua</strong>Enviar dotaciones a áreas inferiores para controlar daños por escurrimiento (mantas, drenajes).</div>
+        <div class="card card-morado"><strong>Actuar como si viviera ahí</strong>Salvar objetos valiosos, proteger lo que puede retirarse.</div>
+        <div class="card card-verde"><strong>Salvar todo lo salvable</strong>Evaluar perfil de la propiedad y trabajar para minimizar pérdidas.</div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>Incendios en Patrimonio Cultural</h3>
+      <div class="alerta-ambar alerta">En museos, teatros, iglesias, bibliotecas: usar la FUERZA JUSTA. Extremar precauciones con el agente extintor. Consultar a técnicos del edificio sobre materiales valiosos. Ventilar adecuadamente. El agua puede disolver pinturas, colas, tintas, y deformar materiales orgánicos de manera irreversible.</div>
+      <p style="font-family:Arial,sans-serif;font-size:0.87rem;">Preservar la escena para Fiscalía, PNP, DIPREIN u otras entidades competentes en la determinación del origen y causa.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ LECCIÓN 21 ═══════════════════════════════ -->
+<div class="leccion" id="l21">
+  <div class="leccion-header" style="border-left: 5px solid var(--gris);">
+    <div class="leccion-num" style="color:var(--gris);">21</div>
+    <div>
+      <div class="leccion-titulo">Evaluación de Estructuras</div>
+      <div class="leccion-meta">3 horas &nbsp;·&nbsp; Módulo II</div>
+    </div>
+  </div>
+  <div class="leccion-body">
+    <div class="objetivos">
+      <h4>Objetivos de aprendizaje</h4>
+      <ol>
+        <li>Reconocer elementos estructurales básicos</li>
+        <li>Reconocer métodos de construcción a nivel nacional</li>
+        <li>Comportamiento de elementos estructurales en incendios</li>
+        <li>Identificar el sistema estructural de una edificación</li>
+        <li>Describir niveles de daño en concreto armado, albañilería y adobe</li>
+      </ol>
+    </div>
+
+    <div class="seccion">
+      <h3>Elementos Estructurales (RNE – Norma E.060)</h3>
+      <div class="cards-grid">
+        <div class="card card-gris"><strong>Cimentación</strong>Transmite cargas al suelo de fundación.</div>
+        <div class="card card-gris"><strong>Columnas</strong>Resisten fuerzas a lo largo de su eje central (compresión).</div>
+        <div class="card card-gris"><strong>Muros</strong>Encierran/separan espacios, resisten cargas verticales y laterales.</div>
+        <div class="card card-gris"><strong>Vigas</strong>Trabajan fundamentalmente a flexión.</div>
+        <div class="card card-gris"><strong>Losas</strong>Techos o pisos, espesor reducido, armado en 1 o 2 direcciones.</div>
+        <div class="card card-gris"><strong>Placas</strong>Laterales a las columnas, soportan sismos (diseño sismo resistente).</div>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <h3>Sistemas Estructurales (tipos)</h3>
+      <table class="tabla-mini">
+        <tr><th>Tipo</th><th>Descripción</th></tr>
+        <tr><td>Pórticos (concreto)</td><td>Vigas + columnas unidas rígidamente</td></tr>
+        <tr><td>Muros estructurales</td><td>Muros que resisten cargas verticales y sísmicas</td></tr>
+        <tr><td>Dual/Combinado</td><td>Pórticos + muros o diagonales</td></tr>
+        <tr><td>EMDL</td><td>Muros delgados, máximo 8 pisos, sin extremos confinados</td></tr>
+        <tr><td>Albañilería confinada</td><td>Muros de ladrillo + columnetas y viguetas de concreto</td></tr>
+        <tr><td>Albañilería reforzada</td><td>Ladrillos con perforación vertical + barras de acero</td></tr>
+        <tr><td>Albañilería no reforzada</td><td>Sin refuerzo ni confinamiento. Alta vulnerabilidad.</td></tr>
+        <tr><td>Estructuras de acero</td><td>Elementos de acero/aluminio. Pórticos arriostrados o no.</td></tr>
+        <tr><td>Madera</td><td>Elementos principalmente de madera. Sistema entramado o poste-viga.</td></tr>
+        <tr><td>Adobe (Tierra)</td><td>Muros de adobe o tierra apisonada. Alta vulnerabilidad sísmica.</td></tr>
+      </table>
+    </div>
+
+    <div class="seccion">
+      <h3>Comportamiento en Incendios</h3>
+      <ul class="lista">
+        <li><strong>Acero/Aluminio:</strong> reducen resistencia y módulo de elasticidad con la temperatura.</li>
+        <li><strong>Concreto:</strong> reduce resistencia + "Spalling" (despostillamiento explosivo). Expone la armadura al fuego.</li>
+        <li><strong>Madera:</strong> carbonización superficial (protege el núcleo) pero reduce área resistente y realimenta el incendio.</li>
+        <li><strong>Albañilería:</strong> fisuras y deformaciones dependen del sistema (confinado, reforzado, no reforzado).</li>
+      </ul>
+      <div class="alerta-ambar alerta">La compartimentación del edificio es una medida fundamental de PROTECCIÓN PASIVA para evitar la propagación del incendio.</div>
+    </div>
+
+    <div class="seccion">
+      <h3>Niveles de Daño – Concreto Armado</h3>
+      <table class="tabla-mini">
+        <tr><th>Nivel</th><th>Descripción del daño</th></tr>
+        <tr><td>Ninguno/Muy leve</td><td>Fisuras &lt;0.2 mm, casi imperceptibles</td></tr>
+        <tr><td>Leve</td><td>Fisuración visible, 0.2–1.0 mm</td></tr>
+        <tr><td>Moderado</td><td>Grietas 1.0–2.0 mm, pérdida incipiente del recubrimiento</td></tr>
+        <tr><td>Fuerte</td><td>Agrietamiento notable, pérdida de recubrimiento, armadura expuesta</td></tr>
+        <tr><td>Severo</td><td>Aplastamiento del concreto, pandeo de barras, deformaciones excesivas</td></tr>
+      </table>
+    </div>
+
+    <div class="seccion">
+      <h3>Niveles de Daño – Albañilería</h3>
+      <table class="tabla-mini">
+        <tr><th>Nivel</th><th>Descripción</th></tr>
+        <tr><td>Ninguno/Muy leve</td><td>Grietas &lt;0.2 mm</td></tr>
+        <tr><td>Leve</td><td>0.2–1.0 mm, visible a simple vista</td></tr>
+        <tr><td>Moderado</td><td>Agrietamiento diagonal incipiente, 1.0–3.0 mm</td></tr>
+        <tr><td>Fuerte</td><td>Agrietamiento diagonal severo &gt;3.0 mm, desplazamiento de piezas, aplastamiento local</td></tr>
+        <tr><td>Severo</td><td>Propagación diagonal en columnetas, grietas en viguetas &gt;1.0 mm, desplome</td></tr>
+      </table>
+    </div>
+
+    <div class="seccion">
+      <h3>Niveles de Daño – Adobe</h3>
+      <table class="tabla-mini">
+        <tr><th>Nivel</th><th>Descripción</th></tr>
+        <tr><td>Ninguno/Muy leve</td><td>Fisuras &lt;0.4 mm, casi imperceptibles</td></tr>
+        <tr><td>Leve</td><td>0.4–2.0 mm, visible a simple vista</td></tr>
+        <tr><td>Moderado</td><td>Grietas 0.4–2.0 mm horizontales en base o parte central, combinadas con diagonales</td></tr>
+        <tr><td>Fuerte</td><td>Similar al moderado pero grietas &gt;4.0 mm, desplazamiento fuera del plano de varios mm</td></tr>
+        <tr><td>Severo</td><td>Aplastamiento local, desplome o inclinación apreciable del muro</td></tr>
+      </table>
+      <div class="alerta-ambar alerta">Las viviendas de adobe son muy antiguas y vulnerables frente a sismos. No cuentan con condiciones de sismo resistencia adecuadas.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<footer>
+  <p>Guía de estudio generada a partir del Manual del Participante – CFBB Ver-2025</p>
+  <p style="margin-top:6px;">Cuerpo General de Bomberos Voluntarios del Perú &nbsp;·&nbsp; Dirección General de Formación Académica</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFBB 2026 — Curso de Formación Básica de Bomberos</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fire: #E8430A;
+    --fire-deep: #B02D04;
+    --fire-glow: #FF7A30;
+    --smoke: #2B2B2B;
+    --ash: #3D3D3D;
+    --ember: #FFB347;
+    --gold: #F4C842;
+    --cream: #FFF8F0;
+    --white: #FFFFFF;
+    --green-ok: #2E7D32;
+    --red-err: #C62828;
+    --blue-info: #1565C0;
+    --gray-light: #F5F5F5;
+    --shadow: 0 4px 24px rgba(0,0,0,0.18);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: #1A1A1A;
+    color: var(--cream);
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #1A1A1A 0%, #2D1200 50%, #1A1A1A 100%);
+    border-bottom: 3px solid var(--fire);
+    padding: 48px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 80%, rgba(232,67,10,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--fire);
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--white);
+    line-height: 1.15;
+  }
+  .hero h1 span { color: var(--fire-glow); }
+  .hero p {
+    margin-top: 14px;
+    font-size: 16px;
+    color: #ccc;
+    max-width: 580px;
+    margin-left: auto; margin-right: auto;
+    line-height: 1.6;
+  }
+  .hero-flame { font-size: 48px; margin-bottom: 12px; line-height: 1; }
+
+  /* ── NAV PILLS ── */
+  .lessons-nav {
+    background: var(--smoke);
+    padding: 16px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--ash);
+  }
+  .nav-pill {
+    background: transparent;
+    border: 1.5px solid #555;
+    color: #bbb;
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .nav-pill:hover, .nav-pill.active {
+    background: var(--fire);
+    border-color: var(--fire);
+    color: #fff;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 32px 16px 60px; }
+
+  /* ── LESSON CARD ── */
+  .lesson-card {
+    background: var(--smoke);
+    border-radius: 10px;
+    margin-bottom: 36px;
+    overflow: hidden;
+    border: 1px solid #3a3a3a;
+    display: none;
+  }
+  .lesson-card.visible { display: block; }
+
+  .lesson-header {
+    background: linear-gradient(90deg, var(--fire-deep) 0%, var(--fire) 100%);
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .lesson-number {
+    font-family: 'Oswald', sans-serif;
+    font-size: 40px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.25);
+    line-height: 1;
+    min-width: 56px;
+  }
+  .lesson-title-block h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: .5px;
+  }
+  .lesson-title-block p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 3px;
+  }
+
+  /* ── TABS ── */
+  .tab-bar {
+    display: flex;
+    background: #222;
+    border-bottom: 2px solid #3a3a3a;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: transparent;
+    color: #888;
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    letter-spacing: .5px;
+    cursor: pointer;
+    transition: all .2s;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+  }
+  .tab-btn.active {
+    color: var(--fire-glow);
+    border-bottom-color: var(--fire-glow);
+  }
+  .tab-btn:hover:not(.active) { color: #ccc; }
+
+  /* ── CONTENT PANELS ── */
+  .panel { display: none; padding: 26px 28px; }
+  .panel.active { display: block; }
+
+  /* ── SUMMARY ── */
+  .summary h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    color: var(--ember);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 22px 0 8px;
+  }
+  .summary h3:first-child { margin-top: 0; }
+  .summary p { font-size: 15px; line-height: 1.75; color: #ddd; margin-bottom: 10px; }
+  .summary ul { padding-left: 20px; margin-bottom: 10px; }
+  .summary ul li { font-size: 15px; line-height: 1.7; color: #ddd; margin-bottom: 4px; }
+  .summary .highlight-box {
+    background: rgba(232,67,10,0.12);
+    border-left: 4px solid var(--fire);
+    padding: 12px 16px;
+    border-radius: 0 6px 6px 0;
+    margin: 14px 0;
+    font-size: 14px;
+    color: #eee;
+  }
+
+  /* ── QUIZ ── */
+  .quiz-intro {
+    background: rgba(255,179,71,0.1);
+    border: 1px solid var(--ember);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: var(--ember);
+    margin-bottom: 24px;
+    text-align: center;
+  }
+  .question-block { margin-bottom: 28px; }
+  .question-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #eee;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .question-num {
+    display: inline-block;
+    background: var(--fire);
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option-btn {
+    background: #2e2e2e;
+    border: 1.5px solid #444;
+    color: #ccc;
+    padding: 11px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: left;
+    transition: all .18s;
+    line-height: 1.4;
+  }
+  .option-btn:hover:not(.disabled) { border-color: var(--fire-glow); color: #fff; background: #3a2a1a; }
+  .option-btn.correct { background: #1B3A1B; border-color: #4CAF50; color: #81C784; }
+  .option-btn.wrong { background: #3A1B1B; border-color: #EF5350; color: #EF9A9A; }
+  .option-btn.disabled { cursor: default; }
+  .feedback {
+    margin-top: 8px;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: rgba(76,175,80,.15); color: #81C784; border-left: 3px solid #4CAF50; }
+  .feedback.wrong { background: rgba(239,83,80,.15); color: #EF9A9A; border-left: 3px solid #EF5350; }
+
+  .quiz-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  .btn-check, .btn-reset {
+    padding: 11px 24px;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    letter-spacing: .5px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-check { background: var(--fire); color: #fff; }
+  .btn-check:hover { background: var(--fire-deep); }
+  .btn-reset { background: #444; color: #ccc; }
+  .btn-reset:hover { background: #555; color: #fff; }
+
+  .score-display {
+    margin-top: 20px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    display: none;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+  }
+  .score-display.show { display: block; }
+  .score-display .score-num { font-size: 36px; font-weight: 700; }
+  .score-display .score-label { font-size: 14px; margin-top: 4px; }
+  .score-display.great { background: rgba(76,175,80,.2); border: 1px solid #4CAF50; color: #81C784; }
+  .score-display.good { background: rgba(255,179,71,.15); border: 1px solid var(--ember); color: var(--ember); }
+  .score-display.low { background: rgba(239,83,80,.15); border: 1px solid #EF5350; color: #EF9A9A; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 28px;
+    font-size: 13px;
+    color: #666;
+    border-top: 1px solid #333;
+  }
+  footer span { color: var(--fire); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar { height: 4px; background: #333; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--fire), var(--gold)); transition: width .4s; }
+
+  @media (max-width: 600px) {
+    .lesson-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .panel { padding: 18px 16px; }
+    .lessons-nav { gap: 6px; }
+    .nav-pill { font-size: 11px; padding: 4px 9px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-flame">🔥</div>
+  <div class="hero-badge">CGBVP — DIGEFA</div>
+  <h1>Curso de Formación <span>Básica de Bomberos</span></h1>
+  <p>Resúmenes didácticos y evaluaciones interactivas — Módulo III · Lecciones 22 al 32</p>
+</div>
+
+<!-- NAV -->
+<nav class="lessons-nav" id="mainNav">
+  <button class="nav-pill active" onclick="showLesson('all', this)">Todas</button>
+  <button class="nav-pill" onclick="showLesson('l22', this)">L22 Edificios</button>
+  <button class="nav-pill" onclick="showLesson('l23', this)">L23 Sótanos</button>
+  <button class="nav-pill" onclick="showLesson('l24', this)">L24 Vehículos</button>
+  <button class="nav-pill" onclick="showLesson('l25', this)">L25 Líquidos</button>
+  <button class="nav-pill" onclick="showLesson('l26', this)">L26 Gases</button>
+  <button class="nav-pill" onclick="showLesson('l27', this)">L27 Espumas</button>
+  <button class="nav-pill" onclick="showLesson('l28', this)">L28 Investigación</button>
+  <button class="nav-pill" onclick="showLesson('l29', this)">L29 Rescate Inc.</button>
+  <button class="nav-pill" onclick="showLesson('l30', this)">L30 Ascensores</button>
+  <button class="nav-pill" onclick="showLesson('l31', this)">L31 Cuerdas</button>
+  <button class="nav-pill" onclick="showLesson('l32', this)">L32 APH</button>
+</nav>
+
+<div class="container" id="lessonContainer">
+
+<!-- ════════════════ LECCIÓN 22 ════════════════ -->
+<div class="lesson-card visible" id="l22">
+  <div class="lesson-header">
+    <div class="lesson-number">22</div>
+    <div class="lesson-title-block">
+      <h2>🏢 Incendio en Edificios</h2>
+      <p>Módulo III · 3 horas · Incendios en estructuras elevadas</p>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog22"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l22','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l22','quiz',this)">📝 Evaluación</button>
+  </div>
+
+  <div class="panel summary active" id="l22-summary">
+    <h3>¿Qué es un incendio en estructuras elevadas?</h3>
+    <p>Son aquellos incendios que se desarrollan en edificios de <strong>más de 4 pisos</strong>. Representan uno de los mayores desafíos para los bomberos, ya que combinan dificultades de acceso, evacuación masiva, propagación vertical del humo y riesgo de colapso estructural.</p>
+
+    <h3>Tipos de edificación</h3>
+    <p>Existen diversas categorías: edificios de estacionamientos, de oficinas, de uso mixto, de uso público, viviendas unifamiliares, bifamiliares, multifamiliares, quintas y tiendas. Cada tipo presenta características particulares de carga de fuego y riesgo de evacuación.</p>
+
+    <h3>Elementos a considerar en el incendio</h3>
+    <ul>
+      <li><strong>Dificultad de acceso:</strong> la altura dificulta el posicionamiento de escalas y equipos.</li>
+      <li><strong>Tiempo de evacuación:</strong> las grandes cantidades de personas requieren más tiempo para salir.</li>
+      <li><strong>Transferencia de calor:</strong> el calor y el humo ascienden por escaleras, ductos y ascensores, expandiéndose a pisos superiores.</li>
+    </ul>
+
+    <h3>Problemas operativos para los bomberos</h3>
+    <ul>
+      <li>El personal debe ascender con EPP completo y EPRA, además del material de combate.</li>
+      <li>La gran cantidad de personas dificulta las maniobras.</li>
+      <li>Las dimensiones del edificio y la carga de fuego aumentan la complejidad.</li>
+      <li>Los sistemas de extinción pueden estar inoperativos o ausentes.</li>
+      <li>La propagación del fuego a pisos adyacentes es rápida.</li>
+    </ul>
+
+    <h3>Pasos para el control del incendio</h3>
+    <div class="highlight-box">⚡ Solicitar información en ruta, movilizar mínimo 2 autobombas + 1 escala + 1 rescate + 1 médica. Evaluar 360°, establecer PC, usar ascensores sólo hasta 2 pisos bajo el fuego, tender líneas de 3" o 2½" por las escaleras.</div>
+    <ul>
+      <li>Posicionar la 1ª autobomba más allá de la zona de colapso y conectarse al hidrante o siamesa.</li>
+      <li>La 2ª autobomba abastece a la primera.</li>
+      <li>Tender línea de 3" por escaleras y bifurcar en dos de 1¾" con pitón de 125 GPM.</li>
+      <li>El PC se instala en la esquina, al frente, fuera de la zona de colapso.</li>
+      <li>Usar EPP y EPRA completo; trabajar siempre en parejas.</li>
+      <li>Evacuar por escaleras internas, usando unidades aéreas para ventilación y rescate.</li>
+    </ul>
+
+    <h3>Tipos de ataque</h3>
+    <p><strong>Ataque externo:</strong> se usa con monitores y unidades aéreas para sofocar el fuego y proteger edificios aledaños. <strong>Ataque interno:</strong> se realiza con la red existente previa verificación, usando EPRA obligatoriamente y sólo si el edificio no presenta peligro para el personal.</p>
+
+    <h3>Ascensores en incendios</h3>
+    <p>El ascensor puede ser un medio eficaz para transportar bomberos (ahorra el enorme desgaste de subir escaleras), pero es extremadamente peligroso: las altas temperaturas funden los circuitos y convierten el piso del incendio en el destino de todos los ascensores. Sólo se usa hasta 2 pisos por debajo del fuego.</p>
+  </div>
+
+  <div class="panel" id="l22-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas. Cuando termines, presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l22-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l22')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l22')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l22-score"></div>
+  </div>
+</div>
+
+<!-- ════════════════ LECCIÓN 23 ════════════════ -->
+<div class="lesson-card visible" id="l23">
+  <div class="lesson-header">
+    <div class="lesson-number">23</div>
+    <div class="lesson-title-block">
+      <h2>🏚️ Incendios en Sótanos</h2>
+      <p>Módulo III · 3 horas · Espacios subterráneos</p>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog23"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l23','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l23','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l23-summary">
+    <h3>Definición de Sótano</h3>
+    <p>Parte de una edificación cuya superficie superior del techo se encuentra hasta <strong>0.50 m por encima del nivel de la vereda</strong>. Los sótanos modernos pueden albergar estacionamientos, viviendas, oficinas, laboratorios, depósitos, discotecas o equipos técnicos.</p>
+
+    <h3>Tipos de sótanos</h3>
+    <ul>
+      <li><strong>Estacionamiento:</strong> parqueo de vehículos, puede incluir almacenamiento.</li>
+      <li><strong>Habitacional:</strong> espacio habitable subterráneo.</li>
+      <li><strong>Técnico:</strong> equipos de climatización, calderas, instalaciones eléctricas.</li>
+      <li><strong>Depósito:</strong> almacenamiento de bienes y materiales.</li>
+      <li><strong>Laboratorio:</strong> materiales y equipos de radiación.</li>
+      <li><strong>Oficinas y Discotecas:</strong> uso comercial o de entretenimiento.</li>
+    </ul>
+
+    <h3>Características del incendio en sótanos</h3>
+    <ul>
+      <li>Producción masiva de humo difícil de ventilar.</li>
+      <li>Temperaturas elevadas que se desplazan por las escasas aberturas.</li>
+      <li>Dificultad para localizar víctimas hasta que se disipe el humo.</li>
+      <li>Obstáculos (vehículos) que dificultan el desplazamiento.</li>
+      <li>Lentitud en la extinción: primero hay que localizar el fuego.</li>
+      <li>Alta fatiga y estrés en los bomberos; necesidad de relevos rápidos.</li>
+    </ul>
+
+    <h3>Situación del incendio</h3>
+    <p>En la fase inicial el fuego se desarrolla intensamente con suficiente aire. Conforme progresa, el suministro de aire disminuye, la concentración de humo aumenta y la presión de los productos de combustión sube. El humo penetra por ductos y grietas hasta los pisos superiores.</p>
+
+    <h3>Pasos para la extinción</h3>
+    <div class="highlight-box">🚒 Mínimo: 2 autobombas + 1 rescate + 1 médica. ¡NUNCA usar ascensores en sótanos! Acceder siempre por escaleras o rampas.</div>
+    <ul>
+      <li>Solicitar información en ruta; corroborar al llegar al lugar.</li>
+      <li>Tender línea de 3" o 2½" por las escaleras; bifurcar en dos de 1¾".</li>
+      <li>PC en la esquina de la fachada, fuera de zona de explosiones.</li>
+      <li>Evaluación 360° y reporte constante al CGBVP.</li>
+      <li>EPP y EPRA completo; trabajar en parejas mínimo.</li>
+      <li>Ventilar/extraer humo para bajar temperatura y elevar el plano neutral.</li>
+      <li>Principio clave: "si no hay vidas creíblemente salvables, no arriesgar vidas de bomberos".</li>
+    </ul>
+
+    <h3>Prevención de incendios en sótanos</h3>
+    <ul>
+      <li>Verificar periódicamente el estado de cables y cajas eléctricas.</li>
+      <li>Instalar ventanas o ductos de ventilación y liberación de humo.</li>
+      <li>No elevar la carga combustible; colocar detectores de humo.</li>
+      <li>Tener un extintor disponible y no usar el sótano como depósito de materiales inflamables.</li>
+    </ul>
+  </div>
+  <div class="panel" id="l23-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas. Cuando termines, presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l23-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l23')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l23')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l23-score"></div>
+  </div>
+</div>
+
+<!-- ════════════════ LECCIÓN 24 ════════════════ -->
+<div class="lesson-card visible" id="l24">
+  <div class="lesson-header">
+    <div class="lesson-number">24</div>
+    <div class="lesson-title-block">
+      <h2>🚗 Incendios en Vehículos</h2>
+      <p>Módulo III · 3 horas · Vehículos térmicos, híbridos y eléctricos</p>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog24"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l24','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l24','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l24-summary">
+    <h3>Introducción y riesgos</h3>
+    <p>Los incendios vehiculares representan alta probabilidad de muerte para sus ocupantes. Las causas principales son fallas mecánicas/eléctricas, mantenimiento deficiente y ensamblaje informal. Los gases tóxicos producidos (CO₂, CO, HCN, HCl) obligan al uso obligatorio del EPRA.</p>
+
+    <h3>Peligros asociados</h3>
+    <ul>
+      <li>Gasolina, GLP, GNV, Diesel: líquidos y gases inflamables.</li>
+      <li>Baterías de litio: emiten litio metálico, fluoruro de hidrógeno, cianuro de hidrógeno.</li>
+      <li>Air Bags: contienen nitruro y nitrato de sodio.</li>
+      <li>Neumáticos, tapicería, plásticos, piezas de magnesio.</li>
+    </ul>
+
+    <h3>Seguridad de la escena y segregación vial</h3>
+    <p>Al llegar, se establece una zona de seguridad. Se colocan conos cada 5 m desde 100 m de distancia. La máquina se posiciona a 30 m del vehículo, a favor del viento y nunca aguas abajo. Se usan luces de emergencia y la flecha indicando el carril habilitado.</p>
+
+    <h3>BLEVE en vehículos</h3>
+    <div class="highlight-box">⚠️ BLEVE: Boiling Liquid Expanding Vapor Explosion. Se produce en 5 fases: fuego en recipiente → activación válvula de alivio → cambio de coloración → fisura → inflamación del vapor en expansión.</div>
+
+    <h3>Vehículos eléctricos e híbridos</h3>
+    <ul>
+      <li>Pueden alcanzar 650 V de corriente continua; cableado naranja de alta tensión.</li>
+      <li>Desconexión: apagar el motor, retirar el fusible principal o quitar la llave.</li>
+      <li>Usar guantes aislantes de 1000 V; esperar 10 min para descarga de capacitores.</li>
+      <li>El sistema de alto voltaje puede permanecer energizado hasta 10 minutos tras apagarse.</li>
+      <li>Los bastones detectores de bomberos solo detectan corriente alterna, NO continua.</li>
+    </ul>
+
+    <h3>Tipos de ataque</h3>
+    <ul>
+      <li><strong>Defensivo:</strong> acércate a 45° del eje longitudinal; zona caliente mínima 15 m.</li>
+      <li><strong>Relámpago:</strong> descarga inmediata de alto flujo exterior.</li>
+      <li><strong>De transición:</strong> 15-30 s de chorro externo seguido de ataque interior.</li>
+      <li><strong>Ofensivo:</strong> control rápido desde distancia segura, a favor del viento.</li>
+    </ul>
+
+    <h3>Espuma y reignición</h3>
+    <p>La espuma separa las llamas del combustible, suprime vapores y enfría. Para baterías de litio: el fuego puede reiniciarse hasta 22 horas después; el agua aplicada no llega al núcleo, sólo genera vapor superficial. Lo mejor es retirar los materiales combustibles cercanos y dejar que se consuma completamente.</p>
+  </div>
+  <div class="panel" id="l24-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas. Cuando termines, presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l24-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l24')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l24')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l24-score"></div>
+  </div>
+</div>
+
+<!-- ════════════════ LECCIÓN 25 ════════════════ -->
+<div class="lesson-card visible" id="l25">
+  <div class="lesson-header">
+    <div class="lesson-number">25</div>
+    <div class="lesson-title-block">
+      <h2>🛢️ Incendios en Líquidos Inflamables y Combustibles</h2>
+      <p>Módulo III · 3 horas · Hidrocarburos y tanques</p>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog25"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l25','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l25','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l25-summary">
+    <h3>Hidrocarburos</h3>
+    <p>Son compuestos de carbono e hidrógeno. Se clasifican en <strong>alifáticos</strong> (alcanos, alquenos, alquinos con enlaces simples, dobles y triples) y <strong>aromáticos</strong> (estructuras cíclicas con dobles enlaces resonantes, como el benceno C₆H₆). Del petróleo crudo se obtienen lubricantes, diésel y gasolina por destilación fraccionada.</p>
+
+    <h3>Clasificación NFPA 30</h3>
+    <ul>
+      <li><strong>Inflamables (PI &lt; 37.8°C):</strong> Clase IA (PI &lt; 22.8°C, PE &lt; 37.8°C), IB (PI &lt; 22.8°C, PE ≥ 37.8°C), IC (PI ≥ 22.8°C y &lt; 37.8°C).</li>
+      <li><strong>Combustibles (PI ≥ 37.8°C):</strong> Clase II, IIa y IIb.</li>
+      <li>Gasolina: PI ≈ -4°C (inflamable). Diésel DB-5: PI ≈ 49°C (combustible).</li>
+    </ul>
+
+    <h3>Tipos de tanques</h3>
+    <ul>
+      <li><strong>Techo flotante:</strong> el techo flota sobre el líquido eliminando vapores; para líquidos inflamables.</li>
+      <li><strong>Techo fijo:</strong> opera con espacio de vapores; para líquidos combustibles. El techo se une con soldaduras débiles que actúan como fusibles en explosión.</li>
+      <li><strong>Térmicos:</strong> mantienen temperatura para líquidos de alta viscosidad.</li>
+    </ul>
+
+    <h3>Fenómenos en incendios de tanques</h3>
+    <div class="highlight-box">⚠️ Los 3 fenómenos requieren: incendio total con voladur del techo + presencia de agua en estratos o fondo + desarrollo de onda de calor.</div>
+    <ul>
+      <li><strong>Boilover:</strong> la onda de calor (200-300°C) desciende ~1 m/h y contacta el agua del fondo; esta se expande 1:1700 y lanza combustible encendido a más de 30 m de altura. Temperatura hasta 1200°C.</li>
+      <li><strong>Slopover:</strong> rebosamiento superficial previo al Boilover al contactar emulsiones de agua en capas intermedias. De menor magnitud.</li>
+      <li><strong>Frothover:</strong> rebosamiento espumoso en aceites minerales viscosos calientes sobre agua fría; no necesariamente incendiado.</li>
+    </ul>
+
+    <h3>Control y extinción</h3>
+    <ul>
+      <li>Aislar el equipo: cerrar válvulas, parar bombas, cortar alimentación.</li>
+      <li>Eliminar suministro de combustible; enfriar equipo adyacente con agua.</li>
+      <li>Extinción por sofocación con espuma (crea manta continua) o eliminación de calor con agua nebulizada.</li>
+      <li>Cuidado: el agua en exceso puede rebalsar recipientes y expandir el incendio.</li>
+    </ul>
+  </div>
+  <div class="panel" id="l25-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas. Cuando termines, presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l25-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l25')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l25')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l25-score"></div>
+  </div>
+</div>
+
+<!-- ════════════════ LECCIÓN 26 ════════════════ -->
+<div class="lesson-card visible" id="l26">
+  <div class="lesson-header">
+    <div class="lesson-number">26</div>
+    <div class="lesson-title-block">
+      <h2>💨 Fugas e Incendios en Gases Inflamables</h2>
+      <p>Módulo III · 3 horas · GLP, GN, Acetileno y BLEVE</p>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog26"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l26','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l26','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l26-summary">
+    <h3>GLP (Gas Licuado de Petróleo)</h3>
+    <ul>
+      <li>Más denso que el aire: Propano 1.5x, Butano 2x. Se acumula en zonas bajas.</li>
+      <li>1 volumen líquido = 270 volúmenes de gas. Incoloro, pero la fuga se ve blanca por condensación.</li>
+      <li>No tóxico, pero anestésico en grandes concentraciones.</li>
+      <li>Temperatura de ignición: Propano 493°C, Butano 482°C.</li>
+      <li>Odorizado con Etil Mercaptano (detectable al 1% en aire).</li>
+    </ul>
+
+    <h3>Gas Natural (GN / GNV)</h3>
+    <ul>
+      <li>Componente principal: metano (mínimo 90%).</li>
+      <li>Más liviano que el aire (densidad 0.55-0.65); se disipa hacia arriba.</li>
+      <li>Temperatura de ebullición: -161°C. LEL 5%, UEL 15%.</li>
+      <li>Incoloro, sin olor; odorizado con Etil Mercaptano. Tanques a 200 bar.</li>
+    </ul>
+
+    <h3>Acetileno</h3>
+    <ul>
+      <li>Inestable a presiones > 2 bar. LEL 2.8%, UEL 93% (muy amplio rango).</li>
+      <li>A temperaturas > 54°C, se descompone en H₂ y C, pudiendo explotar.</li>
+      <li>Cilindros con masa porosa + acetona; válvulas fusibles a ~100°C.</li>
+      <li>Emergencia: enfriar con agua abundante, sumergir 24h si el calor no baja.</li>
+    </ul>
+
+    <h3>Operaciones en fugas de GLP</h3>
+    <div class="highlight-box">🚨 Usar EPRA · Evacuar · Eliminar fuentes de ignición · Ventilar · No tocar interruptores · Cortar fluido eléctrico desde la caja principal exterior · Nunca atravesar la nube de gas sin cortina de agua.</div>
+
+    <h3>Fenómenos físicos de incendio y explosión</h3>
+    <ul>
+      <li><strong>Fire Ball:</strong> inflamación inmediata de nube en espacio abierto; radiación intensa, corta duración.</li>
+      <li><strong>Jet Fire:</strong> fuga presurizada en llama de soplete; riesgo para instalaciones aledañas.</li>
+      <li><strong>CVCE:</strong> explosión de nube confinada; onda destructiva y proyección de fragmentos.</li>
+      <li><strong>UVCE:</strong> ignición diferida de nube no confinada; puede ser deflagración (subsónica) o detonación (supersónica).</li>
+      <li><strong>BLEVE:</strong> expansión explosiva del vapor de líquido en ebullición. Causa bola de fuego enorme, fragmentos hasta 800 m y onda de choque.</li>
+    </ul>
+
+    <h3>Combate de incendios en recipientes a presión</h3>
+    <p>La zona de vapores (parte superior del recipiente) es la más peligrosa: es mala disipadora del calor y es donde ocurre el colapso estructural. El agua debe aplicarse principalmente en la parte superior del recipiente para enfriar integralmente. Los gases criogénicos son excepción: el agua les da calor y aumenta la presión.</p>
+  </div>
+  <div class="panel" id="l26-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas. Cuando termines, presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l26-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l26')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l26')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l26-score"></div>
+  </div>
+</div>
+
+<!-- ════════════════ LECCIÓN 27 ════════════════ -->
+<div class="lesson-card visible" id="l27">
+  <div class="lesson-header">
+    <div class="lesson-number">27</div>
+    <div class="lesson-title-block">
+      <h2>🫧 Concentrados y Espumas Contra Incendio</h2>
+      <p>Módulo III · 3 horas · AFFF, AR-AFFF y tipos de espuma</p>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog27"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l27','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l27','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l27-summary">
+    <h3>¿Qué es la espuma contra incendios?</h3>
+    <p>Masa estable de pequeñas burbujas que cubre la superficie del líquido combustible para aislarla del aire e impedir la salida de vapores inflamables.</p>
+
+    <h3>Tetraedro de la espuma</h3>
+    <p>Para producir espuma se necesitan 4 elementos en proporciones correctas: <strong>Concentrado de espuma + Agua + Aire (gas) + Agitación mecánica</strong>. La ausencia de cualquiera de ellos impide la formación de espuma de calidad.</p>
+
+    <h3>Acción extintora</h3>
+    <ul>
+      <li><strong>Separación:</strong> barrera entre combustible y fuego.</li>
+      <li><strong>Enfriamiento:</strong> reduce temperatura del combustible y superficies.</li>
+      <li><strong>Supresión:</strong> evita la liberación de vapores inflamables.</li>
+      <li><strong>Sofocación:</strong> impide la mezcla de vapores con el O₂ del aire.</li>
+    </ul>
+
+    <h3>Expansión de la espuma (NFPA 11)</h3>
+    <ul>
+      <li><strong>Baja expansión:</strong> hasta 1:20</li>
+      <li><strong>Media expansión:</strong> 1:20 a 1:200</li>
+      <li><strong>Alta expansión:</strong> 1:200 a 1:1000</li>
+    </ul>
+
+    <h3>Métodos de dosificación</h3>
+    <ul>
+      <li><strong>Inducción (efecto Venturi):</strong> succión del concentrado por la velocidad del flujo.</li>
+      <li><strong>Inyección:</strong> bomba externa empuja el concentrado al chorro.</li>
+      <li><strong>Pre-mezcla:</strong> mezcla premedida en contenedor; para extintores portátiles.</li>
+    </ul>
+
+    <h3>Clasificación por combustible</h3>
+    <p><strong>Clase A:</strong> para combustibles sólidos. Reduce tensión superficial del agua permitiendo penetración. Aumenta 5 veces la capacidad extintora. <strong>Clase B:</strong> para hidrocarburos (petróleo, gasolina, diésel) y solventes polares (alcoholes, acetona). Los solventes polares destruyen la espuma estándar; se requiere AR-AFFF.</p>
+
+    <h3>Tipos principales de espuma</h3>
+    <ul>
+      <li><strong>Proteicas:</strong> Proteica normal, Fluorproteica (FP), FFFP, AR-FFFP. Alta resistencia al calor.</li>
+      <li><strong>Sintéticas:</strong> Alta expansión, AFFF, AR-AFFF. Excelente velocidad de extinción.</li>
+    </ul>
+    <div class="highlight-box">⚠️ Incompatibilidad crítica: las espumas Clase A NO extinguen incendios Clase B. Las espumas Clase B estándar NO funcionan en solventes polares. Identificar el combustible antes de aplicar espuma.</div>
+
+    <h3>Propiedades de la espuma</h3>
+    <p>Velocidad de extinción, resistencia al calor, supresión de vapores, tolerancia al combustible, densidad (flota sobre el combustible) y resistencia al alcohol (sólo AR-AFFF).</p>
+  </div>
+  <div class="panel" id="l27-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas. Cuando termines, presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l27-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l27')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l27')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l27-score"></div>
+  </div>
+</div>
+
+<!-- ════════════════ LECCIÓN 28 ════════════════ -->
+<div class="lesson-card visible" id="l28">
+  <div class="lesson-header">
+    <div class="lesson-number">28</div>
+    <div class="lesson-title-block">
+      <h2>🔍 Investigación de Incendios</h2>
+      <p>Módulo III · 3 horas · Primeros respondedores e investigación científica</p>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog28"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l28','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l28','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l28-summary">
+    <h3>Base legal</h3>
+    <p>El DL N°1260 y el RIF del CGBVP obligan a realizar estudios sobre causas y desarrollo de incendios. La Dirección de Prevención e Investigación (DIPREIN) es el órgano competente. Los primeros respondedores son piezas clave para los investigadores.</p>
+
+    <h3>Finalidad del primer respondedor</h3>
+    <ul>
+      <li>Contribuir a la investigación preservando la escena durante la extinción.</li>
+      <li>Proteger la evidencia de la causa del incendio.</li>
+      <li>Recolectar datos objetivos para entregarlos a DIPREIN.</li>
+    </ul>
+    <div class="highlight-box">📖 NFPA 921: "Los bomberos son responsables de la conservación de las pruebas."</div>
+
+    <h3>Actividades del primer respondedor</h3>
+    <ul>
+      <li>Cumplir protocolos de seguridad en la escena.</li>
+      <li>Evaluar técnica y científicamente la dinámica del incendio.</li>
+      <li>Actuar objetivamente para obtener datos como la "trayectoria del flujo" (Flow Path).</li>
+      <li>Desarrollar metas estratégicas y objetivos tácticos desde el PC.</li>
+    </ul>
+
+    <h3>Alcance del primer respondedor</h3>
+    <p>No está autorizado a levantar pruebas, fijar indicios, detener personas ni tomar declaraciones. Debe facilitar toda información al jefe de investigación, pues es el mejor testigo disponible.</p>
+
+    <h3>Criterios de observación (NFPA 921)</h3>
+    <ul>
+      <li><strong>Fuego:</strong> comportamiento, tamaño/color de llamas, explosiones, olores, flujo.</li>
+      <li><strong>Personas:</strong> testigos, propietarios, comportamiento sospechoso en la multitud.</li>
+      <li><strong>Tácticas y acceso:</strong> estado de puertas, ventanas, techos al llegar.</li>
+      <li><strong>Condiciones anómalas:</strong> vehículos cercanos, signos de vandalismo.</li>
+    </ul>
+
+    <h3>Acciones de preservación de la escena</h3>
+    <ul>
+      <li>Usar técnicas de supresión no destructivas (evitar el "efecto pitonazo" en paredes con marcas).</li>
+      <li>Evitar ventilaciones innecesarias; destruir y/o derribar lo mínimo posible.</li>
+      <li>Mover objetos lo menos posible; tener cuidado especial con cuerpos.</li>
+      <li>Usar solo el agua necesaria; no inundar.</li>
+      <li>Documentar: fotos, videos, planos, notas, nombres de testigos.</li>
+      <li>Designar un solo punto de ingreso/salida; limitar acceso al personal esencial.</li>
+    </ul>
+  </div>
+  <div class="panel" id="l28-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas. Cuando termines, presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l28-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l28')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l28')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l28-score"></div>
+  </div>
+</div>
+
+<!-- ════════════════ LECCIÓN 29 ════════════════ -->
+<div class="lesson-card visible" id="l29">
+  <div class="lesson-header">
+    <div class="lesson-number">29</div>
+    <div class="lesson-title-block">
+      <h2>🧑‍🚒 Rescate en Incendios</h2>
+      <p>Módulo III · 3 horas · Búsqueda, rescate y MAYDAY</p>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog29"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l29','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l29','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l29-summary">
+    <h3>Definición</h3>
+    <p>El Rescate en Incendios es el conjunto de acciones planificadas y seguras para localizar, acceder, estabilizar y evacuar a personas o bomberos atrapados dentro de una estructura afectada por un incendio, combinando técnicas de búsqueda, supervivencia individual y rescate asistido.</p>
+
+    <h3>Prioridades tácticas</h3>
+    <ul>
+      <li><strong>1° Búsqueda y Rescate:</strong> entrar, buscar, ubicar y extraer víctimas.</li>
+      <li><strong>2° Control del incendio:</strong> protección, confinamiento y extinción.</li>
+      <li><strong>3° Conservación de la propiedad:</strong> reducir daños sin exponer vidas.</li>
+    </ul>
+
+    <h3>Búsqueda Primaria</h3>
+    <p>Se realiza de forma rápida antes/durante el ataque ofensivo. Se revisan: puertas, ventanas, zonas de origen del fuego, pasillos, escaleras y dormitorios (de noche). Se hacen llamados en voz alta: <em>"¡Somos los bomberos! ¿Hay alguien aquí?"</em> y se pausa a escuchar. No ingresar si no es probable encontrar sobrevivientes.</p>
+
+    <h3>Búsqueda Secundaria</h3>
+    <p>Revisión minuciosa una vez controlado el incendio. Debe realizarla un equipo diferente al de la búsqueda primaria. Se mueve todo el mobiliario. En la mayoría de casos no se encontrarán personas con vida.</p>
+
+    <h3>Principio 2-IN / 2-OUT (NFPA 1500 y OSHA)</h3>
+    <div class="highlight-box">👥 Mínimo 4 integrantes: 2 trabajando en el área peligrosa y 2 fuera disponibles para asistir o rescatar. Comunicación constante: radio, visual, físico y cuerda guía.</div>
+
+    <h3>Herramientas de búsqueda</h3>
+    <ul>
+      <li><strong>Cuerda guía:</strong> mínimo 30 m, diámetro ½ pulg. Para orientación en baja visibilidad.</li>
+      <li><strong>Línea de vida:</strong> 3-4 m, permite alejarse de la cuerda guía con mayor radio de acción.</li>
+      <li><strong>Cinta webbing:</strong> para extracción de víctimas.</li>
+      <li><strong>PASS device:</strong> encendido y funcional antes de ingresar.</li>
+    </ul>
+
+    <h3>Gestión personal del aire (EPRA)</h3>
+    <ul>
+      <li>Regla de los medios: ½ para ingreso/trabajo, ½ para salida y emergencia.</li>
+      <li>Salir ANTES de que suene la alarma de aire bajo (esta indica que se consume el aire de emergencia).</li>
+      <li>El tiempo real varía según condición física y nivel de esfuerzo del bombero.</li>
+    </ul>
+
+    <h3>Posición de búsqueda de 3 puntos</h3>
+    <p>Técnica de avance en ambientes con humo denso: una pierna extendida adelante y otra doblada bajo el cuerpo (combinación de caminata de pato y rodillas). Permite mantener el cuerpo más vertical para observar condiciones y detectar obstáculos, mejor que gatear completamente.</p>
+  </div>
+  <div class="panel" id="l29-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas. Cuando termines, presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l29-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l29')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l29')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l29-score"></div>
+  </div>
+</div>
+
+<!-- ════════════════ LECCIÓN 30 ════════════════ -->
+<div class="lesson-card visible" id="l30">
+  <div class="lesson-header">
+    <div class="lesson-number">30</div>
+    <div class="lesson-title-block">
+      <h2>🛗 Rescate en Ascensores</h2>
+      <p>Módulo III · 3 horas · Tipos, partes y maniobras de rescate</p>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog30"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l30','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l30','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l30-summary">
+    <h3>¿Qué es un ascensor?</h3>
+    <p>Del latín "ascendere". Según el RNE del Perú, los edificios de <strong>5 pisos o más deben tener ascensores</strong>. Las emergencias generalmente no son por eventos naturales sino por falta o mal mantenimiento.</p>
+
+    <h3>Tipos por sistema de funcionamiento</h3>
+    <ul>
+      <li><strong>Eléctricos:</strong> motor + sistema de tracción por cables de acero o fajas sobre polea motriz. Con engranajes (0.1-1.75 m/s) o sin engranajes (2-10 m/s para edificios altos).</li>
+      <li><strong>Hidráulicos:</strong> bomba impulsa fluido al pistón. Velocidad hasta 1.75 m/s. Se usan donde se necesita control de ruido. Tipos: directa 1:1, directa lateral, diferencial 2:1, doble impulsión.</li>
+    </ul>
+
+    <h3>Tipos por uso</h3>
+    <p>Panorámico (paredes de vidrio), Convencional, Para minusválidos, Montacamillas (carga mínima 1000 kg, puerta mínima 1100 mm), Montacargas (para carga y personal de servicio).</p>
+
+    <h3>Partes principales</h3>
+    <ul>
+      <li><strong>Cuarto de máquinas:</strong> motor-reductor, polea de tracción, volante (para maniobra de rescate manual), freno, limitador de velocidad, cuadro de maniobras.</li>
+      <li><strong>Ducto:</strong> cabina, puertas de acceso (6 tipos), guías, contrapeso (peso cabina + 45%), cables de tracción.</li>
+      <li><strong>Foso:</strong> parte inferior del ducto; debe quedar libre ≥0.5 m bajo la cabina.</li>
+    </ul>
+
+    <h3>Medidas de seguridad en rescate</h3>
+    <div class="highlight-box">⚡ SIEMPRE cortar el suministro eléctrico antes de cualquier maniobra en el cuarto de máquinas, ducto o foso. Bloquear el interruptor para evitar rearme involuntario.</div>
+    <ul>
+      <li>Comprobar la posición de la cabina desde la planta más baja.</li>
+      <li>Consultar al propietario la ubicación del servicio técnico.</li>
+      <li>Si el ascensor funciona normalmente: rearmar el interruptor y llamarlo desde el nivel de rescate.</li>
+      <li>El contrapeso determina si la cabina tiende a subir o bajar: si hay más personas de lo esperado, la cabina bajará.</li>
+    </ul>
+
+    <h3>Pulsador de bomberos</h3>
+    <p>Al romper el cristal: el ascensor que sube se detiene en el siguiente piso sin abrir puertas. El que baja continúa hasta la planta principal. Luego sólo obedece llamadas interiores, anulando las exteriores.</p>
+  </div>
+  <div class="panel" id="l30-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas. Cuando termines, presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l30-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l30')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l30')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l30-score"></div>
+  </div>
+</div>
+
+<!-- ════════════════ LECCIÓN 31 ════════════════ -->
+<div class="lesson-card visible" id="l31">
+  <div class="lesson-header">
+    <div class="lesson-number">31</div>
+    <div class="lesson-title-block">
+      <h2>🪢 Sistemas de Rescate con Cuerdas</h2>
+      <p>Módulo III · 3 horas · Física, anclajes, vientos y ventaja mecánica</p>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog31"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l31','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l31','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l31-summary">
+    <h3>Principios de física</h3>
+    <p><strong>Poleas:</strong> Fija (cambia dirección, no reduce esfuerzo), Móvil (reduce el esfuerzo), Compuestas (combinación). Sistema 2:1 → mitad del esfuerzo; sistema 4:1 → cuarta parte del esfuerzo.</p>
+    <p><strong>Factor de Caída (FC):</strong> FC = Distancia de caída / Longitud de cuerda entre rescatista y anclaje. FC=0 (sin caída libre), FC=1 (caída = longitud cuerda), FC=2 (máximo peligro). A mayor FC, mayor riesgo de rotura.</p>
+    <p><strong>Fuerza de choque:</strong> la energía cinética de la caída se transfiere al sistema. No debe superar 6 kN en el rescatista. Los absorbedores de impacto son obligatorios.</p>
+
+    <h3>Distancia de seguridad</h3>
+    <p>Debe contemplar: longitud del elemento de amarre (A) + longitud de desgarro del absorbedor (B) + altura media del usuario (C) + margen de seguridad (D) + elasticidad de la cuerda (E).</p>
+
+    <h3>Tipos de anclajes</h3>
+    <ul>
+      <li><strong>Humano:</strong> solo para emergencias y descensos; el rescatista actúa como contrapeso. Distancia descendedor-apoyo > 20 cm.</li>
+      <li><strong>Estructural:</strong> columnas, vigas, muros, escaleras metálicas, barandas. Deben soportar ≥15 kN (1500 kgf).</li>
+      <li><strong>En equipos móviles:</strong> vehículos de rescate, grúas, retroexcavadoras. Requieren freno de mano + cuñas; fuerza perpendicular al eje del vehículo.</li>
+      <li><strong>Natural:</strong> árboles firmes, grandes piedras enterradas, grietas en rocas. Requiere mucha experiencia; probar varias veces antes de usar.</li>
+    </ul>
+    <div class="highlight-box">✅ Requisitos de todo anclaje: resistencia ≥15 kN, estabilidad, accesibilidad, soporte en la dirección correcta de carga. Inspeccionar: sin óxido, grietas ni deformaciones.</div>
+
+    <h3>Vientos (cuerdas auxiliares)</h3>
+    <p>Cuerdas auxiliares de menor diámetro (8-11 mm) para controlar el movimiento horizontal de una carga suspendida. Tipos: de dirección (fijo en la parte inferior), de estabilización (lateral, evita balanceo), de tracción/guía (posiciona la carga lateralmente). Su longitud debe permitir buen ángulo de trabajo desde el suelo.</p>
+
+    <h3>Ventaja Mecánica y Síndrome del Arnés</h3>
+    <p>Los sistemas de ventaja mecánica (VM) permiten mover cargas pesadas con menor esfuerzo. El <strong>Síndrome del Arnés</strong> ocurre cuando una persona queda suspendida por el arnés sin poder moverse: la sangre se acumula en las piernas y puede causar paro cardíaco en minutos. Tratamiento: rescate inmediato, posición horizontal, monitoreo médico.</p>
+  </div>
+  <div class="panel" id="l31-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas. Cuando termines, presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l31-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l31')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l31')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l31-score"></div>
+  </div>
+</div>
+
+<!-- ════════════════ LECCIÓN 32 ════════════════ -->
+<div class="lesson-card visible" id="l32">
+  <div class="lesson-header">
+    <div class="lesson-number">32</div>
+    <div class="lesson-title-block">
+      <h2>🏥 Atención Prehospitalaria I</h2>
+      <p>Módulo III · 3 horas · APH, Trauma y Triage START</p>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog32"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l32','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l32','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l32-summary">
+    <h3>Consideraciones de seguridad</h3>
+    <p>La evaluación de la escena es constante y comienza desde la recepción de la llamada. EPP APH: casco de rescate, lentes (no oscuros), mascarilla, guantes de examen (no negros), rodilleras.</p>
+
+    <h3>Maniobras para abrir vías aéreas</h3>
+    <ul>
+      <li><strong>EXCELM</strong> (Extensión de cabeza y elevación mandibular): para pacientes sin sospecha de trauma.</li>
+      <li><strong>EM</strong> (Empuje mandibular): para pacientes con trauma. La realiza el APH que fija la cabeza.</li>
+    </ul>
+
+    <h3>Evaluación inicial (6 pasos, máx. 1 minuto)</h3>
+    <ul>
+      <li><strong>Paso 1:</strong> Impresión general - GEPONLAS (Género, Edad, Posición, Nivel de respuesta, Lesiones, Agresivo potencial, Signos de shock).</li>
+      <li><strong>Paso 2:</strong> Nivel de respuesta - AVDI (Alerta, Verbal, Dolor, Inconsciente).</li>
+      <li><strong>Paso 3:</strong> Circulación - pulso carotídeo (hasta 10 segundos).</li>
+      <li><strong>Paso 4:</strong> Abrir vías aéreas (EXCELM o EM).</li>
+      <li><strong>Paso 5:</strong> Respiración - VOS (Ver movimiento torácico, Oír, Sentir). Máx. 10 segundos.</li>
+      <li><strong>Paso 6:</strong> Búsqueda y control de hemorragias / signos de shock.</li>
+    </ul>
+
+    <h3>Guía para trauma (4 APH)</h3>
+    <p>Kit de trauma: Férula Espinal Larga (FEL) + 3 correajes o araña + inmovilizadores cervical y laterales. Tiempo ideal: 8-10 minutos desde el contacto hasta la ambulancia.</p>
+    <div class="highlight-box">🚑 Traslado inmediato si: inconsciente, no alerta, dificultad respiratoria, hemorragia severa, shock, mal aspecto general, gestante, parto complicado, dolor de pecho severo.</div>
+
+    <h3>Triage START</h3>
+    <p>Simple Triage And Rapid Treatment. Creado por el Hospital Hoag y Bomberos de Newport Beach, CA. Clasifica por beneficio probable de la atención, no sólo por gravedad. Máx. 1 minuto por persona.</p>
+    <ul>
+      <li>🔴 <strong>Rojo (1ª prioridad):</strong> estado crítico pero salvable.</li>
+      <li>🟡 <strong>Amarillo (2ª prioridad):</strong> no puede movilizarse pero puede diferirse la atención.</li>
+      <li>🟢 <strong>Verde (3ª prioridad):</strong> puede desplazarse solo, lesiones leves.</li>
+      <li>⚫ <strong>Negro (sin prioridad):</strong> signos de muerte clínica.</li>
+    </ul>
+    <p><strong>4 criterios START:</strong> ¿Puede movilizarse? → Frecuencia respiratoria (R) → Perfusión/llenado capilar (P) → Nivel de respuesta mental (M). Solo se permiten 2 tratamientos durante el triage: abrir vías aéreas y controlar hemorragias.</p>
+  </div>
+  <div class="panel" id="l32-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas. Cuando termines, presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l32-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l32')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l32')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l32-score"></div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<footer>
+  <p>🔥 <span>CGBVP — DIGEFA</span> · Curso de Formación Básica de Bomberos 2026 · Material de apoyo didáctico</p>
+  <p style="margin-top:6px;">Lecciones 22–32 · Módulo III</p>
+</footer>
+
+<script>
+// ══════════════════════════════════════
+// QUIZ DATA
+// ══════════════════════════════════════
+const quizData = {
+  l22: [
+    { q:"¿A partir de cuántos pisos se considera un incendio en estructura elevada?", opts:["2 pisos","4 pisos","Más de 4 pisos","6 pisos"], a:2, fb:"Se considera incendio en estructura elevada aquel que se desarrolla en edificios de MÁS de 4 pisos." },
+    { q:"¿Cuántas unidades mínimas se deben movilizar a un incendio en edificio elevado?", opts:["1 autobomba y 1 escala","2 autobombas, 1 escala, 1 rescate y 1 médica","3 autobombas y 1 rescate","2 autobombas únicamente"], a:1, fb:"El mínimo es: 2 autobombas + 1 escala + 1 rescate + 1 médica." },
+    { q:"¿Hasta cuántos pisos por debajo del fuego se pueden usar los ascensores?", opts:["Al mismo nivel del fuego","1 piso por debajo","2 pisos por debajo","3 pisos por debajo"], a:2, fb:"Los ascensores se controlan con llave para bomberos hasta 2 pisos por debajo del fuego." },
+    { q:"¿Dónde se establece el Puesto de Comando (PC) en un incendio en edificio?", opts:["Dentro del edificio, frente al ascensor","En la azotea del edificio","En la esquina o costado de la fachada, en la acera del frente","En el piso inmediatamente superior al incendio"], a:2, fb:"El PC se establece en la esquina o al costado de la fachada, en la acera del frente para evitar la zona de colapso y tener mejor visión." },
+    { q:"¿Qué diámetro tiene la línea principal de manguera tendida por las escaleras del edificio?", opts:["1¾ pulgadas","2½ pulgadas o 3 pulgadas","4 pulgadas","½ pulgada"], a:1, fb:"Se tiende una línea de 3\" o 2½\" de diámetro por las escaleras, luego se bifurca en líneas de 1¾\"." },
+    { q:"¿Por qué razón es peligroso usar ascensores en un incendio?", opts:["Porque los ascensores son lentos","Porque las altas temperaturas pueden fundir los circuitos y enviar el ascensor al piso del incendio","Porque los bomberos no caben con su equipo","Porque está prohibido por reglamento"], a:1, fb:"Las altas temperaturas funden los circuitos y convierten el piso incendiado en el centro de llamadas para todos los ascensores." },
+    { q:"¿Cuál es el tipo de ataque que usa monitores y unidades aéreas para sofocar el incendio y proteger edificios aledaños?", opts:["Ataque interno","Ataque ofensivo de escalera","Ataque externo","Ataque de rescate"], a:2, fb:"El ataque externo tiene las funciones de sofocar el incendio y proteger las edificaciones aledañas usando monitores y unidades aéreas." },
+    { q:"¿Qué piso se ventila primero en un incendio en edificio?", opts:["El piso del incendio únicamente","El primer piso","El último piso del edificio (azotea) y el comprometido","Todos los pisos simultáneamente"], a:2, fb:"Se ventila el último piso (acceder con escala a la azotea), el comprometido y los inmediatamente superiores." },
+    { q:"¿Cuál es uno de los problemas principales para el bombero en la extinción de incendios en estructuras elevadas?", opts:["El exceso de equipos disponibles","El personal debe subir con EPP completo, EPRA y material de combate","La falta de acceso por autopistas","El exceso de ventilación"], a:1, fb:"El personal deberá subir con sus uniformes contra incendios y EPRA, adicional al material de combate." },
+    { q:"¿Qué edificio se destina exclusivamente al parqueo de vehículos?", opts:["Edificio de uso mixto","Edificio de oficinas","Edificio de estacionamientos","Vivienda colectiva"], a:2, fb:"El edificio de estacionamientos está destinado exclusivamente al parqueo de vehículos." },
+    { q:"¿Qué es la 'zona de colapso' en un incendio de edificio?", opts:["La zona donde se ubica el PC","El área bajo el edificio donde pueden caer escombros, objetos y explosiones","El piso del incendio","La azotea del edificio"], a:1, fb:"La zona de colapso es el área frente a la fachada del edificio donde pueden caer objetos, escombros o producirse explosiones." },
+    { q:"En el ataque interno, ¿cuándo puede el personal ingresar al edificio?", opts:["Siempre, independientemente del riesgo","Solo si el edificio no ofrece peligro al personal","Solo con autorización del alcalde","Solo de noche"], a:1, fb:"El ataque interno se realiza solo si el edificio no ofrece peligro al personal, trabajando con la red existente y usando EPRA." },
+    { q:"¿En qué modalidad se trabaja siempre en un incendio en edificio?", opts:["El bombero trabaja solo para mayor movilidad","En parejas como mínimo","En grupos de 10 o más","El bombero de mayor rango trabaja solo"], a:1, fb:"Las tareas se asignan por equipos de trabajo, mínimo en parejas." },
+    { q:"¿Qué información se solicita en ruta a la central de comunicaciones del CGBVP?", opts:["Solo el nombre del propietario del edificio","Uso del edificio, cantidad de pisos y cuáles están comprometidos","La dirección del hospital más cercano","El costo estimado del incendio"], a:1, fb:"Se solicita información sobre el uso del edificio, cantidad de pisos y cuáles están comprometidos." },
+    { q:"¿Qué es una 'vivienda multifamiliar'?", opts:["Una vivienda de un solo grupo familiar","Un edificio de dos o más unidades de vivienda que comparten bienes y acceso común","Una quinta con jardín","Un edificio exclusivo de oficinas"], a:1, fb:"Vivienda multifamiliar: edificación de 2 o más unidades de vivienda en un edificio con bienes y acceso común." },
+    { q:"¿Cuál es el riesgo de bajar líneas de manguera presurizadas desde pisos superiores?", opts:["Es el método más peligroso, nunca debe hacerse","Es más cómodo que subirlas, ya que la gravedad ayuda","Es imposible por el peso del agua","El agua se enfría y pierde presión"], a:1, fb:"Bajar líneas presurizadas es más cómodo que subirlas gracias a la gravedad; por eso se recomienda tenderlas desde pisos superiores cuando sea posible." },
+    { q:"¿Qué EPP debe usar el bombero en un incendio en edificio elevado?", opts:["Solo casco y guantes","Solo el traje de aproximación","EPP estructural completo incluyendo EPRA","Solo el EPRA sin traje"], a:2, fb:"Se debe usar protección personal estructural completa (EPP y EPRA) en todo momento." },
+    { q:"¿Cómo se realiza la evaluación de la escena al llegar a un incendio en edificio?", opts:["Solo se observa la fachada principal","Se evalúa únicamente el piso del incendio","Se evalúa 360° en lo posible y se reporta a la central del CGBVP","Se evalúa solo el acceso vehicular"], a:2, fb:"Se debe evaluar la escena 360° en lo posible y reportar lo observado a la central de comunicaciones del CGBVP." },
+    { q:"¿Qué herramientas se llevan al ingresar al edificio?", opts:["Solo mangueras","Herramientas para entrada forzada, búsqueda y rescate, combate del fuego, ventilación y reacondicionamiento","Solo extintores portátiles","Solo la radio de comunicaciones"], a:1, fb:"Se llevan herramientas para entrada forzada, búsqueda y rescate, combate del fuego, ventilación y reacondicionamiento según la unidad." },
+    { q:"La 2ª autobomba al llegar al incendio de edificio debe:", opts:["Estacionar frente al edificio y esperar","Ubicar un hidrante y abastecer a la 1ª unidad o a la escala, según se requiera","Ingresar directamente al edificio","Retornar a la estación para cargar agua"], a:1, fb:"La 2ª autobomba debe ubicar un hidrante y abastecer a la primera unidad o a la escala, según se requiera." },
+  ],
+  l23: [
+    { q:"¿Cómo se define un sótano según la lección?", opts:["Cualquier espacio bajo tierra","Parte de una edificación cuya superficie superior del techo se encuentra hasta 0.50 m por encima del nivel de la vereda","Un espacio de 2 m bajo el nivel del suelo","Un piso subterráneo de más de 3 metros de profundidad"], a:1, fb:"Sótano: parte de una edificación cuya superficie superior del techo se encuentra hasta 0.50 m por encima del nivel de la vereda." },
+    { q:"¿Cuál es una característica principal de los incendios en sótanos respecto a la temperatura?", opts:["La temperatura es baja por estar bajo tierra","Las temperaturas se elevan por la escasa ventilación y se desplazan por los pocos ingresos","La temperatura se regula automáticamente","La temperatura nunca supera los 300°C"], a:1, fb:"Por no tener buena ventilación, los sótanos conservan altas temperaturas que se desplazan por los escasos ingresos." },
+    { q:"¿Por qué el número de aberturas limitadas en un sótano es peligroso?", opts:["Facilita la extinción rápida","Provoca suministro insuficiente de aire y acumulación de productos de combustión nocivos","Hace el sótano más seguro","Evita que el humo salga al exterior"], a:1, fb:"Las pocas aberturas provocan suministro insuficiente de aire y acumulación de productos de combustión nocivos en concentración peligrosa." },
+    { q:"¿Qué tipo de sótano se destina al almacenamiento de bienes y materiales?", opts:["Sótano habitacional","Sótano técnico","Sótano de depósito","Sótano de laboratorio"], a:2, fb:"El sótano de depósito se destina al almacenamiento de bienes, materiales o equipos." },
+    { q:"¿Cuál es el principio fundamental al decidir si enviar personal al interior de un sótano en llamas?", opts:["Siempre ingresar sin importar el riesgo","Si no hay vidas creíblemente salvables, no arriesgar vidas de bomberos","Ingresar solo si hay más de 5 bomberos disponibles","Esperar 30 minutos antes de ingresar"], a:1, fb:"El principio es: 'Si no hay vidas creíblemente salvables, no habrá por qué arriesgar vidas de bomberos'." },
+    { q:"¿Qué medio de transporte NO debe usarse en un incendio de sótano?", opts:["Escaleras internas","Rampas del edificio","Ascensores","Escaleras externas"], a:2, fb:"En sótanos, NO deben usarse los ascensores. Se accede por escaleras o rampas." },
+    { q:"¿Cuál es el mínimo de unidades para un incendio de sótano?", opts:["1 autobomba y 1 rescate","2 autobombas, 1 rescate y 1 médica","3 autobombas y 2 rescates","1 autobomba únicamente"], a:1, fb:"El mínimo es: 2 autobombas + 1 rescate + 1 médica (sin unidad escala, a diferencia de los edificios elevados)." },
+    { q:"¿Cómo penetra el humo a los pisos superiores desde el sótano?", opts:["Solo por las ventanas","A través de ascensores, ductos de ventilación, vertederos de basura, grietas en estructuras","Solo por las escaleras principales","El humo no puede llegar a pisos superiores desde el sótano"], a:1, fb:"El humo penetra a través de huecos de ascensores, sistemas de ventilación, vertederos de basura, aberturas y grietas en estructuras." },
+    { q:"¿Qué acción de ventilación se debe realizar en un sótano en incendio?", opts:["Cerrar todas las salidas para concentrar el humo","Ventilar o extraer el humo del sótano para elevar el plano neutral y bajar la temperatura","Esperar que el humo se disipe solo","Abrir todas las ventanas del piso superior"], a:1, fb:"Se debe ventilar o extraer el humo del sótano para evitar la propagación del fuego, elevar el plano neutral y bajar la temperatura." },
+    { q:"¿Por qué es difícil localizar víctimas en un sótano?", opts:["Porque los sótanos son muy pequeños","Porque hay demasiada luz","Es difícil hasta que se haya disipado gran parte del humo","Porque las víctimas no colaboran"], a:2, fb:"Es difícil encontrar a las víctimas en un sótano hasta que se haya disipado gran parte del humo." },
+    { q:"¿Cómo evoluciona el fuego en un sótano en su fase inicial?", opts:["Lentamente, por falta de oxígeno","De forma intensa, debido a la cantidad suficiente de aire en el volumen del local","Se extingue solo por falta de combustible","No se desarrolla en la fase inicial"], a:1, fb:"En el período inicial de desarrollo del fuego, este se produce de forma intensa, debido a la cantidad suficiente de aire en el volumen del local." },
+    { q:"¿Cuándo aumenta la presión de los productos de combustión en el sótano?", opts:["Al inicio del incendio","A medida que se desarrolla el fuego","Solo cuando se abre una puerta","Nunca aumenta"], a:1, fb:"A medida que se desarrolla el fuego, aumenta la presión de los productos de combustión en el interior del sótano." },
+    { q:"¿Qué medida de prevención se recomienda para reducir incendios en sótanos?", opts:["No instalar ventanas","Colocar detectores de humo y tener un extintor","Usar materiales combustibles en el piso","Tapar todas las salidas"], a:1, fb:"Se recomienda colocar detectores de humo, tener un extintor y verificar el estado de instalaciones eléctricas." },
+    { q:"¿Por qué los bomberos pueden experimentar fatiga acelerada en sótanos?", opts:["Porque deben subir muchos pisos","Porque las bajas temperaturas dificultan el movimiento","Por el ambiente hostil con altas temperaturas, humo denso y espacio confinado","Porque el equipo pesa más bajo tierra"], a:2, fb:"Los bomberos experimentan fatiga y estrés por el ambiente hostil: alta temperatura, humo denso, espacio confinado y escasa ventilación." },
+    { q:"¿Qué tipo de sótano contiene equipos técnicos como calderas y sistemas de climatización?", opts:["Sótano de depósito","Sótano habitacional","Sótano técnico","Sótano panorámico"], a:2, fb:"El sótano técnico alberga equipos técnicos, sistemas de climatización, calderas, instalaciones eléctricas, etc." },
+    { q:"¿Por qué es importante identificar el tipo de sótano al responder a un incendio?", opts:["Para saber el número de pisos del edificio","Porque el tipo determina la carga de fuego, las sustancias presentes y la velocidad de propagación","Solo para fines estadísticos","Para determinar el costo de los daños"], a:1, fb:"El tipo de sótano (estacionamiento, técnico, laboratorio, etc.) determina las características del material combustible y la velocidad de propagación del fuego." },
+    { q:"¿Qué riesgo representa la presencia de vehículos en un sótano de estacionamiento durante un incendio?", opts:["Ningún riesgo, los vehículos son seguros","Dificultan el desplazamiento del personal y son fuente adicional de combustible","Solo dificultan el ingreso de la autobomba","Los vehículos protegen a las víctimas del fuego"], a:1, fb:"Los vehículos dificultan el desplazamiento del personal y también representan una carga de fuego adicional." },
+    { q:"¿Cómo se debe estacionar la 1ª autobomba al llegar a un incendio de sótano?", opts:["Directamente frente a la entrada del sótano","Pasar la fachada (zona de colapso), conectarse al hidrante y presurizar la siamesa","Dentro del sótano, lo más cerca posible al fuego","En la vereda del frente"], a:1, fb:"La 1ª autobomba debe pasar la zona de colapso, conectarse al hidrante y presurizar la siamesa de la red privada o tender por escaleras." },
+    { q:"¿Cuál es la recomendación respecto al control de entrada y salida de personal en un sótano incendiado?", opts:["No hay restricciones de acceso","Tener especial cuidado y control donde el bombero se pierde de vista (área crítica)","Solo el comandante puede entrar y salir","Cualquier personal puede ingresar sin restricción"], a:1, fb:"Se debe tener especial cuidado en el control de entrada y salida del personal al área crítica (donde se pierde de vista al bombero)." },
+    { q:"¿Para qué sirve el reacondicionamiento final en un incendio de sótano?", opts:["Para decorar el sótano tras el incendio","Para limpiar el área, asegurar que no haya rescoldos y dejar el lugar seguro","Para recoger los equipos de comunicación","Para escribir el informe de incendio"], a:1, fb:"El reacondicionamiento permite limpiar el área, asegurar que no queden focos de calor activos y dejar el lugar en condiciones seguras." },
+  ],
+  l24: [
+    { q:"¿Cuál es el principal riesgo para los bomberos en un incendio vehicular respecto a los gases?", opts:["Solo hay humo visible sin toxicidad","Los gases tóxicos (CO, HCN, HCl) obligan al uso del EPRA completo","El humo es inofensivo en vehículos pequeños","Solo los gases de gasolina son peligrosos"], a:1, fb:"Los agentes tóxicos en un vehículo en llamas son tan diversos como en un fuego estructural. Se requiere EPRA obligatoriamente." },
+    { q:"¿A qué distancia mínima debe estacionarse la autobomba de un vehículo en llamas?", opts:["5 metros","15 metros","30 metros","50 metros"], a:2, fb:"Para un fuego en vehículo, la zona de protección es de 30 metros mínimo desde el fuego hasta la autobomba." },
+    { q:"¿Qué es un BLEVE?", opts:["Un tipo de extintor portátil","Una técnica de ventilación forzada","Expansión explosiva del vapor de un líquido en ebullición","Un sistema de detección de gas"], a:2, fb:"BLEVE: Boiling Liquid Expanding Vapor Explosion (Expansión explosiva del vapor de un líquido en ebullición)." },
+    { q:"¿Qué voltaje pueden llegar a manejar los vehículos eléctricos?", opts:["12 voltios","220 voltios","Hasta 650 voltios de corriente continua","1000 voltios"], a:2, fb:"Los vehículos eléctricos pueden llegar a 650 voltios de corriente continua." },
+    { q:"¿Qué color identifica el cableado de alta tensión en vehículos eléctricos e híbridos?", opts:["Rojo y negro","Amarillo y verde","Azul eléctrico o naranja, con cubierta naranja","Blanco y gris"], a:2, fb:"El cableado de alta tensión es de color azul eléctrico o naranja, grueso y cubierto con protección de color naranja." },
+    { q:"¿Por qué los detectores de corriente estándar que usan algunos bomberos pueden ser peligrosos en VE?", opts:["Porque no tienen batería suficiente","Porque detectan corriente continua pero no la alterna","Porque solo detectan corriente alterna, NO la continua (que es la de los VE)","Porque se dañan con el calor"], a:2, fb:"Los bastones eléctricos usados por algunas Compañías de Bomberos solo detectan corriente ALTERNA, no corriente CONTINUA (la de los VE)." },
+    { q:"¿Cuánto tiempo puede permanecer energizado el sistema de alto voltaje de un VE tras apagarse?", opts:["Instantáneamente se descarga","1 minuto","Hasta 10 minutos","24 horas"], a:2, fb:"El sistema de alto voltaje puede permanecer energizado hasta 10 minutos después de que el vehículo haya sido apagado." },
+    { q:"¿Qué tipo de incendio es más común en un vehículo y por qué?", opts:["Incendio externo por actos vandálicos","Incendio interno asociado al motor y fallos eléctricos","Incendio del maletero por materiales olvidados","Incendio del parabrisas por el sol"], a:1, fb:"Los incendios internos son más comunes, principalmente asociados al motor y a fallos eléctricos o rotura de piezas." },
+    { q:"¿Qué acción define el 'ataque defensivo' en un incendio vehicular?", opts:["Atacar directamente desde el frente del vehículo","Acercarse a 45° del eje longitudinal del vehículo con zona caliente mínima de 15 m","Ingresar al habitáculo para atacar el fuego","Dejarlo quemar sin intervenir"], a:1, fb:"Ataque defensivo: acercarse a 45° del eje longitudinal del vehículo, preferentemente del lado opuesto a la carga; zona caliente ≥15 m." },
+    { q:"¿Cómo actúa la espuma como agente extintor en un incendio de combustible líquido?", opts:["Enfría únicamente por absorción de calor","Separa las llamas del combustible, suprime vapores, sofoca y enfría","Solo actúa sofocando el oxígeno","Solo es útil para incendios en estructuras"], a:1, fb:"La espuma actúa separando llamas del combustible, suprimiendo vapores, sofocando e impidiendo el contacto con el O₂ del aire, y enfriando." },
+    { q:"¿Cuándo puede ocurrir la reignición de las baterías de litio?", opts:["Solo en las primeras 2 horas","Nunca si se apagó correctamente","Hasta 22 horas después de la extinción aparente","Solo si se agrega más combustible"], a:2, fb:"Existe posibilidad de reignición hasta 22 horas después. Se recomienda usar cámara térmica durante y después de la extinción." },
+    { q:"¿Por qué aplicar agua en un incendio de batería de litio puede ser ineficaz?", opts:["Porque el agua reacciona con el litio creando explosión inmediata","Porque el agua no llega al núcleo de las baterías; solo evapora en las paredes calientes sin reducir el calor interno","Porque el agua apaga el fuego demasiado rápido","Porque el agua está prohibida para este tipo de incendio"], a:1, fb:"El agua no llega al núcleo de las baterías (está encapsulada en blindaje). Solo genera vapor en las paredes sin efecto de enfriamiento interno." },
+    { q:"¿Qué es la segregación vial y para qué sirve?", opts:["Cerrar la autopista indefinidamente","Técnica para alertar a conductores de la emergencia, reducir velocidad y proteger la escena","Desviar el tráfico sin señalizar","Solo aplica en accidentes sin incendio"], a:1, fb:"La segregación vial es una técnica para alertar a los conductores que se dirigen por la misma pista de la emergencia, logrando disminuir la velocidad y proteger la escena." },
+    { q:"¿Qué ángulo de aproximación se recomienda para el ataque ofensivo a un vehículo?", opts:["De frente, 0°","Desde atrás, 180°","A 45° con relación al eje longitudinal del vehículo","Paralelo al vehículo, 90°"], a:2, fb:"Se recomienda acercarse a un ángulo de 45° con relación al eje longitudinal del vehículo." },
+    { q:"¿Qué es el GLP y cuál es su rango de inflamabilidad?", opts:["Gas Natural, rango 5%-15%","Gas Licuado de Petróleo, rango 1.8% a 9.5%","Gasolina sin plomo, rango 3%-7%","Gas de acetileno, rango 2.8%-93%"], a:1, fb:"GLP (Gas Licuado de Petróleo): mezcla de propano y butano, con rango de inflamabilidad de 1.8% a 9.5%." },
+    { q:"¿Cuál es el punto de inflamación de la gasolina?", opts:["+52°C","-43°C","0°C","+20°C"], a:1, fb:"La gasolina tiene un punto de inflamación de -43°C, lo que la hace extremadamente peligrosa a temperaturas normales." },
+    { q:"Al recoger los conos de la segregación vial, ¿qué secuencia se sigue?", opts:["Primero se recogen los conos y luego sube el personal","La máquina retrocede, el bombero recoge los conos y la máquina lo espera en la berma antes de retirarse","Todo el personal recoge los conos al mismo tiempo","Solo el comandante recoge los conos"], a:1, fb:"La máquina retrocede, un bombero recoge los conos, la máquina toma posición en la berma para que suba el último bombero y luego se retira." },
+    { q:"¿Qué son los metales combustibles en los vehículos y cuál es su característica principal en un incendio?", opts:["Solo el acero de la carrocería","Magnesio y aluminio; producen temperaturas extremadamente altas y son reactivos al agua","Solo el hierro del motor","Los plásticos del tablero"], a:1, fb:"Metales como el magnesio y aluminio producen temperaturas superiores a 1093°C y son reactivos al agua. Requieren agente Clase D." },
+    { q:"¿Qué indica un cambio de coloración en el manto de un recipiente de GLP expuesto al fuego?", opts:["Que el recipiente está enfriándose","Que es la fase 3 del BLEVE, indicando sobrecalentamiento estructural","Que la válvula de alivio funciona correctamente","Que el GLP se ha consumido"], a:1, fb:"El cambio de coloración en el manto del recipiente es la Fase 3 del BLEVE, señal de sobrecalentamiento que puede terminar en ruptura." },
+    { q:"¿Qué procedimiento se sigue para abrir el capó de un vehículo en llamas?", opts:["Romper el parabrisas y acceder desde adentro","Ubicar el pasador de apertura y golpear hasta arrancarlo; si falla, aperturar lateralmente y lanzar chorro de enfriamiento","Esperar que el fuego extinga el sistema de apertura","Cortar el capó con sierra eléctrica"], a:1, fb:"Se ubica el pasador, se golpea hasta arrancarlo; si falla, se apertura una abertura lateral en el capó y se lanza chorro de enfriamiento por ella." },
+  ],
+  l25: [
+    { q:"¿Cuál es la clasificación de la gasolina según la NFPA 30?", opts:["Líquido Clase II, combustible","Líquido Clase IB, inflamable","Líquido Clase IIb, combustible","Líquido Clase IA, inflamable"], a:1, fb:"La gasolina es un líquido Clase IB: punto de inflamación menor que 22.8°C y punto de ebullición igual o mayor a 37.8°C." },
+    { q:"¿Qué fenómeno se produce cuando la onda de calor contacta el agua del fondo del tanque en un incendio de petróleo?", opts:["Slopover","Frothover","Boilover","BLEVE"], a:2, fb:"El Boilover ocurre cuando la onda de calor convectiva contacta el agua del fondo del tanque, produciendo expansión súbita del vapor (1:1700) que lanza combustible encendido al exterior." },
+    { q:"¿A qué velocidad desciende la onda de calor en un tanque de petróleo crudo en incendio?", opts:["30 cm por hora","1 metro por hora","5 metros por hora","10 metros por hora"], a:1, fb:"Las fracciones pesadas y calientes descienden aproximadamente 1 metro por hora hacia el fondo del tanque." },
+    { q:"¿Qué es el Slopover?", opts:["Una explosión total del tanque","Un rebosamiento superficial que ocurre antes del Boilover, de menor magnitud","El mismo fenómeno que el Boilover","Un incendio de techo fijo"], a:1, fb:"Slopover: rebosamiento superficial que ocurre ANTES del Boilover, cuando la onda de calor contacta emulsiones de agua en capas intermedias, con derrames parciales sin grandes consecuencias." },
+    { q:"¿Cuánto se expande el agua al transformarse en vapor a 100°C?", opts:["100 veces","500 veces","1700 veces","3000 veces"], a:2, fb:"El agua en estado líquido se expande aproximadamente 1700 veces al transformarse en vapor a 100°C." },
+    { q:"¿Cuál es la diferencia entre un tanque de techo flotante y uno de techo fijo?", opts:["Los de techo flotante son más peligrosos","Los de techo flotante eliminan el espacio de vapores (para inflamables); los de techo fijo tienen espacio de vapores (para combustibles)","Son idénticos en funcionamiento","Los de techo fijo no pueden incendiarse"], a:1, fb:"Techo flotante: flota sobre el líquido eliminando vapores (para inflamables). Techo fijo: opera con espacio de vapores que varía con el nivel del líquido (para combustibles)." },
+    { q:"¿Qué son los solventes polares y por qué requieren espuma especial?", opts:["Son la misma cosa que los hidrocarburos","Son compuestos miscibles con agua que destruyen la espuma estándar; requieren AR-AFFF","Son líquidos no inflamables","Son idénticos a la gasolina en propiedades de incendio"], a:1, fb:"Los solventes polares (alcoholes, acetona) son miscibles con agua y pueden destruir la capa de espuma estándar, requiriendo espumógenos especiales AR-AFFF." },
+    { q:"¿Por qué los tanques de techo fijo tienen soldaduras débiles en el techo?", opts:["Por error de fabricación","Para reducir costos de construcción","Actúan como fusibles: en explosión interna, el techo se desprende sin colapsar el tanque y sin generar derrame mayor","Para facilitar el mantenimiento"], a:2, fb:"Los cordones de soldadura de los techos actúan como fusibles: en explosión interna, el techo se desprende conservando la integridad del cilindro y evitando un derrame mayor." },
+    { q:"¿Qué es un Rompeolas en un camión cisterna?", opts:["Un sistema de extinción de incendios","Un tabique interno con aberturas que permite el paso del líquido pero disminuye el movimiento de olas y su energía cinética","Una válvula de seguridad","Un tipo de tanque esférico"], a:1, fb:"El rompeolas es un tabique interno con aberturas que permite el paso del líquido pero atenúa el movimiento de las olas y su energía cinética." },
+    { q:"¿Qué tres condiciones se deben cumplir para que se produzcan fenómenos en tanques en incendio?", opts:["Fuga de gas, techo cerrado y temperatura baja","Incendio total con vuelo del techo, presencia de agua en estratos o fondo, y desarrollo de onda de calor","Explosión inicial, presencia de personal y viento fuerte","Sobrepresión, material combustible y ausencia de bomberos"], a:1, fb:"Las 3 condiciones: 1) Incendio total con voladur del techo. 2) Presencia de agua en estratos o fondo del tanque. 3) Desarrollo de onda de calor convectiva." },
+    { q:"¿Qué es la válvula de fondo en una cisterna?", opts:["La válvula exterior de descarga","Una válvula situada en el interior del depósito que cierra automáticamente si hay rotura de tubería, evitando la salida del líquido","Una válvula de seguridad en el techo","El tapón de rosca exterior"], a:1, fb:"La válvula de fondo está en el interior del depósito. Si hay rotura de la tubería, se cierra automáticamente evitando la salida del líquido de la cisterna." },
+    { q:"¿Cuál es el primer paso para obtener el control de un incendio de líquido inflamable?", opts:["Aplicar espuma inmediatamente","Aislar el equipo incendiado: cerrar válvulas, parar bombas, cortar la alimentación","Llamar a refuerzos y esperar","Construir un dique de contención"], a:1, fb:"El primer paso es aislar el equipo incendiado: cerrar válvulas, parar bomba, cortar la alimentación a la sección comprometida." },
+    { q:"¿Por qué el uso excesivo de agua puede ser contraproducente en un incendio de líquido inflamable?", opts:["Porque el agua apaga el fuego demasiado rápido","Porque el mal uso puede rebalsar recipientes y expandir el incendio","Porque el agua reacciona con todos los hidrocarburos","Porque el agua atrae más combustible"], a:1, fb:"Se debe tener cuidado: el mal uso del agua podría rebalsar recipientes y así expandir el incendio." },
+    { q:"¿Cómo se diferencia la gasolina del diésel en cuanto a su clasificación de riesgo?", opts:["La gasolina es más segura que el diésel","La gasolina es inflamable (PI -43°C) y el diésel es combustible (PI ~49°C)","Ambos son igualmente peligrosos","El diésel es más peligroso que la gasolina"], a:1, fb:"La gasolina tiene PI de -43°C (líquido inflamable). El diésel DB-5 tiene PI de ~49°C (líquido combustible). La gasolina es más peligrosa a temperatura ambiente." },
+    { q:"¿Qué es el Frothover?", opts:["Lo mismo que el Boilover","Rebosamiento espumoso que se produce en aceites minerales viscosos calientes sobre agua fría, no necesariamente incendiados","Una forma de controlar incendios de tanques","Un tipo especial de espuma extintora"], a:1, fb:"Frothover: rebosamiento espumoso en recipientes con aceites minerales viscosos a altas temperaturas, cuando el agua del fondo entra en ebullición. No necesariamente implica ignición." },
+    { q:"¿Qué capacidad debe tener la barrera de contención alrededor de un tanque de almacenamiento?", opts:["50% del volumen del tanque más grande","75% del volumen del tanque más grande","110% del volumen del tanque de mayor capacidad que protege","200% del volumen del tanque más pequeño"], a:2, fb:"La barrera de contención debe tener capacidad de un 110% del volumen del tanque de mayor capacidad del que protege." },
+    { q:"¿Cuándo se dice que un incendio de líquido está 'controlado'?", opts:["Cuando se ha extinguido completamente","Cuando se alcanzó un punto en que hay muy poco peligro de que el incendio se esparza o afecte equipo adicional","Cuando el bombero lo decide","Cuando el agua cubre el combustible"], a:1, fb:"El incendio está controlado cuando se ha alcanzado un punto en que hay muy poco peligro de que se esparza o afecte equipo adicional." },
+    { q:"¿Cómo se obtiene diésel y gasolina a partir del petróleo crudo?", opts:["Por reacción química directa","Por destilación fraccionada en una refinería","Por filtración del agua del petróleo","Por evaporación al sol"], a:1, fb:"Al llegar a la refinería, el petróleo se somete a destilación fraccionada, separándolo en fracciones según su punto de ebullición: lubricantes, diésel y gasolina." },
+    { q:"¿Qué característica tienen los alcanos respecto a sus enlaces?", opts:["Presentan enlaces dobles","Presentan enlaces triples","Presentan enlaces sencillos (simples)","Tienen estructura cíclica aromática"], a:2, fb:"Los alcanos son hidrocarburos alifáticos que presentan únicamente enlaces sencillos entre sus átomos de carbono." },
+    { q:"¿A qué altura puede llegar el combustible lanzado durante un Boilover?", opts:["1-2 metros","5 metros","Más de 30 metros","Solo dentro del tanque"], a:2, fb:"El combustible es lanzado fuera del tanque en explosión violenta formando una columna ascendente que en algunos casos supera los 30 metros de altura." },
+  ],
+  l26: [
+    { q:"¿Cuántas veces se expande 1 volumen de GLP líquido al convertirse en gas?", opts:["27 veces","270 veces","2700 veces","27000 veces"], a:1, fb:"1 volumen de GLP líquido se expande 270 veces su volumen en gas." },
+    { q:"¿El GLP es más o menos denso que el aire?", opts:["Más liviano que el aire (se eleva)","La misma densidad que el aire","Más denso que el aire (se acumula en zonas bajas)","Depende de la temperatura del ambiente"], a:2, fb:"El GLP es MÁS DENSO que el aire: el Propano es 1.5 veces más pesado y el Butano 2 veces más pesado que el aire." },
+    { q:"¿Cuál es el límite inferior de inflamabilidad del Gas Natural (GNV)?", opts:["1.8%","2.8%","5%","10%"], a:2, fb:"El Gas Natural tiene LEL (Lower Explosive Limit) de 5% y UEL de 15%." },
+    { q:"¿Qué característica hace al Gas Natural diferente del GLP en cuanto a densidad?", opts:["El GN es más denso que el GLP","El GN es más denso que el aire","El GN es más liviano que el aire (densidad 0.55-0.65), el GLP es más denso","Son iguales en densidad"], a:2, fb:"El Gas Natural es más liviano que el aire (densidad 0.55-0.65), a diferencia del GLP que es más pesado. Esto hace que el GN se eleve y el GLP se acumule." },
+    { q:"¿Qué es el BLEVE?", opts:["Un incendio forestal de gran magnitud","Un sistema de extinción por vapor","Expansión explosiva del vapor de un líquido en ebullición","Un tipo de tanque criogénico"], a:2, fb:"BLEVE: Boiling Liquid Expanding Vapor Explosion (Expansión explosiva del vapor de un líquido en ebullición)." },
+    { q:"¿Qué temperatura máxima de llama tiene el Propano?", opts:["800°C","1200°C","1998°C","2500°C"], a:2, fb:"La temperatura máxima de llama del Propano es de 1998°C." },
+    { q:"¿Cuál es el amplio rango de inflamabilidad del Acetileno (LEL-UEL)?", opts:["1.4% a 7.6%","1.8% a 9.5%","5% a 15%","2.8% a 93%"], a:3, fb:"El Acetileno tiene un rango de inflamabilidad extremadamente amplio: LEL 2.8% a UEL 93%, uno de los más amplios entre los gases industriales." },
+    { q:"¿A qué temperatura comienza el Acetileno a descomponerse en H₂ y C?", opts:["Por encima de 30°C","Por encima de 54°C","Por encima de 100°C","Por encima de 200°C"], a:1, fb:"A temperaturas por encima de los 54°C, el acetileno se descompone en hidrógeno y carbono, pudiendo explotar violentamente." },
+    { q:"¿Qué acción NO se debe hacer durante una fuga de GLP?", opts:["Usar EPRA","Evacuar el área","Encender o apagar interruptores eléctricos","Ventilar el área"], a:2, fb:"Durante una fuga de GLP, NO se debe encender ni apagar ningún interruptor eléctrico, ya que puede generar una chispa que encienda el gas." },
+    { q:"En un incendio de GLP, ¿qué se debe hacer con la llama si no se puede controlar la fuga?", opts:["Extinguir la llama inmediatamente con agua","Nunca intentar extinguir una fuga encendida si no se sabe cómo controlar la fuga","Usar extintor de CO₂ sobre la llama","Tapar la llama con una manta ignífuga"], a:1, fb:"Nunca intentar extinguir una fuga encendida si no se sabe cómo controlar la fuga de gas. Una llama controlada es preferible a una nube de gas explosiva." },
+    { q:"¿Qué es un Jet Fire?", opts:["Un incendio masivo de zona abierta","Fuego semejante a la llama de un soplete producido por una fuga presurizada a través de bridas, válvulas o conexiones","Una bola de fuego producida por ignición de nube","Una explosión de tanque a presión"], a:1, fb:"Jet Fire: fuego semejante a la llama de un soplete producido a través de fugas presurizadas (bridas, válvulas, conexiones, sellos)." },
+    { q:"¿Cuál es la zona del recipiente a presión donde PRIMERO se debe aplicar el agua de enfriamiento?", opts:["La parte inferior (donde está el líquido)","La parte media (ecuador del tanque)","La parte superior o cámara de vapores","Se aplica uniformemente en toda la superficie"], a:2, fb:"La zona de vapores (parte superior) es donde ocurre el colapso estructural. Agua aplicada correctamente en la parte superior se aprovecha en la inferior, logrando enfriamiento integral." },
+    { q:"¿Cuándo NO se debe usar agua para enfriar un recipiente de gas?", opts:["Nunca, siempre se puede usar agua","En recipientes con gases criogénicos, porque el agua les transfiere calor aumentando su presión interna","En recipientes de acero","En tanques de GLP"], a:1, fb:"En gases criogénicos, el agua es contraproducente: están a baja temperatura y el agua les transfiere calor, aumentando la presión interna y el riesgo de BLEVE." },
+    { q:"¿Cuál es la odorización añadida al GLP y al GN para detección de fugas?", opts:["Aceite de pino","Cloro","Etil Mercaptano","Amoníaco"], a:2, fb:"Tanto el GLP como el Gas Natural son odorizados con Etil Mercaptano, detectable por el olfato cuando la concentración llega al 1% de gas en el aire." },
+    { q:"¿Qué diferencia al CVCE del UVCE?", opts:["El CVCE es más pequeño que el UVCE","El CVCE es una explosión de nube confinada; el UVCE es ignición diferida de nube NO confinada","Son el mismo fenómeno con distinto nombre","El UVCE solo ocurre en tanques y el CVCE en tuberías"], a:1, fb:"CVCE: explosión de nube CONFINADA (Confined Vapor Cloud Explosion). UVCE: ignición DIFERIDA de nube no confinada (Unconfined Vapor Cloud Explosion), puede ser deflagración o detonación." },
+    { q:"¿Cuántas fases tiene el proceso del BLEVE?", opts:["3 fases","4 fases","5 fases","7 fases"], a:2, fb:"El BLEVE se produce en 5 fases: 1)Fuego en recipiente, 2)Activación válvula de alivio, 3)Cambio de coloración, 4)Fisura en el manto, 5)Inflamación de la fase de vapor en expansión." },
+    { q:"¿A qué distancia pueden proyectarse fragmentos en un BLEVE?", opts:["Hasta 50 metros","Hasta 200 metros","Hasta 400 metros","Más de 800 metros a la redonda"], a:3, fb:"Un BLEVE produce esparcimiento de grandes fragmentos a más de 800 metros a la redonda, lo que puede provocar más siniestros." },
+    { q:"¿Cómo se almacena el Acetileno en los cilindros para hacerlo más seguro?", opts:["Comprimido a alta presión sin relleno","Disuelto en acetona dentro de una masa porosa de pequeñas celdas","Licuado a baja temperatura","Mezclado con nitrógeno inerte"], a:1, fb:"Los cilindros de acetileno están rellenos de una masa porosa saturada de acetona, reduciendo el volumen de gas en cada celda para mayor seguridad." },
+    { q:"¿Qué es el principio de máxima seguridad que deben aplicar los bomberos en fenómenos de gas?", opts:["Siempre atacar de frente con máxima agua","Actuar como si lo peor fuera realmente a ocurrir; planear lo mejor, esperar lo peor","Retirarse siempre a 500 m de distancia","Esperar a que el gas se consuma solo"], a:1, fb:"Principio de máxima seguridad: 'Cuando haya que enfrentarse con un fenómeno poco conocido o catastrófico, habrá que actuar como si lo peor, teóricamente fuera a ocurrir.' 'Planee lo mejor, espere lo peor'." },
+    { q:"¿Qué ocurre con el Acetileno expuesto a una llama y cuál es el procedimiento correcto?", opts:["No reacciona; se extingue solo","Se liquida y es más seguro","Se descompone y puede explotar; enfriar con agua abundante desde lejos y sumergir 24h si no baja la temperatura","Debe extinguirse con CO₂ directamente"], a:2, fb:"El Acetileno puede explotar si se calienta. Procedimiento: enfriar con agua abundante desde lejos, protegerse detrás de elemento fijo, y si baja la temperatura, sumergir el cilindro 24h." },
+  ],
+  l27: [
+    { q:"¿Cuáles son los 4 elementos del 'Tetraedro de la Espuma'?", opts:["Agua, arena, viento y calor","Concentrado de espuma, agua, aire y agitación mecánica","Espuma, manguera, pitón y bomba","Proteínas, carbohidratos, grasas y vitaminas"], a:1, fb:"El tetraedro de la espuma requiere 4 elementos: Concentrado de espuma + Agua + Aire (gas) + Agitación mecánica. La falta de uno impide la formación de espuma de calidad." },
+    { q:"¿Cuál es el rango de expansión de la espuma de ALTA expansión según NFPA 11?", opts:["Hasta 1:20","1:20 a 1:200","1:200 a 1:1000","Mayor a 1:1000"], a:2, fb:"Según NFPA 11: Espuma de alta expansión tiene un rango de 1:200 a 1:1000." },
+    { q:"¿Qué es la 'Supresión de vapores' como acción extintora de la espuma?", opts:["Aumentar la temperatura del combustible para quemarlo más rápido","Evitar la liberación de vapores inflamables reduciendo la ignición y re-ignición","Reemplazar el oxígeno con gas inerte","Mezclar el combustible con agua"], a:1, fb:"Supresión: la espuma evita la liberación de vapores inflamables por la superficie del combustible, reduciendo la posibilidad de ignición y re-ignición." },
+    { q:"¿En qué se diferencia la espuma Clase A de la Clase B?", opts:["La espuma A es para gases y la B para líquidos","La espuma A reduce tensión superficial del agua para combustibles sólidos; la B crea manta en líquidos inflamables/combustibles","Son idénticas en propiedades y uso","La A es proteica y la B siempre sintética"], a:1, fb:"Espuma A: para combustibles sólidos, reduce tensión superficial del agua. Espuma B: para líquidos inflamables y combustibles (hidrocarburos y solventes polares)." },
+    { q:"¿Por qué los solventes polares destruyen la espuma estándar?", opts:["Porque son más fríos que la espuma","Porque son miscibles con agua y rompen la estructura de la espuma estándar","Porque reaccionan químicamente con el concentrado","Porque los solventes son más densos que la espuma"], a:1, fb:"Los solventes polares (alcoholes, acetona) son miscibles con agua y pueden destruir la capa de espuma generada por espumógenos estándar. Se requiere AR-AFFF." },
+    { q:"¿Qué tipo de espuma tiene la mejor velocidad de extinción según la tabla de propiedades?", opts:["Proteica normal","Fluorproteica (FP)","AFFF y AR-AFFF","Alta expansión"], a:2, fb:"Según la tabla de propiedades, las espumas AFFF y AR-AFFF tienen velocidad de extinción 'Excelente', superior a las proteicas." },
+    { q:"¿Qué es el método de dosificación por 'Inducción' (eductor)?", opts:["Una bomba externa inyecta el concentrado al chorro","El concentrado está premezclado en el tanque","Se usa el efecto Venturi (velocidad del flujo) para succionar el concentrado e incorporarlo al agua","Se mezcla a mano el concentrado con el agua"], a:2, fb:"Inducción: usa el efecto Venturi (dispositivo que estrecha la tubería y aumenta velocidad) para succionar el concentrado de espuma e incorporarlo al caudal de agua." },
+    { q:"¿Qué sucede si NO se usa el concentrado de espuma adecuado para el tipo de combustible?", opts:["La espuma funciona igual","La espuma pierde un poco de eficacia","La espuma puede ser completamente ineficaz; es crítico identificar el combustible antes de aplicar","Solo cambia el color de la espuma"], a:2, fb:"Es extremadamente importante identificar el tipo de combustible antes de aplicar espuma. La incompatibilidad puede hacer que la espuma sea completamente ineficaz." },
+    { q:"¿Cuánto aumenta la capacidad extintora del agua al agregar una pequeña cantidad de concentrado Clase A?", opts:["2 veces","3 veces","5 veces","10 veces"], a:2, fb:"El simple hecho de agregar una pequeña cantidad de concentrado Clase A al agua incrementa 5 veces la capacidad extintora." },
+    { q:"¿Para qué tipo de incendios es específicamente eficaz la espuma Clase B?", opts:["Solo para madera y papel","Para líquidos inflamables y combustibles (hidrocarburos y solventes polares)","Para incendios eléctricos","Para metales combustibles"], a:1, fb:"La espuma Clase B es especialmente eficaz para dos categorías: hidrocarburos (derivados del petróleo) y solventes polares (alcoholes, acetona, etc.)." },
+    { q:"¿Qué es la 'Resistencia al calor' de la espuma?", opts:["La temperatura máxima que puede soportar el concentrado antes de evaporarse","La propiedad de la espuma de resistir más tiempo antes de destruirse por el calor del incendio","La velocidad con que la espuma cubre el combustible","La cantidad de agua que contiene la espuma"], a:1, fb:"Resistencia al calor: propiedad de la espuma de resistir más tiempo antes de destruirse con el calor del incendio activo." },
+    { q:"¿Qué hidrocarburos son adecuados para espuma Clase B estándar?", opts:["Solo agua","Derivados del petróleo: crudo, fuel oil, gasolina, benceno, queroseno","Alcoholes y cetonas","Todos los líquidos por igual"], a:1, fb:"La espuma Clase B estándar es eficaz para hidrocarburos: petróleo crudo, fuel oil, gasolina, benceno, nafta, combustible de reactores, queroseno." },
+    { q:"¿Qué es la 'Pre-mezcla' como método de dosificación de espuma?", opts:["Mezclar la espuma con el agua en el momento del combate","Cantidades de agua y concentrado previamente medidas mezcladas en un contenedor; usado en extintores portátiles","Una técnica de inducción por Venturi","Inyectar concentrado a la base del tanque incendiado"], a:1, fb:"Pre-mezcla: cantidades de agua y concentrado de espuma previamente medidas ya mezcladas en un contenedor. Usada en extintores portátiles, unidades de doble agente, etc." },
+    { q:"¿Qué característica tienen las espumas proteicas en cuanto a resistencia al calor?", opts:["Débil resistencia al calor","Buena resistencia al calor","Excelente resistencia al calor","No tienen resistencia al calor"], a:2, fb:"Las espumas proteicas tienen 'Excelente' resistencia al calor, lo que las hace muy duraderas en incendios prolongados." },
+    { q:"¿Qué es la 'Tolerancia al combustible' de la espuma?", opts:["La cantidad de combustible que puede apagar","La propiedad de resistir la contaminación por el combustible al contacto con él (sea inyectada por la base o aplicada por encima)","El peso del combustible que soporta la capa de espuma","El tiempo que tarda en apagar el combustible"], a:1, fb:"Tolerancia al combustible: propiedad de resistir la contaminación cuando se inyecta por la base del tanque o toma contacto con el combustible al cubrir la superficie." },
+    { q:"¿Por qué es importante la homogeneidad de las burbujas en la espuma?", opts:["Las burbujas grandes son más eficaces","Una aireación adecuada produce burbujas homogéneas para formar una manta más duradera y eficaz","El tamaño de las burbujas no importa","Las burbujas pequeñas son siempre ineficaces"], a:1, fb:"Una aireación adecuada produce burbujas homogéneas para formar una manta de espuma más duradera y efectiva." },
+    { q:"¿Cuál espuma tiene mejor resistencia al alcohol según la tabla de propiedades?", opts:["Proteica normal","AFFF","Fluorproteica (FP)","AR-AFFF"], a:3, fb:"Según la tabla de propiedades, las espumas AR-AFFF (resistentes al alcohol) tienen 'Excelente' resistencia al alcohol, diseñadas específicamente para solventes polares." },
+    { q:"¿Qué concentraciones se usan habitualmente para los concentrados de espuma?", opts:["0.5%, 1% y 1.5%","1%, 3% y 6%","5%, 10% y 15%","2%, 4% y 8%"], a:1, fb:"La mayoría de concentrados de espuma se mezclan en dosificaciones de 1%, 3% y 6% dependiendo del fabricante." },
+    { q:"¿Qué tipo de espuma se clasifica como 'espuma química'?", opts:["AFFF","FFFP","Aquella resultante de la reacción química de dos productos (histórica, con dificultades de manipuleo)","La espuma de alta expansión"], a:2, fb:"Las espumas químicas resultan de la mezcla de dos productos que reaccionan químicamente. Presentan dificultades de manipuleo y tienden a apelmazarse con la humedad." },
+    { q:"¿Por qué el agua se aplica como neblina fina para eliminar calor en un incendio de líquido?", opts:["Porque la neblina extingue más lentamente","Porque cuanto más fina es la lluvia de agua, mayor es la superficie disponible para absorción de calor y reducción de temperatura","Porque la neblina es más segura para los bomberos","Porque la neblina no moja el combustible"], a:1, fb:"Cuanto más fina es la lluvia de agua, mayor es la superficie disponible para la absorción de calor, reduciendo la temperatura y la vaporización del combustible." },
+  ],
+  l28: [
+    { q:"¿Cuál es la finalidad principal del primer respondedor en la investigación de incendios?", opts:["Determinar el origen y causa del incendio de forma definitiva","Contribuir preservando la escena durante las actividades de lucha contra incendios y protegiendo la evidencia","Detener a los sospechosos y tomarles declaración","Levantar todas las pruebas encontradas en la escena"], a:1, fb:"La finalidad es contribuir a la investigación preservando y protegiendo la escena, no determinar el origen (eso es función de DIPREIN)." },
+    { q:"¿Qué norma establece que el CGBVP debe realizar estudios sobre causas de incendios?", opts:["Solo el Código Penal peruano","El RNE (Reglamento Nacional de Edificaciones)","El DL N°1260 y el RIF del CGBVP","La norma NFPA 101"], a:2, fb:"El DL N°1260 y el RIF del CGBVP (Art. 51°, Art. 53°) establecen la obligación de realizar estudios sobre causas y desarrollo de incendios." },
+    { q:"¿Qué NO puede hacer el primer respondedor en la escena de un incendio?", opts:["Tomar fotografías","Hacer observaciones del comportamiento del fuego","Levantar pruebas, fijar indicios, detener personas o tomar declaraciones","Informar al jefe de investigación"], a:2, fb:"Los primeros respondedores NO están autorizados a levantar pruebas, fijar indicios, detener personas ni tomar declaraciones. Eso corresponde al equipo de DIPREIN." },
+    { q:"¿Qué es el 'Flow Path' o trayectoria del flujo en investigación de incendios?", opts:["La ruta de evacuación de los bomberos","El recorrido del flujo de aire y gases calientes que determina la dirección de propagación del incendio","La ruta que sigue el agua al extinguir el incendio","La trayectoria de los fragmentos en una explosión"], a:1, fb:"El Flow Path (trayectoria del flujo) es el recorrido del flujo de aire y gases calientes; los bomberos deben obtener datos objetivos sobre él para contribuir a la investigación." },
+    { q:"¿Por qué el primer respondedor es considerado el mejor testigo de un incendio?", opts:["Porque puede inventar la causa del incendio","Porque está en la escena en las primeras instancias, conoce la dinámica del fuego y reúne datos objetivos únicos","Porque tiene autoridad legal superior","Porque lleva más tiempo como bombero"], a:1, fb:"El primer respondedor está en la escena desde las primeras instancias, puede conocer la dinámica del incendio, el comportamiento de materiales y reúne datos únicos e irrepetibles." },
+    { q:"¿Qué técnica de supresión se debe usar para preservar las marcas del fuego en paredes?", opts:["El 'pitonazo' directo en las paredes con marcas","Técnicas no destructivas evitando el 'efecto pitonazo' en paredes y techos con marcas","Usar máxima presión para enfriar rápido","Aplicar espuma en todas las superficies"], a:1, fb:"Se deben usar técnicas de supresión adecuadas no destructivas, evitando el 'efecto pitonazo' en paredes y techos donde están las marcas del fuego." },
+    { q:"¿Qué documentos se deben preservar en la escena del incendio?", opts:["Solo el parte de emergencia del comandante","Ningún documento, solo las observaciones verbales","Fotos, videos, planos, notas y nombres de testigos con datos de contacto","Solo las facturas del propietario"], a:2, fb:"Se debe preservar toda documentación: fotos, videos, planos, notas y nombres de testigos con sus datos de contacto." },
+    { q:"¿Qué se debe observar en las 'Tácticas de combate y acceso' con fines de investigación?", opts:["El presupuesto utilizado en el incendio","El estado de las puertas, ventanas, techos, condiciones al llegar y condiciones particulares","Los nombres de todos los testigos","El color del humo únicamente"], a:1, fb:"Las tácticas de combate y acceso incluyen la observación del estado de puertas, ventanas, techos y condiciones al llegar, ya que esto afecta la investigación posterior." },
+    { q:"¿Qué indica la NFPA 921 respecto a la preservación de la escena del incendio?", opts:["La escena puede limpiarse inmediatamente después del incendio","Se debe preservar la escena tan intacta e inalterada como sea posible","Los bomberos no tienen responsabilidad en la preservación","Solo la policía puede preservar la escena"], a:1, fb:"La NFPA 921 indica que 'se debe hacer todo lo posible para proteger y preservar el lugar del incendio tan intacto e inalterado como sea posible'." },
+    { q:"¿Cuántos puntos de ingreso y salida deben establecerse en la escena del incendio?", opts:["Tantos como sea necesario para acceso rápido","Solo uno, para controlar el acceso al personal autorizado","Uno por cada 10 bomberos presentes","No se establecen puntos de acceso"], a:1, fb:"Se debe designar solo UNA forma de entrada y salida para mantener el control de quién accede a la escena." },
+    { q:"¿Qué artículo del Código Penal peruano trata sobre el peligro por incendio o explosión?", opts:["Art. 108 sobre asesinato","Art. 273 sobre peligro por medio de incendio o explosión","Art. 45 sobre articulación interinstitucional","Art. 103 sobre prevención departamental"], a:1, fb:"El Art. 273 del Código Penal peruano trata sobre 'Peligro por medio de incendio o explosión': pena privativa de libertad de 3 a 10 años." },
+    { q:"¿Por qué es importante no inundar la escena con agua durante la extinción?", opts:["El agua puede afectar la estructura del edificio","El exceso de agua destruye evidencias importantes para la investigación posterior","El agua atrae a más curiosos","El agua interfiere con las comunicaciones de radio"], a:1, fb:"Se debe usar solo el agua necesaria. El exceso destruye marcas del fuego, patrones de combustión y otras evidencias vitales para la investigación." },
+    { q:"¿Qué observaciones sobre personas son relevantes para la investigación?", opts:["Solo el nombre del propietario","Testigos, propietarios, personas con comportamiento sospechoso, los que preguntan mucho y personas abandonando la escena","Solo las víctimas confirmadas","Los bomberos que llegaron primero"], a:1, fb:"Se deben observar testigos, propietarios, víctimas, personas en la multitud, personas abandonando la escena y personas muy interesadas haciendo preguntas sobre el incendio." },
+    { q:"¿Qué debe hacer el primer respondedor con los cuerpos encontrados en la escena?", opts:["Moverlos a un lugar más accesible","Acordonarlos, no tocarlos ni moverlos, e informar a la policía","Fotografiarlos y luego moverlos","Cubrirlos con una sábana y moverlos"], a:1, fb:"Se deben acordonar las víctimas fallecidas: no tocarlas, no moverlas, e informar a la policía de inmediato." },
+    { q:"¿Qué significa DIPREIN?", opts:["División de Protección de Estructuras e Instalaciones","Dirección de Prevención e Investigación de Incendios del CGBVP","Departamento de Investigación y Rescate en Incendios","Dirección de Investigaciones de Riesgos Especiales e Industriales"], a:1, fb:"DIPREIN: Dirección de Prevención e Investigación de Incendios del CGBVP, el equipo de investigación especializado al que el primer respondedor debe entregar la información recopilada." },
+    { q:"¿Cuándo debe comunicarse el primer respondedor con el equipo de investigación de incendios?", opts:["Solo después de terminar el reacondicionamiento","De inmediato, en cuanto se ubique al jefe de investigación en la escena","Solo al día siguiente","Solo si el bombero lo considera importante"], a:1, fb:"Se debe comunicar de forma inmediata, en cuanto se ubique al jefe de investigación en la escena, proporcionando todos los datos recopilados." },
+    { q:"¿Por qué la ventilación debe ser mínima durante la extinción cuando hay investigación?", opts:["Porque la ventilación enfría demasiado la escena","La ventilación innecesaria puede destruir patrones de humo y evidencias de los flujos térmicos que son clave para determinar el origen del incendio","Porque la ventilación puede apagar el incendio prematuramente","La ventilación no tiene impacto en la investigación"], a:1, fb:"La ventilación innecesaria puede destruir patrones de humo y evidencias de los flujos térmicos (Flow Path) que son esenciales para determinar el origen del incendio." },
+    { q:"¿Cuál es el alcance del primer respondedor respecto a la información que puede proporcionar?", opts:["Puede hacer conclusiones definitivas sobre el origen del incendio","Solo puede reportar si hubo víctimas","Proporciona observaciones objetivas sobre el incendio, personas, tácticas y condiciones anómalas al equipo de investigación","Decide si el incendio fue intencional o accidental"], a:2, fb:"El primer respondedor proporciona observaciones objetivas sobre el incendio, personas, tácticas de combate y condiciones anómalas, sin hacer conclusiones definitivas." },
+    { q:"¿Qué pregunta sobre electricidad debe hacerse el primer respondedor al observar la escena?", opts:["¿Cuánto costará reparar la instalación?","¿Estaba enchufado algún aparato eléctrico antes de moverlo?","¿Funcionaban los interruptores al entrar?","¿Hay cables de alta tensión en el área?"], a:1, fb:"Es importante observar y registrar si algún aparato eléctrico estaba enchufado antes de moverlo, ya que esto puede ser clave para determinar la causa del incendio." },
+    { q:"¿Qué debe hacer el primer respondedor si descubre evidencia de otro delito (robo, homicidio)?", opts:["Ignorarlo y enfocarse solo en el incendio","Comunicarlo inmediatamente a las autoridades correspondientes (policía/fiscal)","Levantar las pruebas del delito él mismo","Esperar a que llegue DIPREIN para decidir"], a:1, fb:"Si descubre evidencia de otro delito, debe comunicarlo de inmediato a las autoridades correspondientes (policía, fiscal)." },
+  ],
+  l29: [
+    { q:"¿Cuál es la PRIMERA prioridad táctica en operaciones de combate contra incendios?", opts:["Control del incendio","Conservación de la propiedad","Búsqueda y Rescate","Preservación de la escena"], a:2, fb:"La 1° prioridad táctica es la Búsqueda y Rescate: entrar, buscar, ubicar y extraer víctimas." },
+    { q:"¿Cuántos integrantes mínimo establece la norma NFPA 1500 para operar en el interior de una estructura en incendio?", opts:["2 integrantes","3 integrantes","4 integrantes (2 adentro + 2 afuera)","6 integrantes"], a:2, fb:"La NFPA 1500 (8.5.4 al 8.5.7) establece mínimo 4 integrantes: 2 trabajando en el interior y 2 fuera disponibles para asistir o rescatar (principio 2-IN/2-OUT)." },
+    { q:"¿Qué es la Búsqueda Primaria?", opts:["La revisión minuciosa luego de controlar el incendio","La acción rápida realizada antes y durante el ataque ofensivo para localizar víctimas en el menor tiempo posible","La búsqueda de equipos del bombero perdidos","La inspección del perímetro externo del edificio"], a:1, fb:"La búsqueda primaria es la acción realizada antes y durante la fase de ataque ofensivo; debe realizarse de manera rápida para maximizar la cobertura con el incendio aún activo." },
+    { q:"¿Cuál es la longitud mínima recomendada para la cuerda guía?", opts:["10 metros","20 metros","30 metros (100 pies) con diámetro de ½ pulgada","50 metros"], a:2, fb:"La cuerda guía debe tener longitud mínima de 30 metros (100 pies) y diámetro de ½ pulgada (12 mm)." },
+    { q:"¿Qué es la 'Regla de los Medios' para la gestión del aire del EPRA?", opts:["Usar ½ del aire antes de entrar y ½ adentro","½ del aire para ingreso y trabajo; ½ para salida y reserva de emergencia","Usar ¾ del aire adentro y ¼ para salir","No existe tal regla"], a:1, fb:"La regla de los medios establece: ½ del aire para ingreso y trabajo, ½ para salida y reserva de emergencia." },
+    { q:"¿Cuándo debe el bombero iniciar su salida del interior del edificio en cuanto al EPRA?", opts:["Cuando la alarma de aire bajo suene","ANTES de que suene la alarma de aire bajo, ya que esta indica que se consume el aire de emergencia","Cuando el cilindro esté completamente vacío","Solo cuando el comandante lo ordene"], a:1, fb:"Se debe salir ANTES de que suene la alarma de aire bajo. Esta alarma indica que ya se está consumiendo el aire de emergencia (reserva), no que se debe iniciar la salida." },
+    { q:"¿Qué localización común de víctimas en incendios nocturnos señala la lección?", opts:["En cocinas y baños","Cerca de las puertas de entrada","En dormitorios, cerca de camas, ventanas o puertas","En los pasillos del edificio"], a:2, fb:"De noche es común encontrar víctimas en dormitorios, cerca de camas, ventanas o puertas." },
+    { q:"¿Qué diferencia a la Búsqueda Secundaria de la Primaria?", opts:["Es más rápida que la primaria","Se realiza por el mismo equipo que hizo la primaria","Es una revisión minuciosa realizada por un equipo DIFERENTE una vez controlado el incendio; se mueve el mobiliario","Solo busca bomberos, no víctimas civiles"], a:2, fb:"La búsqueda secundaria es minuciosa, la realiza un equipo DIFERENTE al que hizo la primaria, se mueve todo el mobiliario, y en la mayoría de casos no encontrará personas con vida." },
+    { q:"¿Qué grupo etario según la NFPA tiene el mayor riesgo de sufrir lesiones o morir en un incendio?", opts:["Niños menores de 5 años","Adolescentes entre 12 y 18 años","Adultos mayores de 65 años","Adultos de 30 a 50 años"], a:2, fb:"Según el programa Steps to Safety de NFPA, los adultos mayores de 65 años tienen el mayor riesgo de sufrir lesiones o fallecer en un incendio estructural." },
+    { q:"¿Qué herramienta del maletín de búsqueda permite alejarse de la cuerda guía con mayor radio de acción?", opts:["La cuerda guía principal","La línea de vida (3-4 m de longitud)","La cinta webbing","La hacha martillo"], a:1, fb:"La línea de vida (3-4 m, diámetro ½ pulg.) permite al bombero anclarse a la cuerda guía y alejarse de ella con mayor radio de acción para explorar áreas adyacentes." },
+    { q:"¿Qué es la posición de búsqueda de '3 puntos'?", opts:["Gatear con manos y rodillas en el suelo","Avanzar con una pierna extendida adelante y otra doblada bajo el cuerpo, manteniendo el cuerpo más vertical","Caminar agachado con una mano en la pared","Arrastrase completamente por el suelo"], a:1, fb:"La posición de 3 puntos: una pierna extendida adelante y otra doblada bajo el cuerpo (combinación de caminata de pato y rodillas). Permite mantener el cuerpo más vertical y detectar obstáculos." },
+    { q:"¿Cuántos recipientes de aire comprimido de reserva recomienda llevar en el maletín de búsqueda?", opts:["1 cilindro","2 cilindros adicionales de reserva","4 cilindros","Ninguno, el EPRA es suficiente"], a:1, fb:"Se recomiendan 2 cilindros de aire comprimido adicionales (reserva) en el maletín de búsqueda." },
+    { q:"¿Por qué NO se recomienda gatear completamente durante la búsqueda primaria?", opts:["Porque el suelo está demasiado caliente","Porque concentra todo el peso del EPRA en la espalda, dificultando paradas repentinas y maniobras evasivas","Porque se pierde la orientación al gatear","Porque la velocidad de avance es mayor caminando"], a:1, fb:"Gatear completamente concentra todo el peso del EPRA sobre la espalda, lo que puede impulsar al bombero hacia adelante y dificultar paradas repentinas o maniobras evasivas." },
+    { q:"¿Para qué sirve el 'Tablero de control' en operaciones de búsqueda y rescate?", opts:["Para controlar la temperatura del área","Para registrar información clave sobre bomberos dentro de la estructura, garantizando seguridad y optimizando recursos","Para calcular la cantidad de agua necesaria","Para comunicarse con la central del CGBVP"], a:1, fb:"El tablero de control (Sistema de contabilidad) registra información clave para garantizar la seguridad de los bomberos y optimizar el tiempo y recursos durante las operaciones." },
+    { q:"¿Cuáles son las 3 situaciones en que se puede encontrar una víctima respecto al incendio?", opts:["Muerta, inconsciente o consciente","Adentro, afuera o en el hospital","Víctimas que ya salieron, que están tratando de salir y que permanecen dentro sin poder evacuar","Graves, leves o ilesas"], a:2, fb:"Las 3 situaciones: 1) Víctimas que ya salieron. 2) Víctimas que están tratando de salir. 3) Víctimas que permanecen dentro sin poder evacuar por sí mismas." },
+    { q:"¿Cuál es la llamada que realiza el bombero durante la búsqueda primaria?", opts:["Solo silba para atraer la atención","'¡Somos los bomberos! ¿Hay alguien aquí? Si me escucha, grite o haga ruido.'","'¡Incendio declarado, evacuen!'","Solo usa la cámara termográfica, no llama verbalmente"], a:1, fb:"Durante la búsqueda primaria el bombero llama: '¡Somos los bomberos! ¿Hay alguien aquí? Si me escucha, grite o haga ruido.' y luego pausa para escuchar respuestas." },
+    { q:"¿Cuándo la búsqueda puede realizarse sin esperar la cuadrilla completa de 4?", opts:["Nunca, siempre se espera la cuadrilla completa","Solo si el comandante es un oficial de alto rango","Si existe peligro inminente de vida donde el rescate inmediato puede prevenir pérdida de vidas (evaluando el nivel de riesgo)","Siempre se puede ingresar con 2 personas"], a:2, fb:"Si existe una situación inminente de peligro para la vida, los integrantes deben evaluar cuidadosamente el nivel de riesgo antes de actuar, aunque no estén los 4 miembros." },
+    { q:"¿Qué función cumple la 'pizarra acrílica' en operaciones de búsqueda?", opts:["Para calcular la resistencia de las estructuras","Facilita la transmisión rápida y visual de información crítica del plano del edificio entre equipos que ya realizaron búsquedas y los que ingresarán","Para escribir el parte de emergencia","Para marcar las víctimas encontradas"], a:1, fb:"La pizarra acrílica facilita la transmisión rápida y visual del plano mental del edificio entre equipos, permitiendo a los que ingresan saber qué áreas ya fueron revisadas." },
+    { q:"¿Qué verificaciones personales debe hacer el bombero ANTES de ingresar a una búsqueda?", opts:["Solo verificar el radio y la linterna","Saber a quién reportarse, radio encendida en canal correcto, EPRA funcionando con cilindro lleno, PASS activado, conocer deberes y medios alternativos de salida","Solo verificar el EPRA","Verificar únicamente la herramienta de entrada forzada"], a:1, fb:"El bombero debe verificar: a quién reportarse, radio encendida en canal correcto, EPRA activado con cilindro lleno, PASS activado, deberes asignados y medios alternativos de salida." },
+    { q:"¿Qué es la 'cinta webbing' (cinta de extracción) y para qué sirve?", opts:["Una cuerda especial para anclaje de peso","Herramienta versatil que soporta grandes tensiones para ayudar en la extracción de víctimas","Un dispositivo de comunicación","Una cinta para marcar las áreas revisadas"], a:1, fb:"La cinta webbing es una herramienta versátil y fundamental que, gracias a su capacidad de soportar grandes tensiones, ayuda en la extracción de víctimas." },
+  ],
+  l30: [
+    { q:"Según el RNE del Perú, ¿a partir de cuántos pisos es obligatorio contar con ascensor?", opts:["3 pisos","4 pisos","5 pisos o más","7 pisos"], a:2, fb:"Según el Reglamento Nacional de Edificaciones (RNE) del Perú, los edificios de 5 pisos a más deben tener ascensores." },
+    { q:"¿Cuál es la velocidad máxima de la cabina en ascensores eléctricos SIN engranajes (sin grupo reductor)?", opts:["0.1 a 1.75 m/s","1 a 3 m/s","2 a 10 m/s","15 a 20 m/s"], a:2, fb:"Los ascensores eléctricos sin engranajes tienen velocidad de cabina de 2 a 10 m/s, usados en edificios de gran altura." },
+    { q:"¿Cuál es la acción MÁS SEGURA al hacer una maniobra de rescate en un ascensor?", opts:["Primero rescatar y luego cortar la energía","Cortar el suministro eléctrico ANTES de cualquier maniobra en cuarto de máquinas, ducto o foso","Entrar al foso sin cortar la corriente","Llamar al ascensor con el panel del pasillo"], a:1, fb:"SIEMPRE cortar el suministro eléctrico antes de cualquier maniobra en el cuarto de máquinas, ducto o foso. Luego bloquear el interruptor." },
+    { q:"¿Qué es el 'Volante' en el cuarto de máquinas de un ascensor?", opts:["El motor principal del ascensor","El sistema de frenos de emergencia","La parte responsable del ascenso/descenso; se usa para mover la cabina en la maniobra de rescate manual sin corriente","El limitador de velocidad"], a:2, fb:"El Volante es la parte responsable del ascenso y descenso normal; se usa para subir y bajar la cabina durante la maniobra de rescate en ausencia de corriente eléctrica." },
+    { q:"¿Qué información es crítica para el rescate si la cabina está entre pisos?", opts:["El color de las paredes del ascensor","El modelo y marca del ascensor","Cuántas personas están en la cabina, ya que determina si tiende a subir o bajar según el contrapeso","La temperatura dentro de la cabina"], a:2, fb:"El contrapeso se calcula como el peso de la cabina + 45% de su capacidad. Si hay más personas de lo esperado, la cabina bajará. Dato crítico para la maniobra." },
+    { q:"¿Qué ocurre con el ascensor que va subiendo cuando se activa el pulsador de bomberos?", opts:["Continúa hasta el último piso","Se detiene en el piso siguiente sin abrir las puertas y deja de reconocer llamadas exteriores e interiores","Regresa al piso de partida","Se detiene inmediatamente en el piso actual"], a:1, fb:"Si el ascensor va subiendo, se detiene en el piso siguiente, no abre las puertas y deja de reconocer llamadas exteriores e interiores." },
+    { q:"¿Cuántos tipos de sistemas de funcionamiento de ascensores se mencionan en la lección?", opts:["Tres: eléctrico, hidráulico y magnético","Dos: eléctrico e hidráulico","Cuatro: eléctrico, hidráulico, neumático y de cadena","Solo uno: eléctrico"], a:1, fb:"La lección describe dos sistemas de funcionamiento: eléctrico (por tracción de cables con motor) e hidráulico (por pistón accionado por bomba de fluido)." },
+    { q:"¿Cuál es la profundidad mínima libre que debe quedar bajo la cabina cuando llega al fondo del foso?", opts:["10 cm","25 cm","Al menos 0.5 m (50 cm), suficiente para proteger a una persona bajo la cabina","1 metro"], a:2, fb:"El foso debe ser suficientemente profundo para que cuando la cabina comprima los amortiguadores, quede libre al menos medio metro de altura (protección para una persona bajo la cabina)." },
+    { q:"¿Qué característica distingue al ascensor panorámico?", opts:["No requiere cuarto de máquinas","Tiene vidrios panorámicos en lugar de paredes del ducto y no participa en la protección contra incendios","Es el más seguro en emergencias","Solo transporta personas con discapacidad"], a:1, fb:"El ascensor panorámico tiene vidrios panorámicos como paredes del ducto y no participa en la protección contra incendios del edificio." },
+    { q:"¿Cuál es la carga mínima para un ascensor montacamillas?", opts:["500 kg","750 kg","1000 kg","1500 kg"], a:2, fb:"Los ascensores montacamillas tienen capacidad mínima de carga de 1000 kg, con ancho mínimo de puerta de 1100 mm." },
+    { q:"¿Qué es el 'Limitador de velocidad' del ascensor?", opts:["El dispositivo que controla la velocidad máxima de subida del motor","Un dispositivo que detiene la cabina mediante el paracaídas cuando la velocidad supera el límite; tiene un cable independiente a los de tracción","El freno principal del motor","La polea de tracción superior"], a:1, fb:"El limitador de velocidad detiene la cabina mediante un sistema de paracaídas o acuñamiento cuando la velocidad supera el valor establecido. Su cable es independiente de los de tracción." },
+    { q:"¿Qué es la maniobra de 'Rescate con funcionamiento normal'?", opts:["Cortar los cables y dejar caer la cabina al foso","Poner en marcha el ascensor automáticamente desde el nivel de rescate llamándolo con el pulsador de pasillo","Abrir la puerta del ducto y extraer a los pasajeros","Bajar a los pasajeros por el techo de la cabina con cuerdas"], a:1, fb:"Rescate con funcionamiento normal: rearmar el interruptor de encendido y accionar el pulsador de pasillo para llamar al ascensor al nivel de rescate. Es la maniobra más segura." },
+    { q:"¿Qué es el 'Contrapeso' del ascensor y cómo se calcula?", opts:["Es igual al peso máximo de pasajeros","Es el peso de la cabina solamente","Es el peso de la cabina más un 45% de su capacidad de carga; reduce la potencia necesaria para mover la cabina","Es el doble del peso de la cabina"], a:2, fb:"El contrapeso = peso de la cabina + 45% de su capacidad. Su función es reducir la potencia que necesita el motor para mover la cabina." },
+    { q:"¿Cuál es la causa más frecuente de emergencias en ascensores según la lección?", opts:["Terremotos o desastres naturales","Vandalismo de usuarios","Falta de mantenimiento o mal mantenimiento","Sobrecarga de pasajeros"], a:2, fb:"Muchas veces las emergencias en ascensores no se suscitan por un evento natural sino por la falta de mantenimiento o por un mal mantenimiento." },
+    { q:"¿Qué son las 'guías de cabina' del ducto?", opts:["Los cables que mueven la cabina","Perfiles laminados en forma de T que dirigen el recorrido del ascensor y del contrapeso","Los dispositivos de apertura de puertas","El fondo del foso"], a:1, fb:"Las guías de cabina son perfiles laminados en forma de T que dirigen el recorrido tanto del ascensor como del contrapeso a lo largo del ducto." },
+    { q:"¿Qué sucede cuando los mecanismos de seguridad van conectados en serie?", opts:["Si uno falla, los demás continúan funcionando","Si uno se interrumpe, detiene todo el funcionamiento del ascensor (aunque se mantiene tensión en el cuadro de maniobras)","Todos deben fallar simultáneamente para detener el ascensor","No tienen efecto en la operación del ascensor"], a:1, fb:"Los mecanismos de seguridad van en serie: si uno se interrumpe, detiene el funcionamiento del ascensor, aunque se mantiene la tensión eléctrica en el cuadro de maniobras." },
+    { q:"¿Cuánto tiempo tiene la empresa mantenedora para responder a una persona atrapada en un ascensor?", opts:["48 horas","24 horas en averías normales, pero INMEDIATAMENTE en urgencias como persona atrapada o accidente","72 horas","Solo durante horario de oficina"], a:1, fb:"La norma europea EN 81-20/50 establece 24 horas para averías ordinarias, pero respuesta INMEDIATA ante situaciones urgentes como persona atrapada o accidente." },
+    { q:"¿En qué tipo de ascensor se ubica el cuarto de máquinas en un 'recinto contiguo al ducto'?", opts:["Ascensor eléctrico sin engranajes","Ascensor neumático","Ascensor hidráulico con cuarto de máquinas","Ascensor panorámico"], a:2, fb:"Los ascensores hidráulicos pueden ubicar su cuarto de máquinas en un recinto contiguo al ducto, no necesariamente arriba." },
+    { q:"¿Qué se debe hacer ANTES de desconectar la batería de 12V en un vehículo eléctrico atrapado en un ascensor?", opts:["No hay preparación necesaria","Abrir ventanas, desbloquear puertas y abrir el portón trasero según sea necesario","Primero apagar el sistema de alta tensión","Esperar 15 minutos"], a:1, fb:"Antes de desconectar la batería auxiliar de 12V, se deben abrir ventanas, desbloquear puertas y abrir el portón trasero, ya que una vez desconectada, los controles de potencia no funcionarán." },
+    { q:"¿Qué tipo de ascensor se usa en hospitales para el transporte de camillas?", opts:["Ascensor panorámico","Ascensor convencional","Ascensor montacamillas o montacamas con puerta mínima de 1100 mm","Ascensor de emergencia para bomberos"], a:2, fb:"El ascensor montacamillas y montacamas está destinado al transporte de camillas y camas en centros de salud. Requiere capacidad mínima de 1000 kg y puerta mínima de 1100 mm." },
+  ],
+  l31: [
+    { q:"¿Qué es una polea MÓVIL y cómo afecta al esfuerzo?", opts:["Cambia la dirección de la fuerza sin reducir el esfuerzo","Reduce el esfuerzo necesario al distribuir el peso de la carga entre varios puntos","Duplica la fuerza aplicada","No tiene efecto en el esfuerzo necesario"], a:1, fb:"La polea móvil reduce el esfuerzo necesario al distribuir el peso de la carga, a diferencia de la fija que solo cambia la dirección sin reducir el esfuerzo." },
+    { q:"¿Cuánto reduce el esfuerzo un sistema de ventaja mecánica de 4:1?", opts:["A la mitad del esfuerzo original","A una tercera parte","A una cuarta parte del esfuerzo original","Al doble del esfuerzo"], a:2, fb:"Un sistema de ventaja mecánica 4:1 reduce la carga a una cuarta parte del esfuerzo original. Un sistema 2:1 la reduce a la mitad." },
+    { q:"¿Cómo se calcula el Factor de Caída (FC)?", opts:["FC = Longitud de cuerda / Peso del rescatista","FC = Distancia de caída / Longitud de cuerda entre rescatista y anclaje","FC = Altura del edificio / Peso de la carga","FC = Velocidad de caída / Tiempo"], a:1, fb:"FC = Distancia de caída / Longitud de cuerda entre el rescatista y el anclaje. A mayor FC, mayor riesgo de rotura del sistema." },
+    { q:"¿Cuál es el Factor de Caída más peligroso?", opts:["FC = 0 (sin caída libre)","FC = 0.5","FC = 1 (caída igual a longitud de cuerda)","FC = 2 (caída es el doble de la cuerda; máximo peligro)"], a:3, fb:"FC = 2 es el máximo peligro: la distancia de caída es el doble de la cuerda disponible para detenerla. FC = 0 es sin caída libre (el más seguro)." },
+    { q:"¿Cuál es la fuerza máxima de choque que no debe superar el rescatista?", opts:["2 kN","6 kN","10 kN","15 kN"], a:1, fb:"La energía absorbida por la persona no debe superar los 6 kN (FC < 6KN). Para ello son obligatorios los absorbedores de impacto." },
+    { q:"¿Qué resistencia mínima debe soportar un anclaje para rescate con cuerda?", opts:["5 kN","10 kN","15 kN (1500 kgf)","25 kN"], a:2, fb:"Todo anclaje debe soportar mínimo 15 kN (1500 kgf) para operaciones de rescate con cuerda." },
+    { q:"¿Cuándo se usa el 'anclaje humano'?", opts:["Es el tipo de anclaje preferido","Solo en situaciones de emergencia cuando no hay otra opción disponible; solo para descensos","Se usa en todos los rescates de rutina","Se usa cuando hay más de 4 rescatistas"], a:1, fb:"El anclaje humano es de uso EXCEPCIONAL y de emergencia, solo cuando la situación impida la instalación de cualquier otro anclaje. Solo se usa para descensos y tiene limitaciones." },
+    { q:"¿Qué son los 'vientos' en rescate con cuerdas?", opts:["Las condiciones meteorológicas que afectan el rescate","Cuerdas auxiliares de menor diámetro que controlan el movimiento horizontal no deseado de una carga suspendida","Los nudos utilizados para unir cuerdas","Los sistemas de frenado de la cuerda principal"], a:1, fb:"Los vientos son cuerdas auxiliares para dirigir, estabilizar o controlar una carga suspendida, minimizando el movimiento pendular y previniendo colisiones." },
+    { q:"¿Qué diámetro tienen habitualmente los vientos (cuerdas auxiliares)?", opts:["El mismo que la cuerda principal","Mayor que la cuerda principal","Menor: generalmente 8-11 mm","Exactamente 6 mm"], a:2, fb:"Los vientos se fabrican con cuerda de menor diámetro que la cuerda principal, generalmente de 8-11 mm." },
+    { q:"¿Cuál es la diferencia entre el anclaje estructural y el anclaje natural?", opts:["Son idénticos en propiedades","El estructural lo construye el hombre (columnas, vigas, muros); el natural lo proporciona el entorno (árboles, rocas, grietas)","El natural es siempre más confiable","El estructural solo funciona en exteriores"], a:1, fb:"Anclaje estructural: construido por el hombre (columnas, vigas, muros, barandas). Anclaje natural: proporcionado por el entorno (árboles firmes, rocas enterradas, grietas en rocas)." },
+    { q:"¿Qué condición debe cumplir un vehículo usado como anclaje móvil?", opts:["Debe estar en movimiento para generar mayor fuerza","Debe estar estabilizado con freno de mano y calzado con cuñas; la parte usada como anclaje debe soportar ≥15 kN","Solo se necesita que el motor esté apagado","Debe estar orientado hacia el punto de rescate"], a:1, fb:"El vehículo debe estar con freno de mano, calzado con cuñas. La parte usada como anclaje debe soportar mínimo 15 kN. La fuerza debe dirigirse perpendicular al desplazamiento." },
+    { q:"¿Qué es el 'Síndrome del Arnés' y cuál es su riesgo principal?", opts:["Un defecto en el equipo del arnés","La situación en que una persona suspendida por el arnés sin poder moverse acumula sangre en las piernas, pudiendo causar paro cardíaco en minutos","Una lesión en la espalda por usar el arnés incorrectamente","Un tipo de mareo al estar en altura"], a:1, fb:"El Síndrome del Arnés ocurre cuando alguien queda suspendido por el arnés sin poder moverse: la sangre se acumula en las piernas y puede causar paro cardíaco en minutos." },
+    { q:"¿Qué tipo de anclaje requiere MAYOR experiencia para su uso?", opts:["El anclaje estructural en columnas","El anclaje en equipos móviles","El anclaje natural (árboles, rocas, grietas); se recomienda probarlo varias veces antes de usar","El anclaje en escaleras metálicas"], a:2, fb:"El anclaje natural requiere mucha experiencia y análisis de comportamiento. Se recomienda probarlo varias veces antes de usarlo en rescate real para verificar su confiabilidad." },
+    { q:"¿Cómo se calcula la expansión de la espuma según la NFPA 11 para baja expansión?", opts:["Mayor que 1:1000","Entre 1:200 y 1:1000","Hasta 1:20","Exactamente 1:10"], a:2, fb:"Según la NFPA 11, la espuma de baja expansión tiene una relación de hasta 1:20." },
+    { q:"¿Qué carga mínima soporta un anclaje en equipos móviles para ser válido?", opts:["5 kN","10 kN","15 kN","20 kN"], a:2, fb:"La parte del vehículo usada como anclaje (chasis, parachoques, ganchos de arrastre) debe soportar una carga mínima de 15 kN." },
+    { q:"¿Qué característica tienen los anclajes naturales en roca vs. los de árbol?", opts:["Los de árbol siempre son más seguros","Son iguales en confiabilidad","Las grietas en roca y agujeros son puntos fijos; los árboles deben tener raíces subterráneas firmes y no ser troncos secos","Los anclajes en roca no son válidos para rescate"], a:2, fb:"Las grietas y agujeros en rocas son puntos fijos. Para árboles: deben tener raíces subterráneas firmes, ser robustos y NO ser troncos secos." },
+    { q:"¿Qué es una polea FIJA y cuál es su función en rescate con cuerdas?", opts:["Reduce el esfuerzo a la mitad","Duplica la fuerza aplicada","Cambia la dirección de la fuerza sin reducir el esfuerzo necesario","Bloquea el movimiento de la cuerda"], a:2, fb:"La polea fija cambia la DIRECCIÓN de la fuerza aplicada, pero NO reduce el esfuerzo necesario. Permite redireccionar el sistema de cuerda." },
+    { q:"¿Cuál es el tipo de 'viento' que se conecta lateralmente para evitar balanceos?", opts:["Viento de dirección","Viento de estabilización","Viento de tracción o guía","Viento de rescate"], a:1, fb:"El viento de estabilización se conecta lateralmente a la carga para evitar balanceos no deseados durante el descenso o ascenso." },
+    { q:"¿Qué componente del sistema de seguridad personal absorbe parte de la fuerza de choque en una caída?", opts:["El casco del bombero","El arnés de seguridad","El absorbedor de impacto (obligatorio para que la fuerza no supere 6 kN)","El cinturón del pantalón de faena"], a:2, fb:"Los absorbedores de impacto son obligatorios para garantizar que la fuerza de choque que se transfiere al rescatista no supere los 6 kN (valor de seguridad)." },
+    { q:"¿Qué debe hacerse con los anclajes ANTES de cada operación de rescate?", opts:["Solo verificarlos visualmente desde lejos","No hay verificación previa necesaria","Inspeccionarlos para detectar óxido, grietas, desgaste o deformaciones; verificar que los conectores estén cerrados y que no haya bordes afilados","Solo verificar si soportaron el último rescate"], a:2, fb:"Antes de cada uso, los anclajes deben inspeccionarse para detectar óxido, grietas, desgaste o deformaciones, y verificar que los conectores (mosquetones) estén cerrados y limpios." },
+  ],
+  l32: [
+    { q:"¿Cuáles son las dos maniobras para abrir las vías aéreas según la lección?", opts:["Compresión torácica y maniobra de Heimlich","EXCELM (Extensión de cabeza y elevación mandibular) y EM (Empuje mandibular)","Cricotirotomía y traqueotomía","RCP y ventilación de rescate"], a:1, fb:"Las dos maniobras: EXCELM (Extensión de cabeza y elevación mandibular) para pacientes sin trauma, y EM (Empuje mandibular) para pacientes con trauma." },
+    { q:"¿Qué significa AVDI en la evaluación inicial?", opts:["Adulto, Vital, Desorientado, Inconsciente","Alerta, Verbal, Dolor, Inconsciente","Arteria, Vena, Drenaje, Irrigación","Análisis, Valoración, Diagnóstico, Intervención"], a:1, fb:"AVDI es el método para evaluar el nivel de respuesta: Alerta (ojos abiertos, obedece), Verbal (responde al habla), Dolor (responde a presión en trapecio), Inconsciente (no responde a nada)." },
+    { q:"¿Cuánto tiempo máximo debe tomar la evaluación inicial completa?", opts:["30 segundos","1 minuto","5 minutos","10 minutos"], a:1, fb:"La evaluación inicial es un proceso ordenado para detectar problemas que amenazan la vida a corto plazo y no debe tomar más de 1 minuto." },
+    { q:"¿Qué significa GEPONLAS en la evaluación prehospitalaria?", opts:["Genero, Edad, Posición, Nivel de respuesta, Lesiones o deformidades, Agresivo potencial, Signos de shock","General, Examen, Presión, Orientación, Nivel, Lesiones, Articulación, Signos","Gravedad, Exposición, Postura, Orientación, Necesidad, Lesión, Asistencia, Soporte","Glucosa, Evaluación, Pulso, Oxígeno, Neurológico, Latido, Acción, Soporte"], a:0, fb:"GEPONLAS: Género, Edad, Posición encontrada, Nivel de respuesta, Lesiones o deformidades visibles, Agresivo potencial y Signos de shock. Es la impresión general del paciente." },
+    { q:"¿Cuál es el paso 3 de la evaluación inicial?", opts:["Abrir las vías aéreas","Buscar hemorragias","Circulación: verificar el pulso carotídeo hasta por 10 segundos","Evaluar el nivel de respuesta (AVDI)"], a:2, fb:"El paso 3 de la evaluación inicial es la Circulación: palpar el pulso carotídeo. Es el último pulso que se pierde y debe verificarse en máximo 10 segundos." },
+    { q:"¿Qué es el VOS en la evaluación de la respiración?", opts:["Verificar, Observar, Sujetar","Ver el movimiento torácico, Oír acercando el oído a la nariz y boca, Sentir la respiración en la mejilla","Valorar, Orientar, Suministrar oxígeno","Verificar Oxígeno en Sangre"], a:1, fb:"VOS: Ver el movimiento torácico/abdominal, Oír acercando el oído a la nariz y boca del paciente, Sentir en la mejilla la respiración. No debe tomar más de 10 segundos." },
+    { q:"¿Cuántos integrantes son el número IDEAL para el manejo de un paciente por trauma?", opts:["2 APH","3 APH","4 APH","6 APH"], a:2, fb:"El número ideal para el manejo de un paciente por trauma es de 4 APH (Agentes de Primeros Auxilios Prehospitalarios)." },
+    { q:"¿Qué color del Triage START indica 'PRIMERA PRIORIDAD' (estado crítico pero salvable)?", opts:["Verde","Amarillo","Rojo","Negro"], a:2, fb:"Color ROJO (Primera prioridad): pacientes con signos y síntomas que muestran estado crítico pero que son salvables y requieren atención inmediata." },
+    { q:"¿Cuántos tratamientos se permiten durante el triage START por parte de quien lo realiza?", opts:["Solo 1: apertura de vías aéreas","Solo 2: abrir vías aéreas y controlar hemorragias","3: vías aéreas, hemorragias y posición","Todos los necesarios para estabilizar al paciente"], a:1, fb:"Solo se permiten 2 tratamientos durante el triage START (cuando aún faltan víctimas): abrir las vías aéreas y controlar hemorragias." },
+    { q:"¿Cuánto tiempo máximo se evalúa cada víctima en el método START?", opts:["30 segundos","1 minuto","2 minutos","5 minutos"], a:1, fb:"El método START no debe tomar más de 1 minuto por persona para clasificar a cada víctima." },
+    { q:"¿Qué indica el color NEGRO en el triage START?", opts:["Primera prioridad: atención inmediata","Segunda prioridad: diferir atención","Tercera prioridad: lesiones leves","Sin prioridad: signos de muerte clínica; cadáveres"], a:3, fb:"Color NEGRO: sin prioridad, presencia de signos de muerte clínica. No se aplica RCP durante el triage START (priorizar el mayor beneficio para el mayor número)." },
+    { q:"¿Cuál es el primer paso del triage START (Paso 1)?", opts:["Evaluar la respiración","Verificar la perfusión","Llamada de víctimas: identificar heridos ambulantes con una llamada en voz alta para que se acerquen","Evaluar el nivel de respuesta (AVDI)"], a:2, fb:"Paso 1 - Llamada de víctimas: el APH hace el llamado en voz alta ('aquellos que puedan caminar, acérquense'), identificando así a los heridos ambulantes (generalmente VERDE)." },
+    { q:"¿Qué indica una frecuencia respiratoria MAYOR a 30 o MENOR a 10 en el triage START?", opts:["Paciente VERDE (lesiones leves)","Paciente AMARILLO (diferido)","Paciente ROJO (inmediato/primera prioridad)","Paciente NEGRO (muerto)"], a:2, fb:"Frecuencia respiratoria mayor a 30 o menor a 10 por minuto indica paciente ROJO (inmediato, primera prioridad)." },
+    { q:"¿Qué indica un llenado capilar mayor a 2 segundos en el triage START?", opts:["Paciente VERDE","Paciente AMARILLO","Paciente ROJO (perfusión comprometida, primera prioridad)","Paciente NEGRO"], a:2, fb:"Llenado capilar mayor a 2 segundos (o pulso radial ausente) = paciente ROJO. Llenado menor a 2 segundos (o pulso radial presente) = pasar al siguiente paso." },
+    { q:"¿Cuál es el EPP mínimo para un APH en la escena?", opts:["Solo guantes","Casco, lentes (no oscuros), mascarilla, guantes de examen (no negros) y rodilleras","Traje de bombero estructural completo","Solo mascarilla y guantes"], a:1, fb:"El EPP APH incluye: casco de rescate, lentes (NO oscuros), mascarilla, guantes de examen (NO negros) y rodilleras." },
+    { q:"¿Cuál es el tiempo estimado ideal desde el contacto con el paciente hasta tenerlo en la ambulancia con el manejo de trauma?", opts:["2 a 4 minutos","5 a 7 minutos","8 a 10 minutos","15 a 20 minutos"], a:2, fb:"Un tiempo estimado de 8 a 10 minutos es lo ideal desde que se contacta al paciente hasta tenerlo en la ambulancia, lo que implica un trabajo de equipo muy bien coordinado." },
+    { q:"¿Qué es el Kit de Trauma en la guía para trauma?", opts:["Solo el desfibrilador","Bolsa de oxígeno y mascarilla","Férula Espinal Larga (FEL) + 3 correajes o tipo 'araña' + inmovilizadores cervical y laterales","Solo la cánula orofaríngea"], a:2, fb:"El kit de trauma consta de 4 elementos: Férula Espinal Larga (FEL), tres correajes o del tipo 'araña', inmovilizadores cervical y laterales." },
+    { q:"¿Cuándo se coloca la cánula orofaríngea?", opts:["En todos los pacientes traumatizados","Solo en pacientes inconscientes y sin reflejos nauseosos","En todos los pacientes con dificultad respiratoria","Solo en pacientes conscientes"], a:1, fb:"La cánula orofaríngea se coloca SOLO en pacientes inconscientes y sin reflejos nauseosos para mantener abierta la vía aérea." },
+    { q:"¿Quién creó el método de triage START?", opts:["La Cruz Roja Internacional","La Organización Mundial de la Salud (OMS)","El Hospital Hoag y el Cuerpo de Bomberos de Newport Beach, California, USA","El CGBVP de Perú"], a:2, fb:"El triage START fue creado por el Hospital Hoag y el Cuerpo de Bomberos de Newport Beach, en California, USA." },
+    { q:"¿Qué significa la maniobra EXCELM?", opts:["Extensión Cervical, Elevación, Lateralización y Movilización","Extensión de la Cabeza y Elevación Mandibular","Exploración Cervical, Estabilización, Liberación y Manejo","Examen Clínico, Evaluación, Limitación y Mantenimiento"], a:1, fb:"EXCELM: Extensión de la Cabeza y Elevación Mandibular. Se usa en pacientes en los que NO se sospecha de trauma cervical." },
+  ]
+};
+
+// ══════════════════════════════════════
+// RENDER QUIZZES
+// ══════════════════════════════════════
+function renderQuiz(lessonId) {
+  const container = document.getElementById(lessonId + '-questions');
+  if (!container || container.dataset.rendered) return;
+  container.dataset.rendered = 'true';
+
+  const questions = quizData[lessonId];
+  let html = '';
+  questions.forEach((q, i) => {
+    html += `<div class="question-block" id="${lessonId}-q${i}">
+      <div class="question-text"><span class="question-num">${i+1}</span>${q.q}</div>
+      <div class="options">`;
+    q.opts.forEach((opt, j) => {
+      html += `<button class="option-btn" data-q="${i}" data-o="${j}" onclick="selectOption(this,'${lessonId}',${i},${j})">${opt}</button>`;
+    });
+    html += `</div>
+      <div class="feedback" id="${lessonId}-fb${i}"></div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function selectOption(btn, lessonId, qIdx, optIdx) {
+  const container = document.getElementById(lessonId + '-q' + qIdx);
+  if (container.querySelector('.option-btn.correct') || container.querySelector('.option-btn.wrong')) return;
+  // Mark selection only (visual highlight before check)
+  container.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.style.borderColor = '#FFB347';
+  btn.style.color = '#FFB347';
+  btn.dataset.selected = 'true';
+  // store selection
+  btn.closest('.question-block').dataset.selected = optIdx;
+}
+
+function checkQuiz(lessonId) {
+  const questions = quizData[lessonId];
+  let score = 0;
+
+  questions.forEach((q, i) => {
+    const block = document.getElementById(lessonId + '-q' + i);
+    const selected = parseInt(block.dataset.selected ?? -1);
+    const fb = document.getElementById(lessonId + '-fb' + i);
+    const btns = block.querySelectorAll('.option-btn');
+
+    btns.forEach(btn => { btn.style.borderColor = ''; btn.style.color = ''; });
+
+    if (selected === -1) {
+      btns[q.a].classList.add('correct');
+      fb.textContent = '⚠️ No respondiste. ' + q.fb;
+      fb.className = 'feedback wrong show';
+    } else if (selected === q.a) {
+      btns[selected].classList.add('correct');
+      btns.forEach(b => b.classList.add('disabled'));
+      fb.textContent = '✅ ¡Correcto! ' + q.fb;
+      fb.className = 'feedback correct show';
+      score++;
+    } else {
+      btns[selected].classList.add('wrong');
+      btns[q.a].classList.add('correct');
+      btns.forEach(b => b.classList.add('disabled'));
+      fb.textContent = '❌ Incorrecto. ' + q.fb;
+      fb.className = 'feedback wrong show';
+    }
+  });
+
+  // Score display
+  const pct = Math.round((score / 20) * 100);
+  const sd = document.getElementById(lessonId + '-score');
+  let cls = pct >= 80 ? 'great' : pct >= 60 ? 'good' : 'low';
+  let msg = pct >= 80 ? '¡Excelente rendimiento! 🔥' : pct >= 60 ? 'Buen esfuerzo, sigue repasando.' : 'Necesitas repasar el material.';
+  sd.innerHTML = `<div class="score-num">${score}/20 (${pct}%)</div><div class="score-label">${msg}</div>`;
+  sd.className = 'score-display show ' + cls;
+
+  // Update progress bar
+  document.getElementById('prog' + lessonId.replace('l', '')).style.width = pct + '%';
+}
+
+function resetQuiz(lessonId) {
+  const container = document.getElementById(lessonId + '-questions');
+  container.removeAttribute('data-rendered');
+  renderQuiz(lessonId);
+  document.getElementById(lessonId + '-score').className = 'score-display';
+  document.getElementById('prog' + lessonId.replace('l', '')).style.width = '0%';
+  // Reset tab
+  const quizPanel = document.getElementById(lessonId + '-quiz');
+  if (quizPanel.classList.contains('active')) renderQuiz(lessonId);
+}
+
+// ══════════════════════════════════════
+// TAB SWITCHING
+// ══════════════════════════════════════
+function switchTab(lessonId, tab, btn) {
+  // Update tab buttons
+  btn.closest('.tab-bar').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Show/hide panels
+  const card = document.getElementById(lessonId);
+  card.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(lessonId + '-' + tab).classList.add('active');
+
+  if (tab === 'quiz') renderQuiz(lessonId);
+}
+
+// ══════════════════════════════════════
+// LESSON NAV
+// ══════════════════════════════════════
+function showLesson(id, btn) {
+  document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+
+  const cards = document.querySelectorAll('.lesson-card');
+  if (id === 'all') {
+    cards.forEach(c => c.classList.add('visible'));
+  } else {
+    cards.forEach(c => c.classList.remove('visible'));
+    document.getElementById(id).classList.add('visible');
+  }
+  window.scrollTo({ top: document.getElementById('lessonContainer').offsetTop - 60, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

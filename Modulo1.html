@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFBB 2026 — Módulo I · Lecciones 01 al 09</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fire:#E8430A; --fire-deep:#B02D04; --fire-glow:#FF7A30;
+    --smoke:#252525; --ash:#353535; --ember:#FFB347; --gold:#F4C842;
+    --cream:#FFF8F0; --white:#fff;
+    --green-ok:#2E7D32; --red-err:#C62828; --blue:#1565C0;
+    --shadow:0 4px 24px rgba(0,0,0,.2); --shadow-sm:0 2px 8px rgba(0,0,0,.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Source Sans 3',sans-serif;background:#181818;color:#e8e8e8;min-height:100vh}
+
+  /* ─── HERO ─── */
+  .hero{background:linear-gradient(135deg,#0d0d0d 0%,#2a0e00 50%,#0d0d0d 100%);border-bottom:3px solid var(--fire);padding:52px 24px 44px;text-align:center;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 90%,rgba(232,67,10,.20) 0%,transparent 65%);pointer-events:none}
+  .hero-shield{font-size:62px;line-height:1;margin-bottom:14px;filter:drop-shadow(0 0 18px rgba(232,67,10,.5))}
+  .hero-badge{display:inline-block;background:var(--fire);color:#fff;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:5px 16px;border-radius:2px;margin-bottom:18px}
+  .hero h1{font-family:'Oswald',sans-serif;font-size:clamp(26px,5vw,50px);font-weight:700;color:#fff;line-height:1.15}
+  .hero h1 span{color:var(--fire-glow)}
+  .hero p{margin-top:12px;font-size:16px;color:#bbb;max-width:580px;margin-left:auto;margin-right:auto;line-height:1.6}
+  .hero-stats{display:flex;justify-content:center;gap:32px;margin-top:26px;flex-wrap:wrap}
+  .hero-stat{text-align:center}
+  .hero-stat .num{font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;color:var(--fire-glow)}
+  .hero-stat .lbl{font-size:12px;color:#888;margin-top:2px}
+
+  /* ─── NAV ─── */
+  .lessons-nav{background:#1e1e1e;padding:14px 16px;display:flex;flex-wrap:wrap;gap:7px;justify-content:center;position:sticky;top:0;z-index:100;border-bottom:2px solid #333}
+  .nav-pill{background:transparent;border:1.5px solid #444;color:#999;font-family:'Oswald',sans-serif;font-size:12px;padding:5px 11px;border-radius:20px;cursor:pointer;transition:all .2s}
+  .nav-pill:hover,.nav-pill.active{background:var(--fire);border-color:var(--fire);color:#fff}
+
+  /* ─── CONTAINER ─── */
+  .container{max-width:920px;margin:0 auto;padding:30px 16px 60px}
+
+  /* ─── LESSON CARD ─── */
+  .lesson-card{background:#252525;border-radius:12px;margin-bottom:34px;overflow:hidden;border:1px solid #333;display:none}
+  .lesson-card.visible{display:block}
+
+  .lesson-header{padding:22px 26px 20px;display:flex;align-items:flex-start;gap:18px;position:relative;overflow:hidden}
+  .lesson-header::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,var(--fire-deep),var(--fire));opacity:.9}
+  .lesson-header::after{content:'';position:absolute;right:-20px;bottom:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.05)}
+  .lesson-header-content{position:relative;z-index:1;display:flex;align-items:flex-start;gap:18px;width:100%}
+  .lesson-icon-box{width:60px;height:60px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:28px}
+  .lesson-title-block h2{font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;color:#fff;letter-spacing:.4px;line-height:1.3}
+  .lesson-title-block .meta{font-size:12px;color:rgba(255,255,255,.65);margin-top:4px}
+  .lesson-number-bg{position:absolute;right:16px;top:8px;font-family:'Oswald',sans-serif;font-size:72px;font-weight:700;color:rgba(255,255,255,.08);line-height:1;z-index:0}
+
+  /* ─── PROGRESS ─── */
+  .progress-bar{height:4px;background:#1a1a1a}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--fire),var(--gold));transition:width .5s}
+
+  /* ─── TABS ─── */
+  .tab-bar{display:flex;background:#1e1e1e;border-bottom:2px solid #333}
+  .tab-btn{flex:1;padding:12px;border:none;background:transparent;color:#777;font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.5px;cursor:pointer;transition:all .2s;border-bottom:3px solid transparent;margin-bottom:-2px}
+  .tab-btn.active{color:var(--fire-glow);border-bottom-color:var(--fire-glow)}
+  .tab-btn:hover:not(.active){color:#ccc}
+
+  /* ─── PANELS ─── */
+  .panel{display:none;padding:26px 26px}
+  .panel.active{display:block}
+
+  /* ─── SUMMARY ─── */
+  .summary h3{font-family:'Oswald',sans-serif;font-size:14px;color:var(--ember);text-transform:uppercase;letter-spacing:1px;margin:22px 0 8px}
+  .summary h3:first-child{margin-top:0}
+  .summary p{font-size:15px;line-height:1.75;color:#ccc;margin-bottom:10px}
+  .summary ul{padding-left:20px;margin-bottom:10px}
+  .summary ul li{font-size:15px;line-height:1.7;color:#ccc;margin-bottom:5px}
+  .highlight-box{background:rgba(232,67,10,.13);border-left:4px solid var(--fire);padding:12px 16px;border-radius:0 6px 6px 0;margin:14px 0;font-size:14px;color:#eee;line-height:1.6}
+  .info-box{background:rgba(21,101,192,.13);border-left:4px solid #1976D2;padding:12px 16px;border-radius:0 6px 6px 0;margin:14px 0;font-size:14px;color:#eee;line-height:1.6}
+
+  /* ─── VISUAL CARDS ─── */
+  .visual-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:14px 0}
+  .visual-card{background:#1e1e1e;border:1px solid #333;border-radius:8px;padding:14px 12px;text-align:center}
+  .visual-card .vc-icon{font-size:30px;margin-bottom:8px;line-height:1}
+  .visual-card .vc-title{font-family:'Oswald',sans-serif;font-size:13px;color:var(--ember);margin-bottom:4px}
+  .visual-card .vc-desc{font-size:12px;color:#aaa;line-height:1.4}
+
+  .timeline{margin:14px 0}
+  .tl-item{display:flex;gap:14px;margin-bottom:14px;position:relative}
+  .tl-dot{width:36px;height:36px;background:var(--fire);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;margin-top:2px}
+  .tl-content{}
+  .tl-content strong{display:block;font-size:14px;color:#fff;margin-bottom:3px}
+  .tl-content span{font-size:13px;color:#aaa;line-height:1.5}
+
+  .badge-row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .badge{background:#2e2e2e;border:1px solid #444;border-radius:4px;padding:4px 10px;font-size:12px;color:#ddd}
+  .badge.red{border-color:var(--fire);color:var(--fire-glow)}
+  .badge.gold{border-color:var(--gold);color:var(--gold)}
+  .badge.blue{border-color:#42A5F5;color:#90CAF9}
+  .badge.green{border-color:#66BB6A;color:#A5D6A7}
+
+  .hierarchy{margin:14px 0}
+  .h-level{display:flex;align-items:center;gap:10px;padding:10px 14px;margin-bottom:6px;border-radius:6px;background:#1e1e1e;border-left:4px solid var(--fire)}
+  .h-level .h-rank{font-family:'Oswald',sans-serif;font-size:13px;color:var(--ember);min-width:130px}
+  .h-level .h-desc{font-size:13px;color:#aaa}
+
+  /* ─── QUIZ ─── */
+  .quiz-intro{background:rgba(255,179,71,.10);border:1px solid var(--ember);border-radius:6px;padding:14px 18px;font-size:14px;color:var(--ember);margin-bottom:22px;text-align:center}
+  .question-block{margin-bottom:26px}
+  .question-text{font-size:15px;font-weight:600;color:#eee;margin-bottom:12px;line-height:1.5}
+  .question-num{display:inline-block;background:var(--fire);color:#fff;font-family:'Oswald',sans-serif;font-size:12px;padding:2px 8px;border-radius:3px;margin-right:8px;vertical-align:middle}
+  .options{display:flex;flex-direction:column;gap:8px}
+  .option-btn{background:#2e2e2e;border:1.5px solid #444;color:#ccc;padding:11px 16px;border-radius:6px;cursor:pointer;font-size:14px;text-align:left;transition:all .18s;line-height:1.4}
+  .option-btn:hover:not(.disabled){border-color:var(--fire-glow);color:#fff;background:#3a2a1a}
+  .option-btn.correct{background:#1B3A1B;border-color:#4CAF50;color:#81C784}
+  .option-btn.wrong{background:#3A1B1B;border-color:#EF5350;color:#EF9A9A}
+  .option-btn.disabled{cursor:default}
+  .feedback{margin-top:8px;font-size:13px;padding:8px 12px;border-radius:5px;display:none;line-height:1.5}
+  .feedback.show{display:block}
+  .feedback.correct{background:rgba(76,175,80,.15);color:#81C784;border-left:3px solid #4CAF50}
+  .feedback.wrong{background:rgba(239,83,80,.15);color:#EF9A9A;border-left:3px solid #EF5350}
+  .quiz-actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+  .btn-check,.btn-reset{padding:11px 24px;border:none;border-radius:6px;font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:.5px;cursor:pointer;transition:all .2s}
+  .btn-check{background:var(--fire);color:#fff}
+  .btn-check:hover{background:var(--fire-deep)}
+  .btn-reset{background:#444;color:#ccc}
+  .btn-reset:hover{background:#555;color:#fff}
+  .score-display{margin-top:20px;padding:18px;border-radius:8px;display:none;text-align:center;font-family:'Oswald',sans-serif}
+  .score-display.show{display:block}
+  .score-display .score-num{font-size:40px;font-weight:700}
+  .score-display .score-label{font-size:14px;margin-top:4px}
+  .score-display.great{background:rgba(76,175,80,.18);border:1px solid #4CAF50;color:#81C784}
+  .score-display.good{background:rgba(255,179,71,.14);border:1px solid var(--ember);color:var(--ember)}
+  .score-display.low{background:rgba(239,83,80,.14);border:1px solid #EF5350;color:#EF9A9A}
+
+  /* ─── SVG IMAGES ─── */
+  .img-wrapper{margin:16px 0;border-radius:8px;overflow:hidden;border:1px solid #333;background:#1a1a1a}
+  .img-wrapper svg{display:block;width:100%}
+  .img-caption{text-align:center;font-size:12px;color:#777;padding:6px 12px 8px;background:#1a1a1a;font-style:italic}
+
+  footer{text-align:center;padding:28px;font-size:13px;color:#555;border-top:1px solid #2a2a2a}
+  footer span{color:var(--fire)}
+
+  @media(max-width:600px){
+    .lesson-header-content{flex-direction:column;gap:10px}
+    .panel{padding:18px 14px}
+    .visual-grid{grid-template-columns:repeat(2,1fr)}
+    .hero-stats{gap:20px}
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-shield">🛡️</div>
+  <div class="hero-badge">CGBVP · DIGEFA · 2026</div>
+  <h1>Curso de Formación <span>Básica de Bomberos</span></h1>
+  <p>Resúmenes didácticos y evaluaciones interactivas — <strong>Módulo I · Lecciones 01 al 09</strong></p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">9</div><div class="lbl">Lecciones</div></div>
+    <div class="hero-stat"><div class="num">180</div><div class="lbl">Preguntas</div></div>
+    <div class="hero-stat"><div class="num">27h</div><div class="lbl">Contenido</div></div>
+    <div class="hero-stat"><div class="num">100%</div><div class="lbl">Interactivo</div></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="lessons-nav">
+  <button class="nav-pill active" onclick="showLesson('all',this)">📚 Todas</button>
+  <button class="nav-pill" onclick="showLesson('l01',this)">L01 Intro</button>
+  <button class="nav-pill" onclick="showLesson('l02',this)">L02 Doctrina</button>
+  <button class="nav-pill" onclick="showLesson('l03',this)">L03 Historia</button>
+  <button class="nav-pill" onclick="showLesson('l04',this)">L04 Organización</button>
+  <button class="nav-pill" onclick="showLesson('l05',this)">L05 Comunicaciones</button>
+  <button class="nav-pill" onclick="showLesson('l06',this)">L06 Seguridad</button>
+  <button class="nav-pill" onclick="showLesson('l07',this)">L07 Estrés</button>
+  <button class="nav-pill" onclick="showLesson('l08',this)">L08 SCI</button>
+  <button class="nav-pill" onclick="showLesson('l09',this)">L09 EPRA</button>
+</nav>
+
+<div class="container" id="lessonContainer">
+
+<!-- ═══════════════ LECCIÓN 01 ═══════════════ -->
+<div class="lesson-card visible" id="l01">
+  <div class="lesson-header">
+    <div class="lesson-number-bg">01</div>
+    <div class="lesson-header-content">
+      <div class="lesson-icon-box">📋</div>
+      <div class="lesson-title-block">
+        <h2>Introducción al Curso de Formación Básica de Bomberos</h2>
+        <div class="meta">Módulo I · 3 horas · Lineamientos, evaluaciones y reglamento académico</div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog01"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l01','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l01','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l01-summary">
+    <h3>Objetivo del CFBB</h3>
+    <p>El Curso de Formación Básica de Bomberos (CFBB) está diseñado para conducir el proceso académico de los aspirantes del CGBVP, demostrando los conocimientos y habilidades necesarias para un desempeño seguro y efectivo, con miras a su certificación como bombero <strong>APTO para el servicio</strong>.</p>
+
+    <div class="img-wrapper">
+      <svg viewBox="0 0 700 160" xmlns="http://www.w3.org/2000/svg">
+        <rect width="700" height="160" fill="#1a1a1a"/>
+        <!-- Módulos -->
+        <rect x="20" y="30" width="150" height="100" rx="8" fill="#2a1200" stroke="#E8430A" stroke-width="2"/>
+        <text x="95" y="68" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="13">MÓDULO I</text>
+        <text x="95" y="88" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="11">Lecciones 1-9</text>
+        <text x="95" y="106" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="11">Fundamentos</text>
+        <rect x="190" y="30" width="150" height="100" rx="8" fill="#2a1200" stroke="#E8430A" stroke-width="2"/>
+        <text x="265" y="68" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="13">MÓDULO II</text>
+        <text x="265" y="88" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="11">Lecciones 10-21</text>
+        <text x="265" y="106" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="11">Técnicas Base</text>
+        <rect x="360" y="30" width="150" height="100" rx="8" fill="#2a1200" stroke="#E8430A" stroke-width="2"/>
+        <text x="435" y="68" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="13">MÓDULO III</text>
+        <text x="435" y="88" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="11">Lecciones 22-32</text>
+        <text x="435" y="106" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="11">Incendios/Rescate</text>
+        <rect x="530" y="30" width="150" height="100" rx="8" fill="#1a2a1a" stroke="#4CAF50" stroke-width="2"/>
+        <text x="605" y="68" text-anchor="middle" fill="#66BB6A" font-family="Oswald" font-size="13">MÓDULO IV</text>
+        <text x="605" y="88" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="11">Evoluciones</text>
+        <text x="605" y="106" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="11">Integrales</text>
+        <!-- Arrows -->
+        <path d="M170 80 L187 80" stroke="#555" stroke-width="2" marker-end="url(#arr)"/>
+        <path d="M340 80 L357 80" stroke="#555" stroke-width="2" marker-end="url(#arr)"/>
+        <path d="M510 80 L527 80" stroke="#555" stroke-width="2" marker-end="url(#arr)"/>
+        <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="none" stroke="#555" stroke-width="1"/></marker></defs>
+      </svg>
+      <div class="img-caption">Estructura modular del CFBB — 3 módulos teóricos + 1 de evoluciones integrales + 10 prácticas de campo</div>
+    </div>
+
+    <h3>Estructura del Curso</h3>
+    <div class="visual-grid">
+      <div class="visual-card"><div class="vc-icon">📚</div><div class="vc-title">34 Lecciones</div><div class="vc-desc">Distribuidas en 3 módulos teóricos nacionales</div></div>
+      <div class="visual-card"><div class="vc-icon">🏋️</div><div class="vc-title">10 Prácticas</div><div class="vc-desc">Sesiones de campo con evaluación</div></div>
+      <div class="visual-card"><div class="vc-icon">🎯</div><div class="vc-title">Evoluciones</div><div class="vc-desc">Ejercicios operativos integrales</div></div>
+      <div class="visual-card"><div class="vc-icon">📝</div><div class="vc-title">Eval. Final</div><div class="vc-desc">100 preguntas + 5 estaciones prácticas</div></div>
+    </div>
+
+    <h3>Sistema de Asistencia y Tardanzas</h3>
+    <div class="highlight-box">⏰ <strong>3 tardanzas = 1 falta · 3 faltas consecutivas o 4 no consecutivas en un módulo = SEPARACIÓN · 8 faltas acumuladas en los 3 módulos = SEPARACIÓN</strong><br>Tolerancia máxima: 15 minutos. El aspirante puede dispensar hasta 2 faltas justificadas por módulo.</div>
+
+    <h3>Sistema de Evaluaciones — Notas Mínimas</h3>
+    <div class="badge-row">
+      <div class="badge gold">📊 Promedio Final Módulo: 14</div>
+      <div class="badge gold">🏋️ Prácticas de Campo: 14</div>
+      <div class="badge gold">🎯 Evoluciones Integrales: 14</div>
+      <div class="badge gold">📝 Evaluación Final: 14</div>
+      <div class="badge gold">🏅 Nota Mínima Curso: 14</div>
+    </div>
+    <p>Las evaluaciones son <strong>eliminatorias</strong>: si no se aprueba un módulo, no se puede continuar con el siguiente. La Evaluación Final consta de 100 preguntas escritas y 5 estaciones prácticas (EPP/EPRA, escaleras, chorros, mangueras, cuerdas).</p>
+
+    <h3>Disciplina y Causales de Retiro</h3>
+    <ul>
+      <li>Falta grave o muy grave: separación inmediata del curso.</li>
+      <li>El aspirante separado regresa a su Unidad Básica Operativa de origen.</li>
+      <li>La separación equivale a una suspensión de 15 días; puede ser incrementada por el Consejo de Disciplina.</li>
+    </ul>
+
+    <h3>Derechos y Obligaciones del Aspirante</h3>
+    <ul>
+      <li><strong>Derecho:</strong> recibir a título gratuito los cursos, entrenamientos y asesoría.</li>
+      <li><strong>Obligación:</strong> cumplir las metas académicas y guardar las normas disciplinarias.</li>
+    </ul>
+
+    <h3>Hostigamiento, Acoso y Chantaje</h3>
+    <div class="info-box">📣 Ante cualquier caso de hostigamiento, acoso sexual, educativo o de identidad, el aspirante puede comunicarse directamente con la Oficina del Programa de Formación Básica (OPFB) de la DIGEFA para formular la denuncia correspondiente.</div>
+  </div>
+  <div class="panel" id="l01-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas y luego presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l01-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l01')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l01')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l01-score"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ LECCIÓN 02 ═══════════════ -->
+<div class="lesson-card visible" id="l02">
+  <div class="lesson-header">
+    <div class="lesson-number-bg">02</div>
+    <div class="lesson-header-content">
+      <div class="lesson-icon-box">⚜️</div>
+      <div class="lesson-title-block">
+        <h2>Doctrina y Mística del CGBVP</h2>
+        <div class="meta">Módulo I · 3 horas · Valores, ética y lema institucional</div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog02"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l02','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l02','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l02-summary">
+    <h3>Doctrina, Mística y Ética</h3>
+    <div class="visual-grid">
+      <div class="visual-card"><div class="vc-icon">📜</div><div class="vc-title">Doctrina</div><div class="vc-desc">Enseñanzas y principios que orientan las conductas personales y de grupo; base cultural de identidad institucional</div></div>
+      <div class="visual-card"><div class="vc-icon">✨</div><div class="vc-title">Mística</div><div class="vc-desc">Lo secreto e inexplicable; el compromiso de servir pese a todas las carencias, sin amilanarse ante la adversidad</div></div>
+      <div class="visual-card"><div class="vc-icon">⚖️</div><div class="vc-title">Ética</div><div class="vc-desc">Parte de la filosofía que trata la moral y las obligaciones del hombre orientadas a su realización como persona</div></div>
+    </div>
+
+    <div class="img-wrapper">
+      <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="700" height="200" fill="#1a1a1a"/>
+        <!-- Center circle -->
+        <circle cx="350" cy="100" r="55" fill="#2a1200" stroke="#E8430A" stroke-width="2.5"/>
+        <text x="350" y="88" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="11">LEMA</text>
+        <text x="350" y="103" text-anchor="middle" fill="#fff" font-family="Oswald" font-size="11">CGBVP</text>
+        <text x="350" y="118" text-anchor="middle" fill="#FFB347" font-family="Oswald" font-size="9">FUNDADO 1860</text>
+        <!-- Nodes -->
+        <circle cx="140" cy="60" r="42" fill="#1e1e2e" stroke="#5C6BC0" stroke-width="2"/>
+        <text x="140" y="53" text-anchor="middle" fill="#9FA8DA" font-family="Oswald" font-size="14">DIOS</text>
+        <text x="140" y="70" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="10">Fe y vocación</text>
+        <text x="140" y="83" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="10">de servicio</text>
+        <circle cx="350" cy="168" r="42" fill="#1e2e1e" stroke="#4CAF50" stroke-width="2"/>
+        <text x="350" y="161" text-anchor="middle" fill="#81C784" font-family="Oswald" font-size="14">PATRIA</text>
+        <text x="350" y="178" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="10">Tierra, cultura</text>
+        <circle cx="560" cy="60" r="42" fill="#2e1e1e" stroke="#EF5350" stroke-width="2"/>
+        <text x="560" y="53" text-anchor="middle" fill="#EF9A9A" font-family="Oswald" font-size="12">HUMANIDAD</text>
+        <text x="560" y="70" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="10">Servir al prójimo</text>
+        <text x="560" y="83" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="10">como familia</text>
+        <!-- Lines -->
+        <line x1="180" y1="72" x2="298" y2="93" stroke="#444" stroke-width="1.5"/>
+        <line x1="350" y1="155" x2="350" y2="126" stroke="#444" stroke-width="1.5"/>
+        <line x1="520" y1="72" x2="402" y2="93" stroke="#444" stroke-width="1.5"/>
+      </svg>
+      <div class="img-caption">Lema institucional del CGBVP — adoptado en el 2° Congreso Nacional de Bomberos (1957)</div>
+    </div>
+
+    <h3>El Lema "Dios · Patria · Humanidad"</h3>
+    <ul>
+      <li><strong>DIOS:</strong> la expresión sublime del amor que motiva al bombero a servir hasta exponer su propia vida. Aplica para todas las creencias; la institución es tolerante e inclusiva.</li>
+      <li><strong>PATRIA:</strong> la tierra que nos vio nacer, a la cual pertenecemos; la historia, cultura y lazos afectivos que nos unen como sociedad.</li>
+      <li><strong>HUMANIDAD:</strong> brindar el mejor servicio a la comunidad, asistiendo al prójimo en emergencias como si fuera su propia familia.</li>
+    </ul>
+
+    <h3>El Bombero Voluntario</h3>
+    <div class="highlight-box">🚒 "Ser bombero voluntario significa tener la virtud de proteger y entregarse al otro. El bombero siempre da, nunca pide. Es un deber, una responsabilidad y una tremenda satisfacción."</div>
+
+    <h3>Símbolos Institucionales (R.J. 396-2009 CGBVP)</h3>
+    <div class="badge-row">
+      <div class="badge red">🛡️ Escudo Institucional</div>
+      <div class="badge red">🚩 Bandera Institucional</div>
+      <div class="badge red">🎵 Himno del Bombero Voluntario</div>
+    </div>
+    <p>La <strong>Bandera Institucional</strong> es rectangular, color rojo, con el escudo al centro. Se iza obligatoriamente los mismos días que la Bandera Nacional, de 08:00 a 18:00h. El <strong>Himno del Bombero</strong> fue creado por el Brigadier Julio César Coz Vargas y aprobado en 2002; su entonación es obligatoria al cierre de todas las ceremonias.</p>
+
+    <h3>Valores del Bombero (Manual de Ética del CGBVP)</h3>
+    <div class="visual-grid">
+      <div class="visual-card"><div class="vc-icon">🤝</div><div class="vc-title">Honestidad</div><div class="vc-desc">Rectitud, honor y dignidad; inspirados en "Ama Sua" (no seas ladrón)</div></div>
+      <div class="visual-card"><div class="vc-icon">✅</div><div class="vc-title">Veracidad</div><div class="vc-desc">Autenticidad; evita la mentira. Inspirado en "Ama Llulla" (no seas mentiroso)</div></div>
+      <div class="visual-card"><div class="vc-icon">💪</div><div class="vc-title">Laboriosidad</div><div class="vc-desc">Dedicación al trabajo. Inspirado en "Ama Quella" (no seas ocioso)</div></div>
+      <div class="visual-card"><div class="vc-icon">🛡️</div><div class="vc-title">Lealtad</div><div class="vc-desc">Fidelidad y confianza; no fallar al compromiso. Es recíproca</div></div>
+      <div class="visual-card"><div class="vc-icon">⚖️</div><div class="vc-title">Integridad</div><div class="vc-desc">Coherencia entre pensar, sentir y actuar; rechaza la hipocresía</div></div>
+      <div class="visual-card"><div class="vc-icon">🎯</div><div class="vc-title">Disciplina</div><div class="vc-desc">Columna vertebral institucional; acatamiento consciente de leyes y reglamentos</div></div>
+    </div>
+  </div>
+  <div class="panel" id="l02-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas y luego presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l02-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l02')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l02')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l02-score"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ LECCIÓN 03 ═══════════════ -->
+<div class="lesson-card visible" id="l03">
+  <div class="lesson-header">
+    <div class="lesson-number-bg">03</div>
+    <div class="lesson-header-content">
+      <div class="lesson-icon-box">📜</div>
+      <div class="lesson-title-block">
+        <h2>Historia del CGBVP</h2>
+        <div class="meta">Módulo I · 3 horas · Desde Roma hasta el Perú moderno</div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog03"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l03','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l03','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l03-summary">
+    <h3>Antecedentes en el Mundo</h3>
+    <p>Los primeros grupos organizados para combatir incendios aparecieron en <strong>Roma</strong>, donde el Emperador Augusto Cesar organizó en el año 6 d.C. el cuerpo de los <em>Vigiles</em>: 10,000 bomberos divididos en 10 cohortes con rangos jerárquicos, siphonas, escaleras, hachas y cubos. Roma se convierte en <strong>la cuna del bomberismo mundial</strong>.</p>
+
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot">I</div><div class="tl-content"><strong>64 d.C. — Gran incendio de Roma</strong><span>800,000 habitantes. El Emperador Augusto crea los Vigiles como guardia urbana especializada.</span></div></div>
+      <div class="tl-item"><div class="tl-dot">II</div><div class="tl-content"><strong>1518 — Primer Carro de Bomberos</strong><span>Anthony Blatner construye en Augsburgo el primer carro con bomba tirado por caballos.</span></div></div>
+      <div class="tl-item"><div class="tl-dot">III</div><div class="tl-content"><strong>1672 — Primera Manguera Flexible</strong><span>El holandés Jan van der Heijden inventa la manguera de cuero de 50 pies con uniones de bronce.</span></div></div>
+      <div class="tl-item"><div class="tl-dot">IV</div><div class="tl-content"><strong>1736 — Primera Cía. Voluntaria</strong><span>Filadelfia crea la primera compañía de bomberos voluntarios del mundo (no profesionales hasta 1850).</span></div></div>
+    </div>
+
+    <h3>Historia en el Perú</h3>
+
+    <div class="img-wrapper">
+      <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+        <rect width="700" height="220" fill="#1a1a1a"/>
+        <line x1="30" y1="110" x2="680" y2="110" stroke="#333" stroke-width="2"/>
+        <!-- Points -->
+        <circle cx="80" cy="110" r="8" fill="#E8430A"/>
+        <text x="80" y="100" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="10">1772</text>
+        <text x="80" y="130" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="9">Virrey Amat</text>
+        <text x="80" y="142" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="9">1ra organiz.</text>
+
+        <circle cx="200" cy="110" r="8" fill="#E8430A"/>
+        <text x="200" y="100" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="10">1845</text>
+        <text x="200" y="130" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="9">Mariscal</text>
+        <text x="200" y="142" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="9">R. Castilla</text>
+
+        <circle cx="320" cy="110" r="10" fill="#B02D04"/>
+        <text x="320" y="97" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="11">28 Ago</text>
+        <text x="320" y="109" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="11">1860</text>
+        <text x="320" y="128" text-anchor="middle" fill="#fff" font-family="sans-serif" font-size="9">1ra Cía. legal:</text>
+        <text x="320" y="140" text-anchor="middle" fill="#fff" font-family="sans-serif" font-size="9">PAITA</text>
+
+        <circle cx="430" cy="110" r="12" fill="#E8430A"/>
+        <text x="430" y="96" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="11">05 Dic</text>
+        <text x="430" y="108" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="11">1860</text>
+        <text x="430" y="128" text-anchor="middle" fill="#fff" font-family="sans-serif" font-size="9">CGBVP</text>
+        <text x="430" y="140" text-anchor="middle" fill="#fff" font-family="sans-serif" font-size="9">Fundación</text>
+
+        <circle cx="560" cy="110" r="10" fill="#c62828"/>
+        <text x="560" y="97" text-anchor="middle" fill="#EF9A9A" font-family="Oswald" font-size="11">02 May</text>
+        <text x="560" y="109" text-anchor="middle" fill="#EF9A9A" font-family="Oswald" font-size="11">1866</text>
+        <text x="560" y="128" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="9">Combate</text>
+        <text x="560" y="140" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="9">del Callao</text>
+
+        <circle cx="650" cy="110" r="8" fill="#2e7d32"/>
+        <text x="650" y="100" text-anchor="middle" fill="#81C784" font-family="Oswald" font-size="10">1957</text>
+        <text x="650" y="130" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="9">Lema oficial</text>
+        <text x="650" y="142" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="9">adoptado</text>
+      </svg>
+      <div class="img-caption">Línea de tiempo histórica del bomberismo en el Perú</div>
+    </div>
+
+    <h3>Primeras Compañías en el Perú</h3>
+    <ul>
+      <li><strong>Paita (28/08/1860):</strong> primera compañía legalmente constituida del Perú. Fundada por Alejandro Blaker (inglés).</li>
+      <li><strong>Chalaca N°1 (05/12/1860):</strong> fundada en el Callao por un grupo de 54 jóvenes entusiastas. Primer comandante: Guillermo Higginson.</li>
+      <li><strong>Roma N°1 (15/04/1866):</strong> colonia italiana de Lima, fundada por Emilio Longhi con 290 socios. Participó en el Combate del 2 de Mayo.</li>
+      <li><strong>France N°2 (20/04/1866):</strong> colonia francesa; 114 voluntarios al mando de Jean Tribaud.</li>
+      <li><strong>Municipal Lima (21/04/1866):</strong> primera compañía netamente peruana; comandada por Francisco Lazo.</li>
+    </ul>
+
+    <h3>Juan Antonio Alarco Espinosa — Primer Héroe</h3>
+    <div class="highlight-box">🎖️ Bombero de la Municipal Lima. Nacido el 13 de junio de 1841 en Lima. El 2 de mayo de 1866, ante la caída de un artillero en el Torreón de la Merced, se adelantó exclamando: <em>"¡YO SOY PERUANO, A MÍ ME TOCA!"</em> y fue alcanzado por el cañonazo del buque Almanza, falleciendo junto a 27 personas incluido el Ministro de Guerra, Coronel José Gálvez Egusquiza.</div>
+
+    <h3>El Combate del 2 de Mayo (1866)</h3>
+    <p>La escuadra española amenazó el Callao queriendo recuperar sus ex colonias. Los bomberos de las compañías Chalaca, Roma, France y Municipal Lima acudieron al Callao para combatir incendios, atender heridos y apoyar las líneas de defensa. El Ejército, la Marina y los bomberos vencieron juntos a una armada tecnológicamente superior.</p>
+  </div>
+  <div class="panel" id="l03-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas y luego presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l03-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l03')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l03')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l03-score"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ LECCIÓN 04 ═══════════════ -->
+<div class="lesson-card visible" id="l04">
+  <div class="lesson-header">
+    <div class="lesson-number-bg">04</div>
+    <div class="lesson-header-content">
+      <div class="lesson-icon-box">🏛️</div>
+      <div class="lesson-title-block">
+        <h2>Organización, Normas y Reglamento</h2>
+        <div class="meta">Módulo I · 3 horas · Estructura institucional del CGBVP y jerarquía</div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog04"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l04','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l04','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l04-summary">
+    <h3>¿Qué es el CGBVP?</h3>
+    <p>El Cuerpo General de Bomberos Voluntarios del Perú (CGBVP) es una <strong>organización cívica nacional</strong> conformada por bomberos voluntarios que prestan servicio público de manera voluntaria y <em>ad honorem</em>. Regulada por el DL N°1260. Sus miembros no son funcionarios ni servidores públicos y sus actividades no tienen carácter laboral.</p>
+
+    <div class="img-wrapper">
+      <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+        <rect width="700" height="260" fill="#1a1a1a"/>
+        <!-- Top level -->
+        <rect x="220" y="10" width="260" height="36" rx="6" fill="#2a1200" stroke="#E8430A" stroke-width="1.5"/>
+        <text x="350" y="33" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="13">CONSEJO DE OFICIALES GENERALES</text>
+        <!-- Command -->
+        <rect x="190" y="62" width="320" height="36" rx="6" fill="#2e1a00" stroke="#FFB347" stroke-width="1.5"/>
+        <text x="350" y="85" text-anchor="middle" fill="#FFB347" font-family="Oswald" font-size="13">COMANDO NACIONAL (Cdte. General)</text>
+        <!-- Arrows down -->
+        <line x1="350" y1="46" x2="350" y2="62" stroke="#555" stroke-width="1.5"/>
+        <polygon points="350,62 345,55 355,55" fill="#555"/>
+        <!-- Three columns -->
+        <rect x="20" y="115" width="180" height="36" rx="5" fill="#1e1e2e" stroke="#5C6BC0" stroke-width="1.5"/>
+        <text x="110" y="138" text-anchor="middle" fill="#9FA8DA" font-family="Oswald" font-size="11">ÓRGANOS AUTÓNOMOS</text>
+        <rect x="260" y="115" width="180" height="36" rx="5" fill="#1e2e1e" stroke="#4CAF50" stroke-width="1.5"/>
+        <text x="350" y="138" text-anchor="middle" fill="#81C784" font-family="Oswald" font-size="11">ÓRGANOS DE LÍNEA</text>
+        <rect x="500" y="115" width="180" height="36" rx="5" fill="#2e1e1e" stroke="#EF5350" stroke-width="1.5"/>
+        <text x="590" y="138" text-anchor="middle" fill="#EF9A9A" font-family="Oswald" font-size="11">ÓRGANOS DESCONCENTRADOS</text>
+        <!-- Lines from command -->
+        <line x1="350" y1="98" x2="110" y2="115" stroke="#555" stroke-width="1"/>
+        <line x1="350" y1="98" x2="350" y2="115" stroke="#555" stroke-width="1"/>
+        <line x1="350" y1="98" x2="590" y2="115" stroke="#555" stroke-width="1"/>
+        <!-- Sub items -->
+        <text x="110" y="165" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="10">• Consejo Nac. Disciplina</text>
+        <text x="110" y="178" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="10">• Inspectoría General</text>
+        <text x="350" y="165" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="10">• Dir. Gral. Operaciones</text>
+        <text x="350" y="178" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="10">• Dir. Gral. Voluntariado</text>
+        <text x="350" y="191" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="10">• Dir. Gral. Formación</text>
+        <text x="590" y="165" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="10">• Comandantes Territoriales</text>
+        <text x="590" y="178" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="10">• Comandancias Dept.</text>
+        <text x="590" y="191" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="10">• Unidades Básicas Op. (UBO)</text>
+        <!-- UBO split -->
+        <rect x="400" y="215" width="120" height="30" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1"/>
+        <text x="460" y="234" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">Compañía de Bomberos</text>
+        <rect x="540" y="215" width="120" height="30" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1"/>
+        <text x="600" y="234" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">Estación de Bomberos</text>
+        <line x1="590" y1="205" x2="460" y2="215" stroke="#444" stroke-width="1"/>
+        <line x1="590" y1="205" x2="600" y2="215" stroke="#444" stroke-width="1"/>
+      </svg>
+      <div class="img-caption">Estructura orgánica del CGBVP — Decreto Legislativo N° 1260 y RIF del CGBVP</div>
+    </div>
+
+    <h3>Objetivos del CGBVP</h3>
+    <ul>
+      <li>Prevenir incendios y accidentes que pongan en peligro vidas, el ambiente y la propiedad.</li>
+      <li>Combatir, controlar y extinguir incendios; rescatar y salvar personas.</li>
+      <li>Participar en primera respuesta ante desastres naturales o antropogénicos (SINAGERD).</li>
+    </ul>
+
+    <h3>Jerarquía del CGBVP</h3>
+    <div class="hierarchy">
+      <div class="h-level"><div class="h-rank">🔴 Brigdr. General</div><div class="h-desc">Grado más alto; Comandante General y Vice</div></div>
+      <div class="h-level"><div class="h-rank">🔴 Brigdr. Mayor</div><div class="h-desc">Comandantes Territoriales (mín. 4 años antigüedad)</div></div>
+      <div class="h-level"><div class="h-rank">🟠 Brigadier</div><div class="h-desc">Cdte. de Cía. centenaria o con más de 50 años</div></div>
+      <div class="h-level"><div class="h-rank">🟡 Tte. Brigadier</div><div class="h-desc">Cdte. de Cía. con menos de 50 años</div></div>
+      <div class="h-level"><div class="h-rank">🟡 Capitán</div><div class="h-desc">2do Jefe en Cías. con más de 50 años</div></div>
+      <div class="h-level"><div class="h-rank">🟢 Teniente</div><div class="h-desc">Cdte. de Estación de Bomberos</div></div>
+      <div class="h-level"><div class="h-rank">🟢 Sub-Teniente</div><div class="h-desc">2do Jefe en Estación de Bomberos</div></div>
+      <div class="h-level"><div class="h-rank">⚪ Seccionario</div><div class="h-desc">Grado de ingreso para bomberos activos</div></div>
+      <div class="h-level"><div class="h-rank">🔵 Aspirante</div><div class="h-desc">15-30 años; en proceso de formación</div></div>
+    </div>
+
+    <h3>Clases de Bomberos</h3>
+    <div class="badge-row">
+      <div class="badge green">✅ Bombero Activo</div>
+      <div class="badge blue">🎓 Bombero Asimilado</div>
+      <div class="badge">🔖 Bombero en Retiro</div>
+    </div>
+    <p>El <strong>Aspirante</strong> es mayor de 15 y menor de 31 años. Se incorpora al CGBVP como <em>Seccionario</em> al cumplir la mayoría de edad. El <strong>Bombero en Retiro</strong> pasa a dicha situación al cumplir 70 años, por incapacidad permanente o a solicitud propia.</p>
+  </div>
+  <div class="panel" id="l04-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas y luego presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l04-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l04')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l04')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l04-score"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ LECCIÓN 05 ═══════════════ -->
+<div class="lesson-card visible" id="l05">
+  <div class="lesson-header">
+    <div class="lesson-number-bg">05</div>
+    <div class="lesson-header-content">
+      <div class="lesson-icon-box">📡</div>
+      <div class="lesson-title-block">
+        <h2>Comunicaciones</h2>
+        <div class="meta">Módulo I · 3 horas · CEEM, radiofonía y parte de emergencia</div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog05"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l05','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l05','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l05-summary">
+    <h3>La Central de Emergencias (CEEM)</h3>
+    <p>Es el lugar físico donde el personal y los equipos reciben llamadas telefónicas y radiales para el despacho de unidades. Es la <strong>columna vertebral del Sistema de Emergencias</strong> del CGBVP. Calificada bajo la norma <strong>NFPA 1061</strong> (Teleoperadores de Seguridad Pública).</p>
+    <div class="badge-row">
+      <div class="badge red">☎️ 3991111</div>
+      <div class="badge red">📞 116</div>
+    </div>
+
+    <div class="img-wrapper">
+      <svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg">
+        <rect width="700" height="180" fill="#1a1a1a"/>
+        <!-- Flow diagram -->
+        <rect x="20" y="60" width="120" height="60" rx="8" fill="#2a1200" stroke="#E8430A" stroke-width="1.5"/>
+        <text x="80" y="87" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="12">CIUDADANO</text>
+        <text x="80" y="103" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">Llama 116/3991111</text>
+        <rect x="180" y="60" width="130" height="60" rx="8" fill="#1e2a1e" stroke="#4CAF50" stroke-width="1.5"/>
+        <text x="245" y="87" text-anchor="middle" fill="#81C784" font-family="Oswald" font-size="12">CEEM</text>
+        <text x="245" y="103" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">Procesa y despacha</text>
+        <rect x="350" y="60" width="130" height="60" rx="8" fill="#2a2200" stroke="#FFB347" stroke-width="1.5"/>
+        <text x="415" y="87" text-anchor="middle" fill="#FFB347" font-family="Oswald" font-size="12">UNIDAD</text>
+        <text x="415" y="103" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">Sale a la emergencia</text>
+        <rect x="520" y="60" width="150" height="60" rx="8" fill="#2a1200" stroke="#E8430A" stroke-width="1.5"/>
+        <text x="595" y="87" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="12">EMERGENCIA</text>
+        <text x="595" y="103" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">Atención y parte virtual</text>
+        <!-- Arrows -->
+        <line x1="140" y1="90" x2="178" y2="90" stroke="#E8430A" stroke-width="2"/>
+        <polygon points="178,90 170,85 170,95" fill="#E8430A"/>
+        <line x1="310" y1="90" x2="348" y2="90" stroke="#E8430A" stroke-width="2"/>
+        <polygon points="348,90 340,85 340,95" fill="#E8430A"/>
+        <line x1="480" y1="90" x2="518" y2="90" stroke="#E8430A" stroke-width="2"/>
+        <polygon points="518,90 510,85 510,95" fill="#E8430A"/>
+        <!-- Radio feedback -->
+        <path d="M415 60 Q 415 30 245 30 Q 180 30 180 60" stroke="#555" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/>
+        <text x="300" y="24" text-anchor="middle" fill="#777" font-family="sans-serif" font-size="10">Reportes de radio en ruta y escena</text>
+      </svg>
+      <div class="img-caption">Flujo de una emergencia: desde la llamada ciudadana hasta la atención en escena</div>
+    </div>
+
+    <h3>Tipos de Equipos de Radio</h3>
+    <div class="visual-grid">
+      <div class="visual-card"><div class="vc-icon">📻</div><div class="vc-title">Radio Base (Fijo)</div><div class="vc-desc">Estaciones de bomberos. Mayor potencia y alcance; conectado a generador de emergencia</div></div>
+      <div class="visual-card"><div class="vc-icon">🚒</div><div class="vc-title">Radio Móvil</div><div class="vc-desc">Instalado en vehículos. Funciona con el sistema eléctrico del vehículo; mayor potencia que el portátil</div></div>
+      <div class="visual-card"><div class="vc-icon">📟</div><div class="vc-title">Radio Portátil</div><div class="vc-desc">Dispositivo manual con baterías recargables. Puede tener botón de emergencia/pánico</div></div>
+    </div>
+
+    <h3>Procedimiento de Reporte Vía Radio</h3>
+    <div class="highlight-box">
+      📻 <strong>Salida de unidad:</strong><br>
+      "Máquina 21-1, 10.10, Central" → Esperar respuesta → "10.01, Máquina 21-1" → "Máquina 21-01, 10.07 al 10.25" → "10.11, [nombre al mando]" → "10.15 [número de efectivos]"
+    </div>
+
+    <h3>Pasos para Confirmar una Emergencia</h3>
+    <ul>
+      <li>Solicitar la dirección exacta y teléfono del informante.</li>
+      <li>Identificar el tipo de siniestro en el momento.</li>
+      <li>Advertir la capacidad del siniestro (estructuras, cantidad de afectados).</li>
+      <li>Indicar cantidad y condición de víctimas.</li>
+      <li>Avisar a la central la salida de la unidad y solicitar apoyo si corresponde.</li>
+    </ul>
+
+    <h3>Parte de Emergencia Virtual</h3>
+    <p>Herramienta que permite evidenciar las acciones, equipos y herramientas utilizadas en la emergencia. Incluye: número de parte, fecha/hora, dirección, tipo de emergencia, comandante del incidente, personas afectadas, pacientes, unidades vehiculares, efectivos y tiempos (despacho, salida, llegada, retiro, ingreso).</p>
+  </div>
+  <div class="panel" id="l05-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas y luego presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l05-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l05')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l05')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l05-score"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ LECCIÓN 06 ═══════════════ -->
+<div class="lesson-card visible" id="l06">
+  <div class="lesson-header">
+    <div class="lesson-number-bg">06</div>
+    <div class="lesson-header-content">
+      <div class="lesson-icon-box">⛑️</div>
+      <div class="lesson-title-block">
+        <h2>Seguridad y Trabajo en Equipo</h2>
+        <div class="meta">Módulo I · 3 horas · Peligros, riesgos, jerarquía de controles y trabajo coordinado</div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog06"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l06','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l06','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l06-summary">
+    <h3>Conceptos Clave</h3>
+    <div class="visual-grid">
+      <div class="visual-card"><div class="vc-icon">⚠️</div><div class="vc-title">Peligro</div><div class="vc-desc">Situación con características intrínsecas capaz de causar daño a persona, equipos, procesos o ambiente</div></div>
+      <div class="visual-card"><div class="vc-icon">📊</div><div class="vc-title">Riesgo</div><div class="vc-desc">Probabilidad de que un peligro se materialice y genere daño</div></div>
+      <div class="visual-card"><div class="vc-icon">💥</div><div class="vc-title">Accidente</div><div class="vc-desc">Suceso repentino e inesperado que puede causar daño a personas o cosas</div></div>
+      <div class="visual-card"><div class="vc-icon">🛡️</div><div class="vc-title">Seguridad</div><div class="vc-desc">Estado que se logra frente a la ausencia del peligro</div></div>
+    </div>
+
+    <h3>Jerarquía de Controles</h3>
+    <div class="img-wrapper">
+      <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="700" height="200" fill="#1a1a1a"/>
+        <!-- Pyramid -->
+        <polygon points="350,10 100,190 600,190" fill="none" stroke="#444" stroke-width="1"/>
+        <!-- Layers -->
+        <polygon points="350,10 220,68 480,68" fill="#B02D04" opacity=".85"/>
+        <text x="350" y="48" text-anchor="middle" fill="#fff" font-family="Oswald" font-size="12">ELIMINACIÓN</text>
+        <text x="350" y="63" text-anchor="middle" fill="#ffcdd2" font-family="sans-serif" font-size="10">Más efectivo</text>
+        <polygon points="220,70 160,118 540,118 480,70" fill="#E8430A" opacity=".75"/>
+        <text x="350" y="98" text-anchor="middle" fill="#fff" font-family="Oswald" font-size="12">SUSTITUCIÓN · INGENIERÍA</text>
+        <polygon points="160,120 115,165 585,165 540,120" fill="#FFB347" opacity=".6"/>
+        <text x="350" y="147" text-anchor="middle" fill="#1a1a1a" font-family="Oswald" font-size="12">CONTROLES ADMINISTRATIVOS</text>
+        <polygon points="115,167 100,190 600,190 585,167" fill="#4CAF50" opacity=".5"/>
+        <text x="350" y="183" text-anchor="middle" fill="#1a1a1a" font-family="Oswald" font-size="12">EPP — Menos efectivo</text>
+      </svg>
+      <div class="img-caption">Jerarquía de controles — de lo más efectivo (eliminación) a lo menos efectivo (EPP)</div>
+    </div>
+
+    <h3>Peligros y Riesgos por Tipo de Emergencia</h3>
+    <ul>
+      <li><strong>Incendios:</strong> estructuras en mal estado (colapso), energía eléctrica (electrocución), gas natural (deflagración), alturas (caídas).</li>
+      <li><strong>Rescates:</strong> alturas, vehículos (atrapamiento), combustible (quemaduras), GNV, baterías de litio (explosión).</li>
+      <li><strong>MATPEL:</strong> productos químicos (derrames, reacciones, incendios, explosiones).</li>
+      <li><strong>Emergencias médicas:</strong> virus, bacterias y microbios.</li>
+      <li><strong>Para todos los casos:</strong> personas en estado etílico, afectados sin lesiones, personas de mal vivir y animales.</li>
+    </ul>
+
+    <h3>Reglas de Oro de Seguridad en Escena</h3>
+    <div class="highlight-box">🚨 <strong>Nunca ingresar solo · Nunca sin EPP · Nunca sin EPRA cuando corresponda · Siempre con radio de comunicaciones · Siempre seguir los POE (Procedimientos Operativos Estandarizados)</strong></div>
+
+    <h3>Los 8 Pasos del Efectivo al Mando (Primero en Llegar)</h3>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot">1</div><div class="tl-content"><strong>Informar</strong><span>Avisar a la base del arribo a la escena</span></div></div>
+      <div class="tl-item"><div class="tl-dot">2</div><div class="tl-content"><strong>Asumir el mando</strong><span>Establecer el Puesto de Comando</span></div></div>
+      <div class="tl-item"><div class="tl-dot">3</div><div class="tl-content"><strong>Evaluar la situación</strong><span>Reconocimiento 360°</span></div></div>
+      <div class="tl-item"><div class="tl-dot">4</div><div class="tl-content"><strong>Perímetro de seguridad</strong><span>Proteger límites del área operativa</span></div></div>
+      <div class="tl-item"><div class="tl-dot">5</div><div class="tl-content"><strong>Establecer objetivos</strong><span>¿Qué se quiere lograr?</span></div></div>
+      <div class="tl-item"><div class="tl-dot">6</div><div class="tl-content"><strong>Estrategias y tácticas</strong><span>¿Cómo se logrará el objetivo?</span></div></div>
+      <div class="tl-item"><div class="tl-dot">7</div><div class="tl-content"><strong>Recursos e instalaciones</strong><span>Determinar necesidades adicionales</span></div></div>
+      <div class="tl-item"><div class="tl-dot">8</div><div class="tl-content"><strong>Transferir el mando</strong><span>Si llega personal de mayor graduación</span></div></div>
+    </div>
+
+    <h3>Trabajo en Equipo</h3>
+    <p>Esfuerzo colaborativo de personas con distintas habilidades que comparten un objetivo común. En los bomberos implica: <strong>roles claros, coordinación, resiliencia, comunicación efectiva y confianza mutua</strong>. Diferente al "grupo de trabajo" donde se opera sin coordinación ni objetivos compartidos.</p>
+  </div>
+  <div class="panel" id="l06-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas y luego presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l06-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l06')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l06')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l06-score"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ LECCIÓN 07 ═══════════════ -->
+<div class="lesson-card visible" id="l07">
+  <div class="lesson-header">
+    <div class="lesson-number-bg">07</div>
+    <div class="lesson-header-content">
+      <div class="lesson-icon-box">🧠</div>
+      <div class="lesson-title-block">
+        <h2>Manejo Psicológico · Estrés en Bomberos</h2>
+        <div class="meta">Módulo I · 3 horas · Estrés agudo, TEPT y prevención</div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog07"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l07','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l07','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l07-summary">
+    <h3>Perfil Singular del Bombero</h3>
+    <p>Los bomberos se caracterizan por ser orientados al detalle, tomadores de decisiones rápidas, altamente motivados de forma interna y con necesidad de estimulación. Las características de mayor riesgo son: <strong>alta necesidad de estimulación, aburren fácilmente y agrado por el riesgo</strong>, ya que pueden llevar a involucrarse en problemas de pareja, financieros o de autocontrol emocional.</p>
+
+    <h3>Modelo Continuo de Estrés (Lazarus y Folkman)</h3>
+    <div class="img-wrapper">
+      <svg viewBox="0 0 700 140" xmlns="http://www.w3.org/2000/svg">
+        <rect width="700" height="140" fill="#1a1a1a"/>
+        <!-- Gauge metaphor -->
+        <rect x="20" y="40" width="150" height="60" rx="8" fill="#1e3a1e" stroke="#4CAF50" stroke-width="2"/>
+        <text x="95" y="68" text-anchor="middle" fill="#81C784" font-family="Oswald" font-size="14">🟢 VERDE</text>
+        <text x="95" y="84" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">Óptimo · Bienestar</text>
+        <text x="95" y="97" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">Crecimiento adaptativo</text>
+        <rect x="190" y="40" width="150" height="60" rx="8" fill="#2a2a00" stroke="#FFD54F" stroke-width="2"/>
+        <text x="265" y="68" text-anchor="middle" fill="#FFD54F" font-family="Oswald" font-size="14">🟡 AMARILLO</text>
+        <text x="265" y="84" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">Estrés leve y transitorio</text>
+        <text x="265" y="97" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">Habitual en la vida</text>
+        <rect x="360" y="40" width="150" height="60" rx="8" fill="#2a1a00" stroke="#FF8F00" stroke-width="2"/>
+        <text x="435" y="68" text-anchor="middle" fill="#FFB74D" font-family="Oswald" font-size="14">🟠 NARANJA</text>
+        <text x="435" y="84" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">Angustia · Deterioro</text>
+        <text x="435" y="97" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">Cicatrices emocionales</text>
+        <rect x="530" y="40" width="150" height="60" rx="8" fill="#3a1a1a" stroke="#EF5350" stroke-width="2"/>
+        <text x="605" y="68" text-anchor="middle" fill="#EF9A9A" font-family="Oswald" font-size="14">🔴 ROJO</text>
+        <text x="605" y="84" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">Desórdenes mentales</text>
+        <text x="605" y="97" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">TEPT · Estrés máximo</text>
+        <!-- Arrow -->
+        <path d="M30,20 L680,20" stroke="#555" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <text x="350" y="16" text-anchor="middle" fill="#666" font-family="sans-serif" font-size="10">Incremento de presión / estrés →</text>
+        <defs><marker id="arr2" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#555"/></marker></defs>
+      </svg>
+      <div class="img-caption">Modelo continuo de estrés — análogo al manómetro de un cuerpo de bomba</div>
+    </div>
+
+    <h3>Incidentes Críticos</h3>
+    <p>Son eventos que sobrepasan la capacidad normal de afrontamiento. Algunos de los más impactantes para los bomberos son: dolor y sufrimiento de niños, muertes masivas, accidentes de compañeros, falla en la misión y exposición mediática intensa.</p>
+
+    <h3>Lesiones por Estrés — Progresión</h3>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot" style="background:#4CAF50">A</div><div class="tl-content"><strong>Reacción de Estrés Agudo (hasta 48h)</strong><span>Condición Amarilla. Mejora con el tiempo sin intervención especializada.</span></div></div>
+      <div class="tl-item"><div class="tl-dot" style="background:#FF8F00">B</div><div class="tl-content"><strong>Trastorno de Estrés Agudo (15-30 días)</strong><span>Condición Naranja. Flashbacks, labilidad emocional, pesadillas, irritabilidad.</span></div></div>
+      <div class="tl-item"><div class="tl-dot" style="background:#c62828">C</div><div class="tl-content"><strong>TEPT — más de 30 días</strong><span>Condición Roja. Ansiedad, depresión, recuerdos intrusivos, alejamiento social. Requiere atención especializada urgente.</span></div></div>
+    </div>
+
+    <h3>Prevención del Suicidio</h3>
+    <div class="highlight-box">🆘 Los bomberos tienen alto riesgo por la exposición continua a incidentes críticos. Ante signos de alarma en un compañero: no asustarse, decirle que no está solo, buscar apoyo. <strong>Línea del MINSA disponible. Centros de Salud Mental Comunitarios en cada distrito.</strong></div>
+
+    <h3>Estrategias de Prevención del Estrés</h3>
+    <ul>
+      <li>Buscar apoyo profesional si te sientes emocionalmente mal (no callar).</li>
+      <li>Desengancharse del servicio y descansar periódicamente.</li>
+      <li>Compartir tiempo de calidad con familia.</li>
+      <li>Ejercicio físico (trotar) para reducir los altos niveles de adrenalina.</li>
+      <li>No usar drogas ni alcohol como escape emocional.</li>
+      <li>Alimentación balanceada y sueño adecuado.</li>
+    </ul>
+  </div>
+  <div class="panel" id="l07-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas y luego presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l07-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l07')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l07')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l07-score"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ LECCIÓN 08 ═══════════════ -->
+<div class="lesson-card visible" id="l08">
+  <div class="lesson-header">
+    <div class="lesson-number-bg">08</div>
+    <div class="lesson-header-content">
+      <div class="lesson-icon-box">🗂️</div>
+      <div class="lesson-title-block">
+        <h2>Sistema de Comando de Incidentes y Contabilidad de Personal</h2>
+        <div class="meta">Módulo I · 3 horas · SCI, 14 principios, TAC y tableros</div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog08"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l08','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l08','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l08-summary">
+    <h3>¿Qué es el SCI?</h3>
+    <p>El Sistema de Comando de Incidentes (SCI) es la combinación de instalaciones, equipamiento, personal, procedimientos, protocolos y comunicaciones, operando en una estructura organizacional común para administrar eficientemente los recursos asignados a un incidente, evento u operativo.</p>
+
+    <h3>6 Características del SCI con sus 14 Principios</h3>
+    <div class="visual-grid">
+      <div class="visual-card"><div class="vc-icon">📏</div><div class="vc-title">Estandarización</div><div class="vc-desc">Terminología común en lenguaje claro sin códigos ni claves</div></div>
+      <div class="visual-card"><div class="vc-icon">👮</div><div class="vc-title">Mando</div><div class="vc-desc">Asumir/transferir mando, cadena de mando, unidad de mando y comando unificado</div></div>
+      <div class="visual-card"><div class="vc-icon">📐</div><div class="vc-title">Planificación</div><div class="vc-desc">Manejo por objetivos, PAI, alcance de control (óptimo: 5) y organización modular</div></div>
+      <div class="visual-card"><div class="vc-icon">🏗️</div><div class="vc-title">Instalaciones</div><div class="vc-desc">PC, Área de Espera (E) y Área de Concentración de Víctimas (ACV)</div></div>
+      <div class="visual-card"><div class="vc-icon">📡</div><div class="vc-title">Comunicaciones</div><div class="vc-desc">Frecuencia común integrada y manejo controlado de la información</div></div>
+      <div class="visual-card"><div class="vc-icon">🎯</div><div class="vc-title">Profesionalismo</div><div class="vc-desc">Responsabilidad continua y oportunidad en el uso de recursos</div></div>
+    </div>
+
+    <h3>Cadena de Supervivencia SCI</h3>
+    <div class="highlight-box">🔗 <strong>3 eslabones interrelacionados:</strong><br>1) Sistema de Contabilidad de Personal (TAC + Tableros)<br>2) MAYDAY, MAYDAY, MAYDAY — llamado de auxilio en zona caliente<br>3) Equipo de Intervención Rápida (EIR) — rescate de bomberos caídos</div>
+
+    <h3>Tarjetas TAC — Colores y Significado</h3>
+    <div class="badge-row">
+      <div class="badge blue">🔵 Celeste: Aspirantes y Pilotos Rentados</div>
+      <div class="badge gold">🟡 Amarillo: Seccionario, Sub-Tte., Tte.</div>
+      <div class="badge" style="border-color:#FF8F00;color:#FFB74D">🟠 Anaranjado: Capitán al Brigadier General</div>
+      <div class="badge green">🟢 Verde Limón: Unidades (vehículos)</div>
+    </div>
+
+    <h3>Tableros de Contabilidad</h3>
+    <ul>
+      <li><strong>TC Puesto de Comando (FSCI 201):</strong> croquis, estructura y objetivos. Responsable: el CI.</li>
+      <li><strong>TC Control de Aire / Ingreso (FSCI 207):</strong> registra ingreso/salida de efectivos de zona caliente, cantidad de aire, tiempo y observaciones.</li>
+      <li><strong>FSCI 211:</strong> registro de todas las unidades y efectivos en la escena con hora de llegada.</li>
+    </ul>
+
+    <div class="info-box">📋 Regulado por <strong>NFPA 1561</strong> (Norma de Gestión de Incidentes). El SCP es de uso obligatorio en todos los escenarios: incendios, rescates, MATPEL, desastres, espacios confinados, emergencias médicas masivas y más.</div>
+
+    <h3>Llamada de Evacuación</h3>
+    <p>Se activa cuando el CI o el Oficial de Seguridad ordenan evacuación total: se tocan las sirenas y el HORN electrónico de las unidades <strong>tres veces de manera rítmica y continua</strong>.</p>
+  </div>
+  <div class="panel" id="l08-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas y luego presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l08-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l08')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l08')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l08-score"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ LECCIÓN 09 ═══════════════ -->
+<div class="lesson-card visible" id="l09">
+  <div class="lesson-header">
+    <div class="lesson-number-bg">09</div>
+    <div class="lesson-header-content">
+      <div class="lesson-icon-box">🌬️</div>
+      <div class="lesson-title-block">
+        <h2>Gestión del Aire del EPRA</h2>
+        <div class="meta">Módulo I · 3 horas · Atmósferas peligrosas, tipos de EPRA y gestión del aire</div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:0%" id="prog09"></div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('l09','summary',this)">📖 Resumen</button>
+    <button class="tab-btn" onclick="switchTab('l09','quiz',this)">📝 Evaluación</button>
+  </div>
+  <div class="panel summary active" id="l09-summary">
+    <h3>Composición Normal del Aire</h3>
+    <div class="badge-row">
+      <div class="badge gold">O₂: 21%</div>
+      <div class="badge blue">N₂: 78%</div>
+      <div class="badge">Otros gases: 1%</div>
+    </div>
+
+    <h3>Atmósferas Peligrosas (OSHA)</h3>
+    <div class="img-wrapper">
+      <svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg">
+        <rect width="700" height="180" fill="#1a1a1a"/>
+        <!-- 4 boxes -->
+        <rect x="10" y="20" width="160" height="140" rx="8" fill="#1e1a2e" stroke="#7E57C2" stroke-width="1.5"/>
+        <text x="90" y="50" text-anchor="middle" fill="#CE93D8" font-family="Oswald" font-size="13">DEFICIENCIA</text>
+        <text x="90" y="65" text-anchor="middle" fill="#CE93D8" font-family="Oswald" font-size="13">DE O₂</text>
+        <text x="90" y="88" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">O₂ &lt; 19.5%</text>
+        <text x="90" y="103" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="10">→ Asfixia, confusión</text>
+        <text x="90" y="116" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="10">→ Pérdida conciencia</text>
+
+        <rect x="185" y="20" width="160" height="140" rx="8" fill="#2a1200" stroke="#FF8F00" stroke-width="1.5"/>
+        <text x="265" y="50" text-anchor="middle" fill="#FFB74D" font-family="Oswald" font-size="13">SOBRE-</text>
+        <text x="265" y="65" text-anchor="middle" fill="#FFB74D" font-family="Oswald" font-size="13">OXIGENADA</text>
+        <text x="265" y="88" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">O₂ &gt; 23.5%</text>
+        <text x="265" y="103" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="10">→ Mayor riesgo</text>
+        <text x="265" y="116" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="10">→ de incendio</text>
+
+        <rect x="360" y="20" width="160" height="140" rx="8" fill="#2a1200" stroke="#E8430A" stroke-width="1.5"/>
+        <text x="440" y="50" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="13">INFLAMABLE</text>
+        <text x="440" y="65" text-anchor="middle" fill="#FF7A30" font-family="Oswald" font-size="13">/ EXPLOSIVA</text>
+        <text x="440" y="88" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">&gt; 10% del LII</text>
+        <text x="440" y="103" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="10">→ Incendio</text>
+        <text x="440" y="116" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="10">→ Explosión</text>
+
+        <rect x="535" y="20" width="155" height="140" rx="8" fill="#2e1a1a" stroke="#EF5350" stroke-width="1.5"/>
+        <text x="612" y="50" text-anchor="middle" fill="#EF9A9A" font-family="Oswald" font-size="13">GASES</text>
+        <text x="612" y="65" text-anchor="middle" fill="#EF9A9A" font-family="Oswald" font-size="13">TÓXICOS</text>
+        <text x="612" y="88" text-anchor="middle" fill="#aaa" font-family="sans-serif" font-size="10">&gt; límite IDLH</text>
+        <text x="612" y="103" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="10">→ Intoxicación</text>
+        <text x="612" y="116" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="10">→ Muerte</text>
+      </svg>
+      <div class="img-caption">4 tipos de atmósferas peligrosas más comunes en emergencias (clasificación OSHA)</div>
+    </div>
+
+    <h3>Gestión del Aire — Regla del 50%</h3>
+    <div class="highlight-box">
+      🌬️ <strong>Regla de los Medios:</strong><br>
+      50% del cilindro → trabajo en la zona caliente<br>
+      50% del cilindro → salida y reserva de emergencia<br><br>
+      Ejemplo: Cilindro de 1800 L, consumo 100 L/min → 18 min totales<br>
+      ✅ 9 min de trabajo · ✅ 9 min de salida y reserva<br><br>
+      <strong>⚠️ Salir ANTES de que suene la alarma de aire bajo — esta indica que ya se consume el aire de reserva</strong>
+    </div>
+
+    <h3>Factores que Afectan el Consumo de Aire</h3>
+    <div class="visual-grid">
+      <div class="visual-card"><div class="vc-icon">💪</div><div class="vc-title">Condición Física</div><div class="vc-desc">A mejor condición, menor consumo de aire y mayor resistencia a la fatiga</div></div>
+      <div class="visual-card"><div class="vc-icon">🎯</div><div class="vc-title">Tipo de Tarea</div><div class="vc-desc">Búsqueda y rescate vs. remoción; a mayor esfuerzo, mayor consumo</div></div>
+      <div class="visual-card"><div class="vc-icon">😷</div><div class="vc-title">Colocación Máscara</div><div class="vc-desc">Correcta hermeticidad = menor consumo innecesario de aire</div></div>
+      <div class="visual-card"><div class="vc-icon">🧘</div><div class="vc-title">Respiración Controlada</div><div class="vc-desc">Respiración lenta y profunda extiende significativamente el tiempo disponible</div></div>
+    </div>
+
+    <h3>Ante Falla del Sistema a Demanda</h3>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot">1</div><div class="tl-content"><strong>Mantener la calma</strong><span>El pánico aumenta el consumo de aire</span></div></div>
+      <div class="tl-item"><div class="tl-dot">2</div><div class="tl-content"><strong>Abrir la válvula by-pass</strong><span>De forma controlada</span></div></div>
+      <div class="tl-item"><div class="tl-dot">3</div><div class="tl-content"><strong>Respirar controladamente</strong><span>Inspiración profunda → retener → exhalar lentamente</span></div></div>
+      <div class="tl-item"><div class="tl-dot">4</div><div class="tl-content"><strong>Cerrar la válvula</strong><span>No es a demanda; cerrar para extender el aire</span></div></div>
+      <div class="tl-item"><div class="tl-dot">5</div><div class="tl-content"><strong>Repetir hasta salir</strong><span>Nunca quitarse la máscara en zona peligrosa</span></div></div>
+    </div>
+
+    <div class="highlight-box">⚠️ <strong>ATENCIÓN:</strong> No quitarse el EPRA durante la fase de remoción. Los niveles de monóxido de carbono son extremadamente altos durante esta etapa. Respirar aire caliente húmedo por encima de 49-54°C puede causar edema laríngeo y muerte por asfixia.</div>
+  </div>
+  <div class="panel" id="l09-quiz">
+    <div class="quiz-intro">📋 Responde las 20 preguntas y luego presiona <strong>"Verificar Respuestas"</strong>.</div>
+    <div id="l09-questions"></div>
+    <div class="quiz-actions">
+      <button class="btn-check" onclick="checkQuiz('l09')">✅ Verificar Respuestas</button>
+      <button class="btn-reset" onclick="resetQuiz('l09')">🔄 Reiniciar</button>
+    </div>
+    <div class="score-display" id="l09-score"></div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<footer>
+  <p>🔥 <span>CGBVP — DIGEFA</span> · Curso de Formación Básica de Bomberos 2026 · Material de apoyo didáctico</p>
+  <p style="margin-top:6px;">Módulo I · Lecciones 01–09 · "Dios · Patria · Humanidad"</p>
+</footer>
+
+<script>
+// ══════════════════════════════════════
+// QUIZ DATA — 20 preguntas × 9 lecciones
+// ══════════════════════════════════════
+const quizData = {
+  l01:[
+    {q:"¿Cuántas lecciones teóricas tiene el Curso de Formación Básica de Bomberos (CFBB)?",opts:["20 lecciones","34 lecciones","40 lecciones","28 lecciones"],a:1,fb:"El CFBB se divide en TRES módulos académicos con un total de 34 lecciones teóricas."},
+    {q:"¿Cuántas prácticas de campo considera el CFBB?",opts:["5 prácticas","8 prácticas","10 prácticas","12 prácticas"],a:2,fb:"Los módulos I, II y III consideran un total de DIEZ (10) prácticas de campo evaluadas."},
+    {q:"¿Cuántas tardanzas constituyen una falta en el CFBB?",opts:["1 tardanza","2 tardanzas","3 tardanzas","5 tardanzas"],a:2,fb:"En cada módulo, TRES (3) tardanzas constituyen una falta."},
+    {q:"¿Cuántas faltas consecutivas en un módulo ameritan la separación del aspirante?",opts:["1 falta","2 faltas","3 faltas consecutivas","5 faltas"],a:2,fb:"Tres (3) faltas CONSECUTIVAS o cuatro (4) no consecutivas durante un módulo ameritan la separación."},
+    {q:"¿Cuántas faltas acumuladas a lo largo de los tres primeros módulos generan la separación?",opts:["5 faltas","6 faltas","8 faltas no consecutivas","10 faltas"],a:2,fb:"Si el aspirante presenta un total de OCHO (8) faltas no consecutivas a lo largo de los tres primeros módulos, será separado."},
+    {q:"¿Cuál es la nota mínima aprobatoria del Promedio Final de Módulo?",opts:["10","12","14","16"],a:2,fb:"La nota mínima aprobatoria del PROMEDIO FINAL DE MÓDULO es de CATORCE (14)."},
+    {q:"¿Cuál es la nota mínima aprobatoria del Promedio Final de Prácticas de Campo?",opts:["10","12","14","16"],a:2,fb:"La nota mínima aprobatoria del PROMEDIO FINAL DE LAS PRÁCTICAS DE CAMPO es de CATORCE (14)."},
+    {q:"¿Cuál es la nota mínima aprobatoria de las Evoluciones Integrales?",opts:["10","12","14","16"],a:2,fb:"La Nota mínima aprobatoria del PROMEDIO FINAL DE EVOLUCIÓN INTEGRAL es de CATORCE (14)."},
+    {q:"¿Cuál es la nota mínima aprobatoria de la Evaluación Final del CFBB?",opts:["10","12","14","16"],a:2,fb:"La Nota mínima aprobatoria de la EVALUACIÓN FINAL es de CATORCE (14)."},
+    {q:"¿De cuántas preguntas consta la evaluación de conocimientos de la Evaluación Final?",opts:["50 preguntas","80 preguntas","100 preguntas","120 preguntas"],a:2,fb:"La evaluación de conocimientos estará compuesta de CIEN (100) preguntas de alternativas múltiples."},
+    {q:"¿Cuántas estaciones prácticas tiene la Evaluación Final?",opts:["3 estaciones","4 estaciones","5 estaciones","6 estaciones"],a:2,fb:"La evaluación práctica de la Evaluación Final está compuesta de CINCO (5) estaciones prácticas."},
+    {q:"¿Qué es el cuadro de mérito del CFBB?",opts:["Un ranking solo de la evaluación final","Un listado de todas las compañías","El resultado promedio de todos los módulos, prácticas, evoluciones y evaluación final a nivel nacional","Solo el promedio de los módulos I, II y III"],a:2,fb:"El cuadro de mérito es el resultado promedio de la sumatoria de notas de MÓDULO I, MÓDULO II, MÓDULO III, PRÁCTICAS DE CAMPO, EVOLUCIONES PRÁCTICAS Y EVALUACIÓN FINAL a nivel nacional."},
+    {q:"¿Cuáles son las estaciones de la Evaluación Final Práctica?",opts:["EPP, RCP, mangueras, cuerdas, química","EPP/EPRA, escaleras portátiles, chorros contra incendios, mangueras/pitones, maniobras con cuerdas","Evacuación, primeros auxilios, escaleras, mangueras, radiocomunicaciones","Incendios, rescates, MATPEL, emergencias médicas, inundaciones"],a:1,fb:"Las 5 estaciones son: 1)EPP y EPRA, 2)Escaleras portátiles, 3)Chorros contra incendios, 4)Mangueras, pitones y accesorios, 5)Maniobras de izaje con cuerdas."},
+    {q:"¿Qué ocurre si un aspirante NO aprueba un módulo del CFBB?",opts:["Puede pasar al siguiente módulo con nota de recuperación","Rinde un examen de subsanación inmediato","No puede continuar con el siguiente módulo (las evaluaciones son eliminatorias)","Repite solo las lecciones desaprobadas"],a:2,fb:"En caso de que el aspirante NO apruebe un módulo, NO podrá continuar con el siguiente módulo. Las evaluaciones son ELIMINATORIAS."},
+    {q:"¿Cuál es la tolerancia máxima de ingreso a una lección?",opts:["5 minutos","10 minutos","15 minutos","20 minutos"],a:2,fb:"La tolerancia máxima será de 15 MINUTOS para entrar a la lección."},
+    {q:"¿Qué método de enseñanza usa el CFBB?",opts:["Método magistral expositivo","Método interactivo de enseñanza (MIE)","Método de aula invertida","Método Montessori"],a:1,fb:"El CFBB utiliza el Método Interactivo de Enseñanza (MIE), que promueve la participación activa del aspirante."},
+    {q:"¿Qué uniforme se usa en las estaciones prácticas del CFBB?",opts:["Uniforme formal de gala","Uniforme de faena (overol o pantalón/polo rojo con cintas reflectivas y borceguíes negros)","Ropa deportiva","Traje de bombero estructural siempre"],a:1,fb:"En estaciones prácticas se usa el uniforme de faena: overol o pantalón+polo rojo con cintas reflectivas, emblemas, borceguíes negros y gorra tipo jockey."},
+    {q:"¿Qué es la Tarjeta de Administración y Control (TAC) en el CFBB?",opts:["Un carnet de identidad nacional","Una tarjeta celeste de uso obligatorio durante el curso que identifica al aspirante con datos básicos","La tarjeta de notas del aspirante","Un permiso especial de prácticas"],a:1,fb:"La TAC (Tarjeta de Administración y Control) de color CELESTE es de uso obligatorio durante el CFBB e identifica al aspirante."},
+    {q:"¿Qué debe hacer el aspirante ante un caso de hostigamiento o acoso?",opts:["Ignorarlo y continuar con el curso","Renunciar al curso inmediatamente","Comunicarse directamente con la OPFB de la DIGEFA para formular la denuncia","Publicarlo en redes sociales"],a:2,fb:"Ante hostigamiento, acoso o chantaje, el aspirante puede comunicarse directamente con la Oficina del Programa de Formación Básica (OPFB) de la DIGEFA."},
+    {q:"¿Está permitido realizar actividades con fuego y altura dentro del CFBB?",opts:["Sí, son parte esencial del entrenamiento","No; dentro del CFBB no se realizan actividades con fuego ni altura; solo las estipuladas en las guías de prácticas","Solo se realizan con supervisión especial","Sí, pero solo en el módulo IV"],a:1,fb:"Dentro del desarrollo del CFBB no se realizan actividades ni ejercicios con fuego ni altura; solo las que se estipulan en las guías de prácticas de campo. No hay justificación para exponer a los aspirantes a riesgos evitables."},
+  ],
+  l02:[
+    {q:"¿Cómo se define 'Doctrina' en el contexto del CGBVP?",opts:["Los uniformes y equipos del bombero","Enseñanzas y principios que orientan las actitudes y conductas personales y de grupo","El manual de operaciones de incendio","El reglamento de disciplina interno"],a:1,fb:"La Doctrina son enseñanzas y principios que orientan y conducen las actitudes y conductas personales y de grupo; es la base de la cultura institucional."},
+    {q:"¿Cuál es el Lema oficial del CGBVP?",opts:["Fe, Valor y Sacrificio","Sirviendo a la Comunidad","Dios, Patria, Humanidad","Honor, Deber, País"],a:2,fb:"El Lema oficial del CGBVP es 'DIOS – PATRIA – HUMANIDAD', adoptado en el 2° Congreso Nacional de Bomberos (1957)."},
+    {q:"¿En qué Congreso Nacional se adoptó oficialmente el Lema del CGBVP?",opts:["Primer Congreso Nacional (1950)","Segundo Congreso Nacional de Bomberos (Lima, 1957)","Tercer Congreso Nacional (1965)","Por Decreto del Presidente de la República"],a:1,fb:"En el Segundo Congreso Nacional de Bomberos Voluntarios del Perú (Lima, 9-13 de octubre de 1957)."},
+    {q:"¿Cuándo fue fundado el CGBVP?",opts:["02 de mayo de 1866","28 de agosto de 1860","05 de diciembre de 1860","01 de enero de 1860"],a:2,fb:"El CGBVP fue fundado el 05 de diciembre de 1860, fecha que marca la fundación oficial de la institución."},
+    {q:"¿Mediante qué resolución se aprueba los Símbolos Institucionales del CGBVP?",opts:["Resolución Jefatural 396-2009 CGBVP","Decreto Legislativo N° 1260","Resolución Ministerial N° 897-2017-IN","Resolución de Comandancia N° 161-2022"],a:0,fb:"Los Símbolos Institucionales del CGBVP fueron aprobados mediante Resolución Jefatural 396-2009 CGBVP."},
+    {q:"¿Cuáles son los tres Símbolos Institucionales del CGBVP?",opts:["Bandera, Himno y Uniforme","Escudo, Bandera Institucional e Himno del Bombero Voluntario","Escudo, Lema e Himno","Casco, Escudo y Bandera"],a:1,fb:"Los tres Símbolos Institucionales son: a) Escudo Institucional, b) Bandera Institucional, c) Himno del Bombero Voluntario."},
+    {q:"¿Cuál es el color y forma de la Bandera Institucional del CGBVP?",opts:["Azul y blanca, rectangular","Roja y blanca, cuadrada","Rectangular, color rojo, con el Escudo del CGBVP al centro","Tricolor, con el lema del CGBVP"],a:2,fb:"La Bandera Institucional del CGBVP es rectangular, de color ROJO, con el Escudo del CGBVP en el centro."},
+    {q:"¿Quién creó el Himno del Bombero Voluntario del Perú?",opts:["Emilio Longhi","Francisco Lazo","Brigadier CBP Julio César Coz Vargas (B-14)","Juan Antonio Alarco"],a:2,fb:"El Himno del Bombero Voluntario fue creado por el Brigadier CBP Julio César Coz Vargas (B-14) y aprobado en 2002 por Resolución Jefatural N° 833-2002."},
+    {q:"¿Cuándo debe entonarse el Himno del Bombero Voluntario?",opts:["Al inicio de todas las ceremonias","Al medio de todos los actos formales","Al cierre de todas las ceremonias y actos formales del CGBVP","Solo en ceremonias de graduación"],a:2,fb:"El Himno es de entonación obligatoria ANTES DE CERRAR todas las ceremonias y actos formales del CGBVP."},
+    {q:"¿Qué representan las palabras 'Ama Sua, Ama Llulla, Ama Quella' en los valores del bombero?",opts:["Los tres pilares del rescate técnico","Los valores incaicos que inspiran Honestidad, Veracidad y Laboriosidad","Los tres primeros grados de la jerarquía","Las tres provincias fundadoras del CGBVP"],a:1,fb:"Ama Sua (no seas ladrón→Honestidad), Ama Llulla (no seas mentiroso→Veracidad) y Ama Quella (no seas ocioso→Laboriosidad) son los valores incaicos que inspiran al bombero."},
+    {q:"¿Por qué se dice que 'La peor violencia es la indiferencia' en el contexto de la Mística bomberil?",opts:["Porque el bombero debe ser agresivo con el fuego","Porque abstenerse de servir o ser indiferente ante la necesidad de la comunidad es la mayor falta contra la mística","Porque los bomberos deben combatir la violencia callejera","Porque la indiferencia genera más incendios"],a:1,fb:"La mística bomberil implica servir a pesar de todas las carencias. La indiferencia —negarse a actuar cuando se puede ayudar— es la mayor traición a esa mística."},
+    {q:"¿Puede un ateo ser bombero voluntario del CGBVP?",opts:["No, el lema dice Dios y se requiere ser creyente","Solo si profesa alguna religión organizada","Sí; la institución recibe a todos los que consideren aptos para su noble causa, respetando la libertad de creencias","Solo si cambia de creencia"],a:2,fb:"La institución es generosa: abre sus brazos a todos de acuerdo con la libre creencia y tolerancia declarada en la Constitución Política del Perú."},
+    {q:"¿Qué entiende el CGBVP por 'Ética Profesional del Bombero Voluntario'?",opts:["El conjunto de maniobras técnicas del bombero","La fe pública que respalda las decisiones del bombero, basada en principios como integridad, responsabilidad y confidencialidad","El protocolo de uniformes y presentación","El reglamento de sanciones disciplinarias"],a:1,fb:"La ética profesional implica acatar principios como integridad, objetividad, responsabilidad, confidencialidad y conducta ética, ya que las decisiones del bombero están respaldadas por la fe pública."},
+    {q:"¿Qué caracteriza al valor de la 'Lealtad' en el bombero?",opts:["Obedecer sin cuestionar al superior","Fidelidad, solidaridad y confianza, sin faltar a la fe depositada; recíproca del superior al inferior y viceversa","Nunca criticar a los compañeros","Dar siempre la razón al jefe de compañía"],a:1,fb:"Lealtad es sinceridad, solidaridad y confianza que exige fidelidad sin faltar a la fe depositada. Es recíproca: del superior al inferior y viceversa."},
+    {q:"¿Qué es la 'Disciplina' en términos institucionales del CGBVP?",opts:["La capacidad de apagar incendios rápidamente","El acatamiento y cumplimiento fiel de leyes y reglamentos; la columna vertebral de la institución","La obediencia ciega sin cuestionamiento","El protocolo de ceremonias y desfiles"],a:1,fb:"La Disciplina es el acatamiento, obediencia y subordinación que exige observar y cumplir fielmente las leyes y reglamentos. Es la columna vertebral de toda institución."},
+    {q:"¿Cuándo se iza la Bandera Institucional?",opts:["Solo el 5 de diciembre (aniversario del CGBVP)","Únicamente en emergencias","Obligatoriamente los mismos días que se iza la Bandera Nacional, de 08:00 a 18:00h en locales del CGBVP","Solo durante las prácticas de campo"],a:2,fb:"La Bandera Institucional se iza obligatoriamente los mismos días que la Bandera Nacional, de 08:00 a 18:00 horas, en todos los locales del CGBVP."},
+    {q:"¿Qué es el Estandarte Institucional?",opts:["El uniforme de gala del bombero","Una bandera portátil con el Escudo del CGBVP, montada en asta portátil de 2.10 m, para actos ceremoniales","El emblema de cada Comandancia Departamental","El distintivo de los bomberos en retiro"],a:1,fb:"El Estandarte Institucional es la Bandera Institucional portada en asta portátil con el Escudo del CGBVP, con asta de 2.10 m de guinda oscura. Su presencia es obligatoria en actos ceremoniales."},
+    {q:"¿Cómo se define ser 'Bombero Voluntario' según la lección?",opts:["Una persona que trabaja temporalmente en una compañía a cambio de beneficios","Alguien que tiene la virtud de proteger y entregarse al otro, cumpliendo una labor social desinteresada de manera voluntaria","Un empleado ad honorem del Estado","Solo quien aprueba el CFBB y todas las evoluciones"],a:1,fb:"Ser bombero voluntario significa tener la virtud de proteger y entregarse al otro. Es una labor social desinteresada, un deber y una responsabilidad; el bombero siempre da, nunca pide."},
+    {q:"¿Cuál es la diferencia entre 'Respeto al superior' y 'Actitud servil' según el Código de Ética?",opts:["No hay diferencia; deben obedecerse todas las órdenes sin cuestionar","El respeto implica reconocer el rango y trabajar en equipo, pero no impide pensar por cuenta propia ni discrepar constructivamente","La actitud servil es la correcta en el CGBVP","El respeto solo se da de inferior a superior, nunca al revés"],a:1,fb:"El respeto no es actitud servil. Implica reconocer el rango e integrarse al equipo, pero permite discrepar de forma respetuosa y constructiva. La actitud servil impide pensar y discrepar."},
+    {q:"¿Qué significa el elemento 'PATRIA' en el Lema del CGBVP?",opts:["El gobierno central y las instituciones públicas","La tierra que nos vio nacer, a la cual pertenecemos con historia, cultura, lazos afectivos y sociedad a la cual servir","El territorio donde opera la compañía de bomberos","El escudo y la bandera del Perú"],a:1,fb:"PATRIA es la tierra que nos vio nacer, con la historia, cultura, lazos afectivos y sociedad a la que los bomberos están dispuestos a servir."},
+  ],
+  l03:[
+    {q:"¿En qué año y bajo qué gobierno se creó en Roma el primer cuerpo de bomberos organizado?",opts:["Año 64 d.C., bajo Nerón","Año 6 d.C., organizado por el Emperador Augusto César","Año 300 a.C., bajo la República Romana","Año 1 d.C., bajo Julio César"],a:1,fb:"El primer cuerpo de bomberos organizado con esclavos y ciudadanos se estableció en el año 6 d.C. bajo el Emperador Augusto César, expandiendo los Vigiles a 10,000 efectivos en 10 cohortes."},
+    {q:"¿Cómo se llamaban los bomberos romanos?",opts:["Legionarios del Fuego","Praetorians","Vigiles (Cohortes Vigilium)","Gladiatores Aquae"],a:2,fb:"Los bomberos romanos se llamaban 'Vigiles' y su unidad completa era la 'Cohortes Vigilium'. Roma se constituyó en la cuna del bomberismo mundial."},
+    {q:"¿Quién inventó la primera manguera flexible en 1672?",opts:["Anthony Blatner","Richard Newsham","Jan van der Heijden (holandés)","George Brathwaite"],a:2,fb:"El holandés Jan van der Heijden inventó en 1672 la primera manguera flexible de cuero, en tramos de 50 pies con uniones de bronce en ambos extremos."},
+    {q:"¿Dónde se creó en 1736 la primera compañía de bomberos VOLUNTARIOS del mundo?",opts:["Londres, Inglaterra","París, Francia","Filadelfia (Philadelphia), EE.UU.","Roma, Italia"],a:2,fb:"En 1736, en FILADELFIA (Philadelphia), se creó la primera Compañía de Bomberos Voluntarios, que no se convertirían en profesionales hasta 1850."},
+    {q:"¿En qué año el Virrey Amat creó la primera organización de bomberos en el Perú virreinal?",opts:["1750","1772","1800","1810"],a:1,fb:"El Virrey Don Manuel Amat y Juniet creó la primera organización de bomberos en el Perú el 2 de enero de 1772, mediante su 'auto de buen gobierno'."},
+    {q:"¿Cuál fue la primera compañía de bomberos legalmente constituida registrada en la historia del Perú?",opts:["Chalaca N°1 del Callao","Roma N°1 de Lima","Compañía de Bomberos Voluntarios de PAITA (28/08/1860)","Municipal Lima"],a:2,fb:"La primera compañía de bomberos voluntarios legalmente constituida que registra la historia peruana fue la de PAITA, creada el 28 de agosto de 1860."},
+    {q:"¿Qué fecha se celebra como la fundación del CGBVP y qué compañía fue clave en ese evento?",opts:["28 de agosto de 1860 — Paita","02 de mayo de 1866 — Roma","05 de diciembre de 1860 — Chalaca N°1","21 de abril de 1866 — Municipal Lima"],a:2,fb:"El 05 de diciembre de 1860 es la fecha de fundación del CGBVP. En esa fecha se realizó la primera reunión que llevaría a fundar la Compañía Chalaca N°1, en el Callao."},
+    {q:"¿Quién fue el Primer Comandante de la Compañía Chalaca N°1?",opts:["Emilio Longhi","Arthur M. Wholey","Guillermo Higginson","Francisco Lazo"],a:2,fb:"El 2 de enero de 1861 fue elegido Comandante don Guillermo Higginson, quien se erigió como el Primer Comandante Activo de la CHALACA N°1."},
+    {q:"¿Por qué se fundaron las compañías Roma N°1 y France N°2 en Lima en 1866?",opts:["Por la necesidad de combatir el Gran Incendio de Lima","En respuesta al llamado del Alcalde de Lima ante la inminente amenaza de la escuadra española al Callao","Por la creciente industrialización de Lima","Para celebrar el aniversario del CGBVP"],a:1,fb:"Se fundaron en respuesta al llamado del Alcalde de Lima, Pablo Antonio Salinas, ante la amenaza de la poderosa escuadra española que ya había bombardeado Valparaíso."},
+    {q:"¿Cuántos socios tuvo la Compañía Roma N°1 en su fundación?",opts:["54 socios","114 socios","209 socios","290 socios"],a:3,fb:"La Compañía Italiana de Bomberos Voluntarios Roma N°1 fue fundada con 290 socios el 15 de abril de 1866."},
+    {q:"¿Cuál fue la primera compañía netamente peruana de bomberos?",opts:["Chalaca N°1","Roma N°1","France N°2","Compañía Municipal Lima (21/04/1866)"],a:3,fb:"La Compañía Municipal Lima, fundada el 21 de abril de 1866, fue la PRIMERA organización netamente compuesta por peruanos."},
+    {q:"¿Quién fue el Primer Jefe Comandante de la Compañía Municipal Lima?",opts:["Emilio Longhi","Jean Tribaud","Francisco Lazo","Guillermo Higginson"],a:2,fb:"El Síndico de la Municipalidad de Lima, don Francisco Lazo, fue el Primer Comandante de la Compañía Municipal Lima."},
+    {q:"¿Dónde nació Juan Antonio Alarco Espinosa?",opts:["En el Callao, el 2 de mayo de 1841","En Lima, en la calle de Gremios N° 482, el 13 de junio de 1841","En Paita, el 28 de agosto de 1840","En Lima, el 21 de abril de 1845"],a:1,fb:"Juan Antonio Alarco Espinosa nació en Lima, en la calle de Gremios N° 482 (hoy cuarta cuadra del Jr. Callao), el 13 de junio de 1841."},
+    {q:"¿Qué dijo Alarco antes de ingresar al Torreón de la Merced?",opts:["'Por la Patria moriré'","'Los bomberos no se rinden'","'¡Yo soy Peruano, a mí me toca!'","'Dios, Patria y Humanidad'"],a:2,fb:"Alarco se adelantó y dijo: '¡YO SOY PERUANO; A MÍ ME TOCA!' antes de subir al Torreón de la Merced donde perdió la vida."},
+    {q:"¿Cuántos años tenía Antonio Alarco cuando falleció?",opts:["20 años","23 años","25 años","30 años"],a:2,fb:"Antonio Alarco contaba con 25 años de edad cuando perdió la vida en el Torreón de la Merced el 2 de mayo de 1866."},
+    {q:"¿Qué buque de la escuadra española fue el que disparó el cañonazo que mató a Alarco?",opts:["El Numancia","El Almirante","El Almanza","El Victoria"],a:2,fb:"El cañonazo provino del buque ALMANZA de la escuadra española comandada por el Almirante Casto Méndez Núñez."},
+    {q:"¿Cuál fue la primera máquina contra incendios construida en Estados Unidos y dónde fue diseñada?",opts:["Nueva York, 1720, por Benjamin Franklin","Philadelphia, 1732, diseñada y construida por Anthony Nichols","Boston, 1740, por Paul Revere","Chicago, 1750, por un ingeniero inglés"],a:1,fb:"La primera máquina contra incendios en EE.UU. fue diseñada y construida por Anthony Nichols en la ciudad de Philadelphia, en el año 1732."},
+    {q:"¿Cómo se llamaban los ex-bomberos entusiastas del Callao que dieron los primeros pasos para fundar una compañía en 1855?",opts:["Los Playeros","Los Ferrusolas","Los Chalaqueros","Los Voluntarios del Puerto"],a:1,fb:"El grupo de jóvenes que en 1855 dio los primeros pasos para fundar una Compañía de Bomberos en el Callao se llamaba LOS FERRUSOLAS."},
+    {q:"¿Qué ocurrió con la Compañía Roma N°1 y la France N°2 tras el Combate del 2 de Mayo?",opts:["Fueron disueltas por el gobierno","El Congreso las declaró Beneméritas a la Patria en Grado Heroico y recibieron medallas de oro","Regresaron a Europa","Fueron absorbidas por la Chalaca N°1"],a:1,fb:"Tras el combate, el General Prado los condecoró públicamente y el Congreso, a nombre de la Nación, los declaró Beneméritos a la Patria en Grado Heroico, otorgándoles la Medalla de Oro al Valor."},
+    {q:"¿Por qué la Compañía Paita N°31 tiene ese número y no el N°1?",opts:["Porque fue reorganizada inmediatamente después de la última compañía fundada en 1939 (la N°30 de Huancayo)","Porque había 30 compañías antes de ella en el Perú","Porque el número 31 es el código del departamento de Piura","Porque fue la 31a en solicitar reconocimiento oficial"],a:0,fb:"Se le asignó el N°31 porque al reorganizarse (1940) se hizo inmediatamente después de la última Compañía fundada en 1939, la N°30 de Huancayo."},
+  ],
+  l04:[
+    {q:"¿Qué tipo de servicio prestan los miembros del CGBVP?",opts:["Servicio remunerado por el Estado","Servicio voluntario y ad honorem; no son funcionarios ni servidores públicos","Servicio part-time con sueldo mínimo","Servicio contractual temporal"],a:1,fb:"Los miembros del CGBVP prestan servicio público de manera VOLUNTARIA y AD HONOREM. No son considerados funcionarios ni servidores públicos y no pueden ser remunerados."},
+    {q:"¿Cuál es el órgano supremo del CGBVP?",opts:["La Comandancia General","El Vice Comandante General","El Consejo de Oficiales Generales","La Dirección General de Operaciones"],a:2,fb:"El Consejo de Oficiales Generales es el órgano SUPREMO del CGBVP. Se constituye por la reunión de los Oficiales Generales activos en uso de sus derechos."},
+    {q:"¿Cómo se elige al Comandante General del CGBVP?",opts:["Por decreto del Presidente de la República","Por designación del Ministro del Interior","Por votación personal y secreta de los Oficiales Generales activos y de los delegados elegidos por cada Compañía","Por elección popular de todos los bomberos activos"],a:2,fb:"El Comandante General es elegido mediante VOTACIÓN personal y secreta de los Oficiales Generales activos y de los delegados elegidos por cada una de las Compañías del CGBVP."},
+    {q:"¿Cuándo reemplaza el Vice Comandante General al Comandante General?",opts:["Solo en emergencias de nivel 3","Solo durante las prácticas de campo","En caso de vacancia, muerte, licencia o ausencia temporal","Solo cuando el Consejo lo autorice"],a:2,fb:"El Vice Comandante General REEMPLAZA al Comandante General en caso de vacancia, muerte, licencia o ausencia temporal."},
+    {q:"¿Cuál es la función del Consejo Nacional de Disciplina?",opts:["Aprobar el presupuesto del CGBVP","Organizar las prácticas de campo","Investigar, juzgar y sancionar las faltas o infracciones cometidas por los bomberos","Nombrar al Comandante General"],a:2,fb:"El Consejo Nacional de Disciplina tiene por función INVESTIGAR, JUZGAR Y SANCIONAR las faltas o infracciones que cometan los bomberos en el desempeño de sus funciones."},
+    {q:"¿Qué son las Brigadas dentro del CGBVP?",opts:["Grupos de 2 bomberos para rescate","Grupos funcionales operativos de no menos de 3 UBOs y no más de 6, en un ámbito territorial determinado","Las unidades de apoyo logístico","Los equipos de investigación de incendios"],a:1,fb:"Las Brigadas son grupos funcionales operativos integrados por no menos de TRES (3) y no más de SEIS (6) Unidades Básicas Operativas, para prestar servicios en un ámbito territorial determinado."},
+    {q:"¿Cuáles son los dos tipos de Unidades Básicas Operativas (UBO)?",opts:["Compañía de Bomberos y Estación de Bomberos","Brigada y Regimiento","Compañía Activa y Compañía Asimilada","UBO Tipo A y UBO Tipo B"],a:0,fb:"Las UBOs se dividen en dos tipos: a) Compañía de Bomberos y b) Estación de Bomberos."},
+    {q:"¿Quién nombra al Comandante de la Unidad Básica Operativa?",opts:["El Consejo de Oficiales Generales","El Comandante Nacional","El Comandante Departamental","Los miembros de la compañía por votación"],a:2,fb:"El Comandante de la UBO es nombrado por el COMANDANTE DEPARTAMENTAL."},
+    {q:"¿Cuál es el grado mínimo de ingreso para un Bombero Activo regular al CGBVP?",opts:["Aspirante","Teniente","Seccionario","Sub-Teniente"],a:2,fb:"La incorporación al CGBVP se formaliza con el grado de SECCIONARIO en el caso de los Bomberos Activos regulares."},
+    {q:"¿Entre qué edades puede postular un Aspirante al CGBVP?",opts:["18 a 40 años","15 a 31 años","15 a 25 años","20 a 35 años"],a:1,fb:"Aspirante es la persona natural MAYOR DE QUINCE AÑOS Y MENOR DE 31 que se presenta voluntariamente a una Compañía o Estación de Bomberos."},
+    {q:"¿Con qué grado ingresa un Bombero Asimilado con doctorado en su especialidad?",opts:["Seccionario","Teniente","Capitán","Teniente Brigadier"],a:3,fb:"El bombero asimilado con DOCTORADO en su especialidad ingresa con el grado de TENIENTE BRIGADIER, reconocido mediante Resolución del Comando Nacional."},
+    {q:"¿A qué edad pasa a retiro un bombero activo por causal de edad?",opts:["60 años","65 años","70 años","75 años"],a:2,fb:"El bombero pasa a situación de retiro por haber cumplido SETENTA (70) años de edad."},
+    {q:"¿Qué grado ostenta el Comandante de una Compañía Centenaria?",opts:["Teniente Brigadier","Capitán","Brigadier","Brigadier Mayor"],a:2,fb:"Las Compañías Centenarias tienen como Comandante a un BRIGADIER y como Segundo Jefe a un Teniente Brigadier."},
+    {q:"¿Cuál de las siguientes es una función del Comandante de la UBO?",opts:["Aprobar el presupuesto del CGBVP","Dirigir y representar a la UBO, y presentar un informe anual a la Comandancia Departamental","Nombrar al Comandante Departamental","Convocar al Consejo de Oficiales Generales"],a:1,fb:"Entre las funciones del Comandante de la UBO está dirigir y representar a la UBO, y presentar a la Comandancia Departamental un INFORME ANUAL de actividades y logros."},
+    {q:"¿Qué norma legal regula principalmente el CGBVP?",opts:["Decreto Supremo N° 025-2017-IN","Código Civil peruano","Decreto Legislativo N° 1260","Ley N° 29090"],a:2,fb:"El CGBVP está regulado principalmente por el Decreto Legislativo N° 1260 del 08 de diciembre de 2016, que fortalece el CGBVP como parte del Sistema Nacional de Seguridad Ciudadana."},
+    {q:"¿Hasta qué grado jerárquico puede ascender un Bombero Asimilado?",opts:["Hasta Teniente","Hasta Capitán","Hasta Brigadier","Hasta Brigadier General"],a:2,fb:"El ascenso para los bomberos asimilados está restringido hasta el grado de BRIGADIER, considerando la actividad institucional que desarrollan."},
+    {q:"¿Cuántas Unidades Básicas Operativas puede agrupar una Comandancia Departamental?",opts:["No más de 10 UBOs","No más de 15 UBOs","No más de 20 UBOs con no más de 6 brigadas","No más de 30 UBOs"],a:2,fb:"Las Comandancias Departamentales agrupan las diferentes Compañías y Estaciones en una cantidad NO MAYOR de 20 UBOs, con no más de seis (6) brigadas."},
+    {q:"¿Qué obligación tiene un bombero en caso de desastre aunque esté lejos de su UBO?",opts:["Reportarse por radio y esperar instrucciones","Acudir en el término de la distancia a su Compañía; si hay dificultad de traslado, colaborar en la más cercana","Esperar la llamada de la central del CGBVP","Presentarse 48 horas después del evento"],a:1,fb:"En caso de desastre, todos los Bomberos están obligados a concurrir en el término de la distancia a su Compañía. Ante dificultad de traslado, colaborarán en la Compañía más cercana."},
+    {q:"¿Cuál es el requisito mínimo para crear una Comandancia Departamental?",opts:["Al menos 5 UBOs creadas","Al menos 3 brigadas operativas","Al menos 2 UBOs creadas dentro del ámbito geográfico del departamento","Al menos 10 bomberos activos"],a:2,fb:"Las Comandancias Departamentales se crean siempre y cuando existan creadas al menos DOS (2) Unidades Básicas Operativas dentro del ámbito geográfico."},
+    {q:"¿Qué requisitos previos debe tener un Comandante Territorial?",opts:["Solo el grado de Brigadier","Grado mínimo de Brigadier Mayor, mínimo 4 años de antigüedad, y haber sido Comandante Departamental y de UBO","Solo haber aprobado el CFBB","Tener más de 20 años en el CGBVP"],a:1,fb:"El Comandante Territorial debe tener grado de BRIGADIER MAYOR como mínimo, con 4 años de antigüedad, y haber sido Comandante Departamental y de UBO previamente."},
+  ],
+  l05:[
+    {q:"¿Bajo qué norma NFPA se califica al Operador de la Central de Emergencias del CGBVP?",opts:["NFPA 1001","NFPA 1500","NFPA 1061","NFPA 72"],a:2,fb:"El CGBVP toma como guía la norma NFPA 1061 (Norma sobre las calificaciones para teleoperadores de seguridad pública)."},
+    {q:"¿Cuáles son los números de la Central de Comunicaciones del CGBVP?",opts:["110 y 117","105 y 118","3991111 y 116","5654321 y 113"],a:2,fb:"Los números de la Central de Comunicaciones del CGBVP son el 3991111 y el 116."},
+    {q:"¿Qué es la Central de Emergencias (CEEM) del CGBVP?",opts:["El cuartel principal del CGBVP","El lugar físico con personal y equipos para recibir llamadas y despachar unidades; columna vertebral del Sistema de Emergencias","Solo un sistema de computadoras","El departamento de logística del CGBVP"],a:1,fb:"La CEEM es el lugar físico donde se encuentran el personal y los equipos para recibir llamadas telefónicas y radiales, y realizar el posterior despacho de unidades. Es la columna vertebral del Sistema de Emergencias."},
+    {q:"¿Cuál es el tiempo máximo en que la fuente de energía alterna debe incorporarse al sistema de la CEEM?",opts:["30 segundos","1 minuto","10 segundos","5 minutos"],a:2,fb:"Es esencial contar con una fuente de energía eléctrica de emergencia alterna que pueda incorporarse al sistema en MENOS de 10 SEGUNDOS."},
+    {q:"¿Cuál de los siguientes es un elemento de comunicación usado en el CGBVP según la NFPA?",opts:["Señales de humo","Sistema de posición global (GPS) y radios portátiles","Palomas mensajeras","Banderas de señales"],a:1,fb:"Según la NFPA, equipos como los radiotransmisores, radios portátiles, radios móviles, GPS y computadoras satisfacen las necesidades de un cuerpo de bomberos."},
+    {q:"¿Qué tipo de radio se instala en los vehículos contra incendios y funciona con el sistema eléctrico del vehículo?",opts:["Radio portátil","Radio base (fijo)","Radio móvil","Radio de banda ciudadana"],a:2,fb:"Los RADIOS MÓVILES se instalan en vehículos contra incendios, ambulancias y vehículos del personal, y funcionan con el sistema eléctrico del vehículo."},
+    {q:"¿Cuáles son los elementos de la comunicación?",opts:["Solo emisor, receptor y mensaje","Emisor, receptor, mensaje, canal, código, contexto, retroalimentación y ruido","Solo señales y respuestas","Frecuencia, canal, código y señal"],a:1,fb:"Los elementos de la comunicación son: Emisor, Receptor, Mensaje, Canal, Código, Contexto, Retroalimentación y Ruido."},
+    {q:"¿Qué es el 'Ruido' en el contexto de las comunicaciones?",opts:["El volumen del radio","Las interferencias que dificultan la comunicación","El sonido de las sirenas","El fondo musical de las transmisiones"],a:1,fb:"El 'Ruido' son las interferencias que dificultan la comunicación, pudiendo ser físicas (interferencia de radio) o psicológicas (distracción)."},
+    {q:"¿En qué banda de frecuencia opera principalmente la central del CGBVP?",opts:["AM (Onda Media)","FM (Frecuencia Modulada)","VHF (Muy Alta Frecuencia) en MHz","Banda ciudadana CB en KHz"],a:2,fb:"La central de emergencia del CGBVP cuenta con diferentes canales de comunicación en una frecuencia VHF (Very High Frequency), usadas para despacho y coordinaciones."},
+    {q:"¿A qué velocidad se propaga una señal de radio VHF?",opts:["300 km/s","3000 km/s","300,000 km/s (velocidad de la luz)","30,000 km/s"],a:2,fb:"Una señal de radio se propaga a cerca de 300,000 km/s (la velocidad de la luz). Una señal VHF se propaga prácticamente en línea de visión."},
+    {q:"¿Qué ventaja tienen los códigos de radio en la comunicación de emergencias?",opts:["Son más fáciles de recordar que el lenguaje normal","Rapidez en la transmisión, claridad, lenguaje único y facilidad en la ejecución de protocolos","No tienen ventajas sobre el lenguaje normal","Solo son útiles en incendios grandes"],a:1,fb:"Las ventajas de los códigos son: rapidez en la transmisión, claridad y exactitud en el mensaje, lenguaje único y facilidad en la ejecución de protocolos del servicio."},
+    {q:"Al reportar una emergencia vía radio, ¿qué código se usa para indicar que una unidad está saliendo?",opts:["10.10","10.07","10.15","10.11"],a:1,fb:"El código 10.07 indica que la unidad está saliendo hacia la emergencia (ejemplo: 'Maquina 21-01, 10.07 al 10.25')."},
+    {q:"¿Qué código se usa para indicar quién está 'al mando' de la unidad?",opts:["10.15","10.48","10.11","10.25"],a:2,fb:"El código 10.11 indica quién está al mando de la unidad (ejemplo: '10.11, 3.05 Navarrete')."},
+    {q:"¿Qué información básica debe proporcionar quien reporta una emergencia vía teléfono?",opts:["Solo nombre y número de celular","Identificarse con nombre/grado/compañía, indicar que es emergencia, dirección, tipo y proporción, y las necesidades para la atención","Solo la dirección del incidente","Solo el tipo de emergencia"],a:1,fb:"Vía teléfono: identificarse con nombre, grado y compañía; indicar que se trata de una emergencia; informar dirección, tipo y proporción; indicar las necesidades para la atención."},
+    {q:"¿Para qué sirve el Parte de Emergencia Virtual?",opts:["Para cobrar el servicio de bomberos a los afectados","Para evidenciar las acciones, equipos y herramientas utilizadas, y llevar control estadístico de emergencias","Solo para reportar víctimas mortales","Para solicitar recursos adicionales a la comandancia"],a:1,fb:"El parte de emergencias permite evidenciar que las acciones, equipos y herramientas utilizadas fueron adecuadas. También permite llevar un control estadístico de emergencias por tipo, clasificación y cantidad."},
+    {q:"¿Cuál es una LIMITACIÓN de los códigos de radio?",opts:["Son demasiado largos","No hay código único universal; requieren aprendizaje y dominio; se abusa en su utilización","No se pueden usar en incendios","Solo funcionan con radios base"],a:1,fb:"Las limitaciones son: no hay código único (varía entre instituciones), requieren aprendizaje y dominio (práctica), y se abusa en su utilización."},
+    {q:"¿Qué información contiene el Parte de Emergencia respecto a las unidades vehiculares?",opts:["Solo el número de la unidad","KM ingreso/salida, horómetro, estado, trabajos realizados, materiales usados, clase de salida y tiempos (despacho, salida, llegada, retiro, ingreso)","Solo el nombre del piloto","Solo el tipo de emergencia atendida"],a:1,fb:"El Parte incluye: KM ingreso/salida, horómetro, observaciones de la unidad, trabajos realizados, materiales utilizados, clase de salida y los tiempos detallados: despacho, salida, llegada, retiro e ingreso."},
+    {q:"¿Dónde NO debe ubicarse físicamente la CEEM?",opts:["En el primer piso de un edificio","En el centro de la ciudad","Cerca de instalaciones con alto riesgo de incendio, y no debe tener materiales combustibles en su construcción","En una zona con buena cobertura de red"],a:2,fb:"La CEEM no debe localizarse cerca de instalaciones con alto riesgo de incendio, tampoco se deben usar materiales combustibles en su construcción ni mantenimiento."},
+    {q:"¿Qué factores en terreno afectan la propagación de las comunicaciones radiales?",opts:["Solo la potencia del equipo","Distancia, tiempo, características del terreno y ruido","Solo las condiciones meteorológicas","Solo la batería del equipo"],a:1,fb:"En terreno, los factores que influyen son: a) Distancia, b) Tiempo, c) Característica del Terreno, d) Ruido."},
+    {q:"¿Cuál es el código que indica el número de efectivos en la unidad?",opts:["10.11","10.07","10.15","10.48"],a:2,fb:"El código 10.15 indica el número de efectivos en la unidad (ejemplo: '10.15 04' significa 4 efectivos)."},
+  ],
+  l06:[
+    {q:"¿Cómo se define 'Peligro' en el contexto de la seguridad en emergencias?",opts:["La probabilidad de que ocurra un accidente","Situación con características intrínsecas capaz de causar daño a la persona, equipos, procesos o medio ambiente","Un incidente ya ocurrido con víctimas","La zona de mayor riesgo en la escena"],a:1,fb:"Peligro: situación con características INTRÍNSECAS capaz de causar daño a la persona, equipos, procesos y medio ambiente. Es la fuente potencial de daño."},
+    {q:"¿Cómo se define 'Riesgo' en el contexto de la seguridad en emergencias?",opts:["Es igual que el peligro, son sinónimos","El daño ya producido por un accidente","Probabilidad de que un peligro se materialice y genere daño a persona, equipos, procesos o medio ambiente","El EPP del bombero"],a:2,fb:"Riesgo: la PROBABILIDAD de que un peligro se materialice y genere daño. El riesgo cuantifica la probabilidad de que el peligro cause un daño."},
+    {q:"¿Cuál es el control MÁS efectivo en la Jerarquía de Controles?",opts:["EPP (Equipo de Protección Personal)","Controles administrativos","Ingeniería","Eliminación del peligro"],a:3,fb:"La ELIMINACIÓN del peligro es el control más efectivo de la jerarquía, ya que elimina la fuente del riesgo por completo. El EPP es el menos efectivo."},
+    {q:"¿Cuál es el control MENOS efectivo en la Jerarquía de Controles?",opts:["Eliminación","Sustitución","Controles de ingeniería","EPP (Equipo de Protección Personal)"],a:3,fb:"El EPP (Equipo de Protección Personal) es el control MENOS efectivo porque no elimina el peligro, solo protege al trabajador cuando falla todo lo demás."},
+    {q:"¿Qué peligro de las baterías de litio puede afectar a los bomberos?",opts:["Solo producen calor sin gases","Pueden generar reacción química, incendios, quemaduras y explosión","Solo producen humo sin peligro de explosión","No representan riesgo para los bomberos"],a:1,fb:"Las Baterías de Litio generan: reacción química, incendios, quemaduras y explosión. Son uno de los peligros más serios en rescate vehicular moderno."},
+    {q:"¿Cuál de los siguientes es un peligro específico de las Emergencias MATPEL?",opts:["Colapso estructural","Virus y bacterias","Derrames, fugas, reacción química, incendios, quemaduras, explosión, muerte","Caídas de altura"],a:2,fb:"En MATPEL, el principal peligro son los Productos Químicos que pueden generar: derrames, fugas, reacción química, incendios, quemaduras, irritaciones, asfixia, explosión y muerte."},
+    {q:"¿Qué acción de seguridad en la compañía permite detectar mal estado de EPP antes de una emergencia?",opts:["Revisión del presupuesto anual","Revisión de Casilleros y del EPP de manera periódica","Entrenamiento de salvamento acuático","Revisión del parque vehicular"],a:1,fb:"La Revisión de Casilleros y del EPP permite a los efectivos conocer la ubicación de sus implementos y detectar el mal estado de los mismos para ser corregidos oportunamente."},
+    {q:"¿Cuántos pasos contempla el protocolo del SCI para el efectivo al mando que llega primero?",opts:["4 pasos","6 pasos","8 pasos","10 pasos"],a:2,fb:"Son OCHO (8) pasos: 1)Informar arribo, 2)Asumir mando/PC, 3)Evaluar situación, 4)Perímetro de seguridad, 5)Establecer objetivos, 6)Estrategias/tácticas, 7)Recursos/instalaciones, 8)Preparar info/transferir mando."},
+    {q:"¿Qué es el Perímetro de Seguridad y cuál es su objetivo?",opts:["Un estudio de riesgos previo al incidente","Conjunto de medidas que protegen los límites del espacio físico de la emergencia para evitar acceso no autorizado e intrusiones","El área donde se ubican las víctimas","El radio de acción de la autobomba"],a:1,fb:"El perímetro de seguridad es un conjunto de medidas que protegen los límites de un espacio físico para evitar el acceso no autorizado y las intrusiones, que causan accidentes a terceros y pérdidas de materiales."},
+    {q:"¿Qué diferencia a un 'equipo de trabajo' de un 'grupo de trabajo'?",opts:["El equipo tiene más personas","En el equipo hay coordinación, roles definidos y objetivo común; en el grupo se trabaja junto pero sin coordinación ni funciones definidas","El grupo trabaja fuera de la compañía","No hay diferencia práctica entre ellos"],a:1,fb:"El equipo de trabajo tiene coordinación, roles definidos y objetivo común compartido. El grupo de trabajo son personas que trabajan juntas pero sin coordinación ni conocimiento de sus funciones específicas."},
+    {q:"¿Qué debe verificarse en las unidades médicas por razones de seguridad?",opts:["Solo el kilometraje y el combustible","Su limpieza e inspección minuciosa, ya que tienen alta carga de agentes que pueden afectar la salud de los bomberos","Solo el estado de las luces y sirenas","Solo los insumos médicos disponibles"],a:1,fb:"Las unidades médicas deben ser objeto de inspección y limpieza periódica, ya que tienen una mayor carga de agentes (biológicos, químicos) que pueden afectar la salud de los bomberos."},
+    {q:"¿Qué establece el estado físico y de salud del bombero respecto a la seguridad en emergencias?",opts:["Si te sientes mal, puedes ir con precaución a la emergencia","Un bombero con dolencia física o mental NO debe asistir a una emergencia, para no convertirse en parte del problema","La condición física no afecta el desempeño en emergencias","Solo importa si hay heridas visibles"],a:1,fb:"Si tienes alguna dolencia o malestar que aqueje tu aspecto físico o mental, lo recomendable es que NO asistas a una emergencia, ya que podrías poner en riesgo a las personas que requieren ayuda, a tus compañeros y a ti mismo."},
+    {q:"¿Cuáles son las 5 características clave del trabajo en equipo para los bomberos?",opts:["Fuerza, rapidez, experiencia, valentía y puntualidad","Roles claros, coordinación, resiliencia/adaptación, comunicación efectiva y confianza/respeto mutuo","Liderazgo, disciplina, obediencia, uniformidad y buen físico","Velocidad, precisión, silencio, autonomía y resistencia"],a:1,fb:"Las 5 características clave son: 1)Roles claros y complementarios, 2)Coordinación y acción coordinada, 3)Resiliencia y adaptación, 4)Comunicación efectiva, 5)Confianza mutua y respeto."},
+    {q:"¿En qué situaciones resulta esencial el trabajo en equipo para los bomberos?",opts:["Solo en incendios de gran magnitud","Apagar incendios, rescatar personas y prevenir futuros incendios mediante educación e inspección","Solo en rescates con múltiples víctimas","Solo durante los simulacros programados"],a:1,fb:"El trabajo en equipo resulta esencial para: apagar incendios eficiente y seguramente, rescatar personas atrapadas, y prevenir futuros incendios mediante educación e inspección."},
+    {q:"Según la frase de Aristóteles citada en la lección, ¿qué es lo que finalmente marca el 'DESTINO' del individuo?",opts:["Sus acciones individuales","Su educación académica","Su CARÁCTER (formado por sus hábitos)","Sus conexiones institucionales"],a:2,fb:"Según Aristóteles: pensamiento→ACCIÓN; acción→COMPORTAMIENTO; comportamiento→HÁBITOS; hábitos→CARÁCTER; y el CARÁCTER marca el DESTINO."},
+    {q:"¿Por qué es importante la Revisión de EPP antes de una emergencia?",opts:["Para cumplir con los registros administrativos","Para verificar que el EPP esté en buen estado y libre de sustancias perjudiciales que podrían comprometer la protección en el incidente","Para ser evaluado por el comandante","Solo para tener el equipo ordenado"],a:1,fb:"Verificar que los EPP estén en buen estado y sin productos perjudiciales es crucial. Ingresar a un incendio con EPP dañado o contaminado (ej: con pintura) puede ser fatal."},
+    {q:"¿Qué se recomienda hacer en una emergencia MATPEL que NO se recomienda en un incendio estructural simple?",opts:["Evacuar la zona","Usar EPRA","Considerar el uso de trajes MATPEL y aislar zonas ZAI y ZAP","Solo establecer perímetro de seguridad"],a:2,fb:"En MATPEL se agrega: aislar la zona (ZAI–ZAP), recolectar información de los materiales, considerar el uso de trajes MATPEL especializados, además de las medidas habituales."},
+    {q:"¿Qué beneficio del trabajo en equipo es especialmente relevante para las víctimas?",opts:["Mayor velocidad de respuesta del primer efectivo","Mejor atención médica para las víctimas, mayor eficiencia y mayor seguridad para los bomberos","Solo el beneficio de menor costo","Mayor notoriedad mediática de la compañía"],a:1,fb:"El trabajo en equipo permite mayor seguridad para los bomberos, mayor eficiencia en incendios y rescates, MEJOR ATENCIÓN MÉDICA para las víctimas, y mayor prevención de incendios."},
+    {q:"¿Cuál es la acción de seguridad de mayor prioridad en un rescate vehicular?",opts:["Entrar al vehículo inmediatamente para rescatar a la víctima","Establecer perímetro de seguridad, cortar suministros básicos (electricidad, gas) y verificar postes y cables afectados","Solo verificar el estado del vehículo desde lejos","Esperar a la ambulancia antes de actuar"],a:1,fb:"En un rescate vehicular se debe: establecer perímetro de seguridad, cortar suministros básicos si es necesario, verificar postes y cables eléctricos afectados, y usar EPP adecuado."},
+    {q:"¿Cómo se mejora el trabajo en equipo de los bomberos según la lección?",opts:["Aumentando el número de integrantes por equipo","Promoviendo confianza, realizando simulacros conjuntos, fomentando resolución de conflictos constructiva, valorando la diversidad y aprendizaje continuo","Solo mejorando los equipos técnicos disponibles","Solo con más capacitación individual"],a:1,fb:"Se mejora promoviendo confianza, realizando simulacros y entrenamientos conjuntos, fomentando resolución constructiva de conflictos, valorando la diversidad y manteniendo actitud de aprendizaje continuo."},
+  ],
+  l07:[
+    {q:"¿Cuáles son las 3 características de mayor riesgo en el perfil del bombero según la lección?",opts:["Toma de decisiones rápidas, orientación al detalle, alta disciplina","Alta necesidad de estimulación, aburren fácilmente y agrado por el riesgo y la variedad","Orientación al equipo, motivación interna y compromiso","Necesidad de gratificación, orientación a la acción y establecer altos estándares"],a:1,fb:"Las características de mayor riesgo (números 7, 9 y 10) son: alta necesidad de estimulación, aburrir fácilmente y agrado por el riesgo y la variedad, ya que pueden inducir a problemas serios."},
+    {q:"¿Qué modelo proponen Lazarus y Folkman para entender el estrés en los bomberos?",opts:["Modelo estático de estrés","Modelo bifactorial de estrés","Modelo continuo de estrés (proceso dinámico de evaluación continua)","Modelo lineal de respuesta al trauma"],a:2,fb:"El Modelo Continuo de Estrés propuesto por Lazarus y Folkman entiende el estrés como un proceso DINÁMICO que implica una evaluación continua de la situación y los recursos para afrontarla."},
+    {q:"¿Qué condición corresponde al nivel 'Naranja' en el modelo continuo de estrés?",opts:["Óptimo funcionamiento y bienestar","Estrés leve y transitorio","Angustia, deterioro de salud mental y cicatrices emocionales","Trastorno mental grave y TEPT"],a:2,fb:"La condición NARANJA se caracteriza por estados de angustia, deterioro de la salud mental y estrés que deja cicatrices emocionales. Equivale a una presión más intensa en la analogía del cuerpo de bomba."},
+    {q:"¿Qué condición corresponde al nivel 'Rojo' en el modelo continuo de estrés?",opts:["Estrés leve y transitorio","Angustia y deterioro moderado","Desórdenes mentales, estrés postraumático y dificultades para adaptarse a la vida diaria","Óptimo crecimiento adaptativo"],a:2,fb:"La condición ROJA implica desórdenes mentales, daño por estrés como TEPT y presentar dificultades para adaptarse a la vida diaria. Es el nivel de máxima presión."},
+    {q:"¿Cuánto tiempo después del evento puede ocurrir un Trastorno de Estrés Agudo?",opts:["Hasta 24 horas","De 15 a 20 días después del evento","Solo durante el evento","Meses después del evento"],a:1,fb:"El Trastorno de Estrés Agudo puede durar de 15 a 20 días después del evento. Se configura como una reacción de condición naranja, con flashbacks, labilidad emocional, pesadillas e irritabilidad."},
+    {q:"¿Cuándo se puede estarse ingresando en una situación de TEPT (Trastorno de Estrés Postraumático)?",opts:["Si los síntomas duran más de 48 horas","Si los síntomas duran entre 15 y 20 días","Si las condiciones se agravan y duran más de 30 días","Si el bombero solo tiene pesadillas ocasionales"],a:2,fb:"Si las condiciones se agravan y duran MÁS DE 30 DÍAS, se puede estar ingresando en una situación de TEPT, que requiere atención profesional especializada urgente."},
+    {q:"¿Qué es un 'Incidente Crítico' en el contexto de la psicología del bombero?",opts:["Cualquier incendio de categoría 3 o superior","Un evento que sobrepasa la capacidad normal de afrontamiento y puede dejar una marca indeleble en la psique","Solo accidentes con víctimas mortales","Un incidente que involucra materiales peligrosos"],a:1,fb:"Un incidente crítico es un evento que sobrepasa la capacidad de afrontamiento normal de una persona y puede dejar una marca indeleble en la psique. Para los bomberos incluye incendios masivos, rescates extremos, incidentes con múltiples víctimas."},
+    {q:"¿Por qué la necesidad de estimulación emocional puede ser problemática para el bombero?",opts:["Porque hace al bombero más eficaz en emergencias","Porque puede conducir al aburrimiento en labores rutinarias y llevar a descuidar actividades importantes como la familia o el trabajo","Porque hace al bombero demasiado activo","Porque es un signo de que el bombero está sano psicológicamente"],a:1,fb:"La necesidad de estimulación emocional puede conducir al aburrimiento por labores rutinarias y llevar a pasar demasiado tiempo en las compañías, descuidando otras actividades igualmente importantes como la familia."},
+    {q:"¿Qué ocurre al precio de suprimir las emociones negativas?",opts:["Mejora el rendimiento del bombero","Previene el TEPT a largo plazo","Causa trastornos mentales, dificultades para concentrarse, problemas para dormir y posiblemente comportamientos agresivos","No tiene efecto en la salud del bombero"],a:2,fb:"Suprimir las emociones causa una serie de trastornos: confusión, dificultades para concentrarse, problemas para dormir, sentirse diferente y potencialmente agresivo. El cuerpo también sufre: sistema inmunológico deprimido, alergias, herpes, caída de pelo."},
+    {q:"¿Qué se recomienda hacer si un compañero muestra signos de alarma de posible suicidio?",opts:["Ignorarlo para no aumentar su angustia","Reportarlo inmediatamente al comandante para su separación","Decirle que no está solo, que puede contar con nosotros, buscar apoyo familiar y solicitar orientación al departamento de Psicología o al MINSA","Confrontarlo públicamente en la compañía"],a:2,fb:"Ante signos de alarma: no asustarse, decirle que no está solo, que es importante para nosotros, buscar apoyo en compañeros o familiares, y solicitar orientación al departamento de Psicología o llamar a la línea del MINSA."},
+    {q:"¿Qué signo físico puede indicar que el cuerpo está lidiando mal con el estrés crónico?",opts:["Aumento de la resistencia física","Mejor capacidad para tomar decisiones bajo presión","Sistema inmunológico deprimido, mayor vulnerabilidad a enfermedades, alergias, caída del pelo","Mayor velocidad de respuesta en emergencias"],a:2,fb:"La lucha constante de suprimir emociones sin reconciliarse con ellas tiene un precio físico: el sistema inmunológico se deprime, aumenta la vulnerabilidad a enfermedades, alergias, herpes, caída del pelo."},
+    {q:"¿Cuál es la estrategia de prevención del estrés relacionada con el ejercicio físico?",opts:["Hacer ejercicio intenso de fuerza todos los días","Realizar ejercicios aeróbicos como trotar para quemar los altos niveles de adrenalina generados","Solo estiramientos ligeros después del trabajo","El ejercicio empeora el estrés; evitarlo"],a:1,fb:"Se recomienda realizar ejercicios físicos aeróbicos como TROTAR para quemar los altos niveles de adrenalina generados durante las emergencias y el estrés crónico."},
+    {q:"¿Qué estímulos de las emergencias quedan especialmente grabados en los bomberos?",opts:["Solo las imágenes visuales del fuego","El olor, la visión, el sonido y especialmente el dolor de niños y el accidente/muerte de compañeros","Solo el sonido de las sirenas","Solo los datos estadísticos de la emergencia"],a:1,fb:"Los estímulos que quedan grabados incluyen: olor, visión, sonido. Los que afectan especialmente son el dolor y sufrimiento de niños y la muerte o accidente de compañeros."},
+    {q:"¿Qué actividad se recomienda EVITAR cuando uno está anímicamente mal?",opts:["Hacer ejercicio físico","Consumir alcohol o drogas como escape emocional","Comunicarse con la familia","Buscar apoyo profesional"],a:1,fb:"Se debe NO consumir alcohol ni drogas cuando se está anímicamente mal, ya que lejos de ayudar, empeorarán la situación anímica y crearán problemas adicionales."},
+    {q:"¿Cuál de estos estímulos es reconocido como de mayor impacto en la salud mental del bombero?",opts:["Incendios de pequeña magnitud sin víctimas","Escenas con gran cantidad de dolor y sufrimiento humano, especialmente si involucran niños o muertes masivas","Emergencias médicas de trauma leve","Accidentes de tránsito sin heridos"],a:1,fb:"Los estímulos atípicos de mayor impacto son las escenas con gran cantidad de dolor y sufrimiento humano, especialmente si hay niños involucrados o muertes masivas o cadáveres seriamente afectados."},
+    {q:"¿Qué recomienda la lección ante una dificultad para regresar a la rutina diaria tras una gran emergencia?",opts:["Ignorar las dificultades y seguir trabajando normalmente","Solicitar inmediatamente la baja del CGBVP","Reconocer la normalidad de esas dificultades y buscar apoyo profesional; descansar y reconectar con la familia","Buscar más emergencias para mantener la adrenalina"],a:2,fb:"Reconocer que es normal tener dificultades para volver a la rutina tras una gran emergencia. Se recomienda buscar apoyo profesional, descansar y reconectar con la familia."},
+    {q:"¿Qué característica del perfil del bombero puede llevar a descuidar compromisos familiares?",opts:["La alta motivación interna","Ser orientado al detalle","La alta necesidad de estimulación que lleva a pasar más tiempo en las compañías","La necesidad de establecer altos estándares"],a:2,fb:"La alta necesidad de estimulación emocional puede conducir al aburrimiento por las labores rutinarias del hogar y al deseo de pasar más tiempo en las compañías, descuidando la familia."},
+    {q:"¿Cuántas horas es el período de atención más urgente para una reacción de estrés agudo?",opts:["Dentro de las primeras 48 horas","Dentro de las primeras 6 horas","Durante las primeras 24 horas","Durante los primeros 7 días"],a:1,fb:"Tanto el estrés agudo como el trastorno de estrés agudo deben atenderse oportunamente; el texto indica que en los primeros dos casos (estrés agudo) la atención debe ser dentro de las primeras 6 HORAS."},
+    {q:"¿Qué es el EPRA Emocional mencionado en la lección?",opts:["El equipo de protección respiratoria emocional, un traje especial","Un instrumento para identificar y evaluar los factores de riesgo emocional en los bomberos","La evaluación anual de salud mental obligatoria","El protocolo de debriefing post-emergencia"],a:1,fb:"El EPRA Emocional es un instrumento diseñado para identificar y evaluar los factores de riesgo emocional en los bomberos, permitiendo intervenir proactivamente para prevenir la escalada del estrés."},
+    {q:"¿Cuánto tiempo puede durar un Flash Back o pesadilla aislada después de un incidente crítico?",opts:["Solo durante los primeros 24 horas","Solo durante los primeros 7 días","Algunos síntomas pueden presentarse hasta 30 días después del evento en forma aislada","No pueden durar más de 15 días"],a:2,fb:"Algunos síntomas como flashbacks o pesadillas pueden presentarse en forma única, inclusive hasta DESPUÉS DE 30 DÍAS del evento en forma aislada."},
+  ],
+  l08:[
+    {q:"¿Qué es el Sistema de Comando de Incidentes (SCI)?",opts:["El conjunto de vehículos de una compañía de bomberos","La combinación de instalaciones, equipamiento, personal, procedimientos, protocolos y comunicaciones en estructura organizacional común para administrar recursos en incidentes","El manual de operaciones de incendio estructural","La jerarquía del CGBVP"],a:1,fb:"El SCI es la combinación de instalaciones, equipamiento, personal, procedimientos, protocolos y comunicaciones, operando en una estructura organizacional común, con la responsabilidad de administrar los recursos asignados para lograr los objetivos del incidente."},
+    {q:"¿Cuántas características tiene el SCI y cuántos principios agrupa en total?",opts:["3 características y 7 principios","5 características y 10 principios","6 características y 14 principios","4 características y 12 principios"],a:2,fb:"El SCI está basado en 6 CARACTERÍSTICAS que agrupan 14 PRINCIPIOS en total: Estandarización (1), Mando (3), Planificación y estructura (4), Instalaciones y recursos (2), Comunicaciones e información (2), Profesionalismo (2)."},
+    {q:"¿Cuál es el alcance de control ÓPTIMO en el SCI?",opts:["3 personas","5 personas (es el óptimo establecido)","7 personas","10 personas"],a:1,fb:"El principio de Alcance de Control en el SCI establece que el número ÓPTIMO de personas a supervisar directamente es CINCO (5)."},
+    {q:"¿Qué es el 'Comando Unificado' en el SCI?",opts:["Cuando el Comandante General asume el mando de todos los incidentes","Cuando dos o más instituciones con competencia legal y jurisdiccional comparten el comando del incidente","Cuando el comandante de mayor rango toma el control","La transferencia de mando a una institución federal"],a:1,fb:"El Comando Unificado se da cuando DOS O MÁS INSTITUCIONES que tienen competencia legal y jurisdiccional sobre el incidente operan bajo un marco de mando acordado previamente en protocolos."},
+    {q:"¿Qué significa la 'Organización Modular' del SCI?",opts:["La organización siempre tiene la misma estructura sin importar el tamaño del incidente","Se establece de arriba hacia abajo según necesidades del CI y crece de abajo hacia arriba según recursos en escena","El SCI solo aplica para incendios en módulos o edificios","Los módulos son los equipos de extinción de incendios"],a:1,fb:"La organización modular se establece DE ARRIBA HACIA ABAJO según las necesidades del Comandante de Incidente (CI) y CRECE DE ABAJO HACIA ARRIBA en base a los recursos registrados en la escena."},
+    {q:"¿Cuáles son las tres instalaciones principales del SCI?",opts:["Cuartel, estación de bomberos y hospital","Puesto de Comando (PC), Área de Espera (E) y Área de Concentración de Víctimas (ACV)","Zona Roja, Zona Amarilla y Zona Verde","Comando, Sectorización y Punto de Reunión"],a:1,fb:"Las instalaciones del SCI son: Puesto de Comando (PC), Área de Espera (E) y Área de Concentración de Víctimas (ACV)."},
+    {q:"¿Cuál es la norma NFPA que regula el Sistema de Contabilidad de Personal (SCP)?",opts:["NFPA 1001","NFPA 1061","NFPA 1561","NFPA 72"],a:2,fb:"El SCP está regulado por la NFPA 1561, norma que contiene los requisitos para los servicios de emergencias respecto a la estructura y operaciones de un sistema de gestión de incidentes."},
+    {q:"¿Cuántas TAC debe portar cada efectivo durante una emergencia?",opts:["1 TAC","2 TAC (una para identificación general y otra para zona de trabajo)","3 TAC","4 TAC"],a:1,fb:"Cada efectivo debe contar con 2 (DOS) tarjetas del color de acuerdo al grado que ostenta. Una se entrega al CI al llegar, y la segunda se entrega al ingresar a la zona de trabajo."},
+    {q:"¿Qué color de TAC corresponde a un Capitán?",opts:["Celeste","Amarillo","Anaranjado","Verde limón"],a:2,fb:"Color ANARANJADO: Capitán, Teniente Brigadier, Brigadier, Brigadier Mayor y Brigadier General."},
+    {q:"¿Qué color de TAC corresponde a los Aspirantes y Pilotos Rentados?",opts:["Verde limón","Anaranjado","Amarillo","Celeste"],a:3,fb:"El color CELESTE corresponde a los ASPIRANTES y PILOTOS RENTADOS."},
+    {q:"¿Cuántas veces y cómo se activa la Llamada de Evacuación?",opts:["Una vez de manera prolongada","Dos veces cortas y una larga","Tres veces de manera rítmica y continua mediante sirenas y HORN electrónico","Cinco veces cortas en rápida sucesión"],a:2,fb:"La Llamada de Evacuación se activa tocando las sirenas y el HORN electrónico TRES VECES de manera rítmica y continua."},
+    {q:"¿Qué es el MAYDAY en el contexto del SCI?",opts:["Un código para solicitar refuerzos adicionales","La frase para identificar una situación de peligro o riesgo; el llamado de auxilio para efectivos dentro y fuera de la zona caliente","Una señal de evacuación general","El código para indicar que el incendio está controlado"],a:1,fb:"MAYDAY, MAYDAY, MAYDAY es la frase para identificar una situación de PELIGRO O RIESGO; es el llamado de auxilio para los efectivos dentro y fuera de la zona caliente. Activa al Equipo de Intervención Rápida."},
+    {q:"¿Cuál es la primera acción que debe realizar el efectivo al mando al llegar primero a una emergencia?",opts:["Establecer el perímetro de seguridad","Evaluar la situación en 360°","Informar a su base del arribo a la escena","Tender la manguera principal"],a:2,fb:"El PRIMER paso es INFORMAR a su base del arribo a la escena (reportarse por radio a la central indicando que llegó al lugar)."},
+    {q:"¿Cuántos tableros de contabilidad existen en el SCP y cuáles son?",opts:["Dos tableros: PC y zona caliente","Tres tableros: TC Puesto de Comando, TC Control de Aire/Ingreso y FSCI 211","Solo uno que lo controla el CI","Cuatro tableros por sector de trabajo"],a:1,fb:"Son TRES tableros: TC Puesto de Comando (FSCI 201 - croquis/estructura), TC Control de Aire e Ingreso (FSCI 207) y el registro de unidades y efectivos FSCI 211."},
+    {q:"¿Qué hace el 'Hombre en Puerta' o asistente en el SCP?",opts:["Maneja la radio del Puesto de Comando","Verifica EPP completo de quienes ingresan, registra todos los ingresos/salidas y no se retira de su área hasta su reemplazo","Solo cuenta el número de efectivos en la zona caliente","Coordina el transporte de víctimas al hospital"],a:1,fb:"El Hombre en Puerta: verifica que los bomberos cuenten con EPP completo y labores asignadas, REGISTRA TODOS LOS INGRESOS Y SALIDAS del área asignada, y NO DEBE RETIRARSE hasta su reemplazo."},
+    {q:"¿En cuántos escenarios se aplica el SCP?",opts:["Solo en incendios estructurales","Solo en incendios y rescates vehiculares","En todos los escenarios de respuesta: incendios, rescates, MATPEL, USAR, desastres, espacios confinados, cuerdas, emergencias médicas masivas y más","Solo en incidentes con más de 10 efectivos"],a:2,fb:"El SCP es aplicable a TODOS los escenarios de respuesta de los bomberos en el Perú, incluyendo incendio estructural, rescate vehicular, fuga de gas, USAR, desastres naturales, MATPEL, espacios confinados, cuerdas y emergencias médicas masivas."},
+    {q:"¿Qué es la 'Sectorización' en el SCI?",opts:["Dividir la ciudad en zonas de respuesta permanentes","Proceso sistemático que identifica las zonas de trabajo según el ingreso o acceso al incidente, a cargo del CI","La asignación de vehículos por tipo de emergencia","La división del PC en áreas de trabajo específicas"],a:1,fb:"La Sectorización es el proceso SISTEMÁTICO que identifica las zonas de trabajo según el ingreso o acceso, a cargo del CI. Los sectores son encargados a un jefe de brigada para su control. NO se sectorizará un área que no sea trabajada."},
+    {q:"¿Qué información RELEVANTE contiene el Tablero TC Control de Aire e Ingreso?",opts:["Solo el nombre del efectivo y su unidad","Identificación del efectivo, sector asignado, hora exacta de ingreso, cantidad de aire, tiempo aproximado de consumo, hora de salida y observaciones","Solo la hora de entrada y salida de la zona caliente","Solo el nivel de presión del EPRA al ingresar"],a:1,fb:"El TC Control de Aire registra: identificación del efectivo, sector/zona asignada, hora exacta de ingreso, cantidad de aire, tiempo aproximado de consumo, hora exacta de salida y observaciones generales."},
+    {q:"¿Cuántas dificultades en la respuesta a incidentes llevaron a desarrollar el SCI?",opts:["3 dificultades","4 dificultades","6 dificultades (terminología diferente, falta de adaptabilidad, dispersión de comunicaciones, falta de planificación, ausencia de instalaciones precisas, carencia de articulación)","8 dificultades"],a:2,fb:"Se identificaron 6 DIFICULTADES: a)Terminología diferente, b)Falta de adaptabilidad, c)Dispersión de comunicaciones, d)Falta de planificación ordenada, e)Ausencia de instalaciones precisas, f)Carencia de articulación interinstitucional."},
+    {q:"¿Con qué frecuencia debe el Jefe de Sector u Operaciones monitorear a sus efectivos en zona caliente?",opts:["Cada 15 minutos","Cada 10 minutos","Cada 5 minutos, según comportamiento del incidente","Solo al inicio y al final de la tarea"],a:2,fb:"El Jefe de Sector u Operaciones (JSO) MONITOREARÁ a sus efectivos en intervalos de CINCO (5) MINUTOS, según el comportamiento del incidente."},
+  ],
+  l09:[
+    {q:"¿Cuál es la composición normal del aire que respiramos?",opts:["50% O₂, 49% N₂, 1% otros","21% O₂, 78% N₂, 1% otros","30% O₂, 70% N₂","15% O₂, 84% N₂, 1% otros"],a:1,fb:"El aire normal se compone de 21% de oxígeno (O₂), 78% de nitrógeno (N₂) y 1% de otros gases."},
+    {q:"¿Cuándo se considera que hay 'Deficiencia de Oxígeno' según la OSHA?",opts:["Cuando el O₂ es menor al 21%","Cuando el O₂ es menor al 19.5%","Cuando el O₂ es menor al 17%","Cuando el O₂ es menor al 15%"],a:1,fb:"Deficiencia de oxígeno: cuando la concentración de O₂ en el aire es INFERIOR AL 19.5%. Esto puede llevar a asfixia, confusión, mareos y pérdida de conciencia."},
+    {q:"¿Cuándo existe una atmósfera 'sobre-oxigenada'?",opts:["Cuando el O₂ supera el 21%","Cuando el O₂ es superior al 23.5%","Cuando el O₂ está entre 21% y 23%","Cuando el O₂ llega al 50%"],a:1,fb:"Una atmósfera sobre-oxigenada es cuando la concentración de O₂ es SUPERIOR AL 23.5%. Aunque parece inofensivo, aumenta drásticamente el riesgo de incendio y explosión."},
+    {q:"¿Qué significa IDLH?",opts:["Inmediatamente Dañino para el Largo de la Hipotermia","Immediately Dangerous to Life or Health — Peligro Inmediato para la Vida o la Salud","Integrated Design Level for Hazard","Nivel inferior de daño a largo plazo hospitalario"],a:1,fb:"IDLH significa 'Immediately Dangerous to Life or Health' — Peligro Inmediato para la Vida o la Salud. Es una atmósfera que plantea amenaza inmediata a la vida o afecta la capacidad de escapar."},
+    {q:"¿Para qué sirve el equipo EPRA?",opts:["Solo para proteger la cara del calor","Para permitir operar en entornos donde el aire es irrespirable por atmósferas peligrosas","Solo para incendios de categoría alta","Para proteger la piel del contacto con el fuego"],a:1,fb:"Los EPRA son herramientas cruciales que permiten a los individuos operar en entornos donde el aire es IRRESPIRABLE debido a la presencia de atmósferas peligrosas (deficiencia O₂, gases tóxicos, etc.)."},
+    {q:"¿Cuándo se debe iniciar la salida del área peligrosa según la gestión del EPRA?",opts:["Cuando el cilindro esté completamente vacío","Cuando suene la alarma de aire bajo","ANTES de que inicie la alarma de aire bajo (al 50% del cilindro)","Cuando el comandante lo ordene por radio"],a:2,fb:"El individuo debe salir de la atmósfera peligrosa ANTES de que inicie el consumo del aire de supervivencia de emergencia. La alarma indica que YA SE CONSUME el aire de reserva."},
+    {q:"Si un cilindro tiene 1800 litros y el consumo es de 100 L/min, ¿cuánto tiempo de trabajo efectivo tiene el bombero?",opts:["18 minutos de trabajo","9 minutos de trabajo (50% del tiempo total)","6 minutos de trabajo","12 minutos de trabajo"],a:1,fb:"Tiempo total: 1800 L / 100 L/min = 18 min. Aplicando la regla del 50%: 9 minutos de trabajo y 9 minutos de salida y reserva."},
+    {q:"Si un cilindro tiene 1200 litros y el consumo es de 100 L/min, ¿cuántos minutos de trabajo efectivo hay?",opts:["12 minutos de trabajo","6 minutos de trabajo (50% de 12 min)","8 minutos de trabajo","4 minutos de trabajo"],a:1,fb:"Tiempo total: 1200 L / 100 L/min = 12 min. 50% para trabajo = 6 MINUTOS de trabajo efectivo. Los otros 6 minutos son para salida y reserva."},
+    {q:"¿A qué porcentaje del cilindro se recomienda retornar a la zona tibia (salir de la zona de riesgo)?",opts:["Al 75% de aire","Al 50% de aire","Al 25% de aire","Al 10% de aire"],a:1,fb:"Al 50% del cilindro se debe retornar a la zona tibia (salir de la zona de riesgo). El 50% restante es para el retorno y reserva de emergencia."},
+    {q:"¿Qué porcentaje de carga mínima debe tener un cilindro de EPRA para usarse operativamente según NFPA 1404?",opts:["70% o más","80% o más","90% o más","100% exactamente"],a:2,fb:"Las inspecciones preventivas deben considerar la carga mínima de un cilindro del 90% A MÁS para garantizar que el bombero cuente con aire suficiente en la emergencia."},
+    {q:"¿Cuál es el primer paso ante la falla del sistema a demanda de aire del EPRA?",opts:["Quitarse la máscara inmediatamente","Llamar MAYDAY por radio","Mantener la calma y abrir controladamente la válvula by-pass","Correr hacia la salida más cercana"],a:2,fb:"Ante falla del sistema a demanda: 1) MANTENER LA CALMA, 2) Abrir controladamente la válvula by-pass. El pánico aumenta el consumo de aire y empeora la situación."},
+    {q:"¿Por qué respirar aire caliente húmedo por encima de 49-54°C es peligroso?",opts:["Solo porque es incómodo","Porque puede causar una seria disminución en la presión arterial, falla circulatoria y edema laríngeo que ocasionará la muerte por asfixia","Solo porque causa quemaduras superficiales","Porque reduce la visibilidad del bombero"],a:1,fb:"Respirar aire caliente húmedo entre 49-54°C puede causar seria disminución en la presión arterial, falla en el sistema circulatorio y un EDEMA LARÍNGEO que ocasionará la muerte por asfixia."},
+    {q:"¿Por qué NO se debe quitar el EPRA durante la fase de remoción?",opts:["Porque el equipo es muy caro","Porque los niveles de monóxido de carbono son extremadamente altos durante esta etapa por la combustión incompleta","Porque el reglamento lo prohíbe expresamente","Porque el humo daña el equipo"],a:1,fb:"Los niveles de MONÓXIDO DE CARBONO (CO) son extremadamente altos durante la fase de remoción, debido a la combustión incompleta. El CO es incoloro e inodoro, y puede matar sin advertencia."},
+    {q:"¿Cuáles son las cuatro atmósferas peligrosas más habituales en incendios u otras emergencias?",opts:["Humo, calor, gases y explosivos","Deficiencia de oxígeno, atmósfera sobre-oxigenada, atmósferas inflamables y gases tóxicos","CO, CO₂, HCN y HCl únicamente","Vapor de agua, nitrógeno, argón y neón"],a:1,fb:"Las cuatro atmósferas peligrosas más habituales son: a)Deficiencia de oxígeno, b)Atmósfera sobre-oxigenada, c)Atmósferas inflamables/explosivas, d)Gases tóxicos."},
+    {q:"¿Qué técnica de respiración se recomienda para extender el suministro de aire durante la falla del EPRA?",opts:["Respirar rápido y superficialmente","Aguantar la respiración completamente durante 2 minutos","Inspiración profunda, retener la respiración, exhalar lentamente; repetir para bajar la frecuencia respiratoria","Respirar solo por la nariz tapando la boca"],a:2,fb:"Se recomienda: inspiración profunda → tratar de aguantar la respiración → exhalar. Repetir este proceso hasta bajar la frecuencia respiratoria y así perdurar el suministro de aire."},
+    {q:"¿Qué factores afectan principalmente la tasa de consumo de aire en el EPRA?",opts:["Solo el modelo del EPRA","La condición física del bombero, el tipo de tarea, la correcta colocación de la máscara y la gestión del aire (respiración controlada)","Solo la antigüedad del cilindro","Solo la temperatura ambiente del incendio"],a:1,fb:"Los factores son: a)Condición física, b)Tipo de tarea (esfuerzo requerido), c)Correcta colocación de la máscara y d)Gestión del aire (respiración controlada, mínimo esfuerzo, planificación de tareas)."},
+    {q:"¿Qué significa que una concentración de gases inflamables supera el 10% de su LII?",opts:["Es seguro porque está por debajo del límite de explosión","Es peligroso: una fuente de ignición puede causar incendio o explosión en esa atmósfera","Solo es peligroso al 100% del LII","No es un criterio de atmósfera peligrosa"],a:1,fb:"Cuando la concentración de gases inflamables o explosivos supera el 10% de su Límite Inferior de Inflamabilidad (LII), una fuente de ignición puede causar incendio o explosión."},
+    {q:"¿Qué indica la norma NFPA 1404 respecto a la alarma de aire bajo?",opts:["La alarma indica que el cilindro está a la mitad","La alarma indica que el bombero ya está consumiendo el aire de RESERVA y debe actuar de inmediato","La alarma indica que el bombero puede trabajar 10 minutos más","La alarma solo es de advertencia sin urgencia inmediata"],a:1,fb:"La NFPA 1404 establece que el individuo debe reconocer que la activación de la ALARMA DE AIRE BAJO le está indicando que está consumiendo el AIRE DE RESERVA. Su activación es una indicación de acción INMEDIATA."},
+    {q:"¿Cuándo es especialmente crítica la gestión del aire del EPRA?",opts:["Solo en incendios forestales","Solo cuando el cilindro es de baja capacidad","En cualquier ambiente IDLH (Inmediatamente Peligroso para la Vida o la Salud), donde el suministro de aire es la línea entre la vida y la muerte","Solo en emergencias MATPEL"],a:2,fb:"La gestión del aire es crítica en cualquier ambiente IDLH, donde el suministro de aire es literalmente la línea entre la vida y la muerte. Una gestión deficiente puede causar asfixia o exposición a sustancias peligrosas."},
+    {q:"¿Qué indica la tasa de consumo de 100 litros por minuto (L/min) propuesta por NIOSH?",opts:["El consumo promedio en reposo absoluto","El consumo aproximado durante la ejecución de tareas en el incendio a máximo esfuerzo","El consumo de un cilindro completo","El límite máximo permitido para el uso seguro del EPRA"],a:1,fb:"El NIOSH (Instituto Nacional para la Seguridad y Salud Ocupacional) propone que durante la ejecución de tareas en el incendio, el consumo aproximado puede ser de 100 litros por minuto."},
+  ]
+};
+
+// ══════ RENDER ══════
+function renderQuiz(id){
+  const c=document.getElementById(id+'-questions');
+  if(!c||c.dataset.rendered)return;
+  c.dataset.rendered='true';
+  let html='';
+  quizData[id].forEach((q,i)=>{
+    html+=`<div class="question-block" id="${id}-q${i}">
+      <div class="question-text"><span class="question-num">${i+1}</span>${q.q}</div>
+      <div class="options">`;
+    q.opts.forEach((o,j)=>{
+      html+=`<button class="option-btn" data-o="${j}" onclick="selectOpt(this,'${id}',${i},${j})">${o}</button>`;
+    });
+    html+=`</div><div class="feedback" id="${id}-fb${i}"></div></div>`;
+  });
+  c.innerHTML=html;
+}
+
+function selectOpt(btn,id,qi,oi){
+  const blk=document.getElementById(id+'-q'+qi);
+  if(blk.querySelector('.correct')||blk.querySelector('.wrong'))return;
+  blk.querySelectorAll('.option-btn').forEach(b=>{b.style.borderColor='';b.style.color='';});
+  btn.style.borderColor='#FFB347';btn.style.color='#FFB347';
+  blk.dataset.selected=oi;
+}
+
+function checkQuiz(id){
+  const qs=quizData[id];
+  let score=0;
+  qs.forEach((q,i)=>{
+    const blk=document.getElementById(id+'-q'+i);
+    const sel=parseInt(blk.dataset.selected??-1);
+    const fb=document.getElementById(id+'-fb'+i);
+    const btns=blk.querySelectorAll('.option-btn');
+    btns.forEach(b=>{b.style.borderColor='';b.style.color='';});
+    if(sel===-1){btns[q.a].classList.add('correct');fb.textContent='⚠️ No respondiste. '+q.fb;fb.className='feedback wrong show';}
+    else if(sel===q.a){btns[sel].classList.add('correct');btns.forEach(b=>b.classList.add('disabled'));fb.textContent='✅ ¡Correcto! '+q.fb;fb.className='feedback correct show';score++;}
+    else{btns[sel].classList.add('wrong');btns[q.a].classList.add('correct');btns.forEach(b=>b.classList.add('disabled'));fb.textContent='❌ Incorrecto. '+q.fb;fb.className='feedback wrong show';}
+  });
+  const pct=Math.round(score/20*100);
+  const sd=document.getElementById(id+'-score');
+  const cls=pct>=80?'great':pct>=60?'good':'low';
+  const msg=pct>=80?'¡Excelente rendimiento! 🔥':pct>=60?'Buen esfuerzo, sigue repasando.':'Necesitas repasar el material.';
+  sd.innerHTML=`<div class="score-num">${score}/20 (${pct}%)</div><div class="score-label">${msg}</div>`;
+  sd.className='score-display show '+cls;
+  document.getElementById('prog'+id.replace('l','0').replace('l','')).style.width=pct+'%';
+  const pn=id.replace('l','');
+  const pg=document.getElementById('prog'+pn.padStart(2,'0'));
+  if(pg)pg.style.width=pct+'%';
+}
+
+function resetQuiz(id){
+  const c=document.getElementById(id+'-questions');
+  c.removeAttribute('data-rendered');
+  renderQuiz(id);
+  document.getElementById(id+'-score').className='score-display';
+}
+
+function switchTab(id,tab,btn){
+  btn.closest('.tab-bar').querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const card=document.getElementById(id);
+  card.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id+'-'+tab).classList.add('active');
+  if(tab==='quiz')renderQuiz(id);
+}
+
+function showLesson(id,btn){
+  document.querySelectorAll('.nav-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  const cards=document.querySelectorAll('.lesson-card');
+  if(id==='all'){cards.forEach(c=>c.classList.add('visible'));}
+  else{cards.forEach(c=>c.classList.remove('visible'));document.getElementById(id).classList.add('visible');}
+  window.scrollTo({top:document.getElementById('lessonContainer').offsetTop-60,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

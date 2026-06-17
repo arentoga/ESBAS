@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulacro Módulo 3 — CFBB 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#11151a;
+  --console:#171d24;
+  --console-2:#1d242c;
+  --line:#323c46;
+  --line-soft:#262e36;
+  --paper:#f3eee1;
+  --paper-2:#ece4d2;
+  --paper-line:#d8cdb3;
+  --ink-on-paper:#241f18;
+  --muted-on-paper:#6b6151;
+  --orange:#ff5a1f;
+  --orange-dim:#c8480f;
+  --amber:#ffb100;
+  --green:#1f8a4c;
+  --green-dim:#163;
+  --red:#d62828;
+  --text-light:#eef0f1;
+  --text-dim:#9aa6b0;
+  --font-display:'Oswald',sans-serif;
+  --font-body:'Source Serif 4',serif;
+  --font-ui:'Inter',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+}
+
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--text-light);
+  font-family:var(--font-ui);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+a{color:inherit;}
+
+/* ---------- Header / console bar ---------- */
+.console-bar{
+  background:linear-gradient(180deg,var(--console) 0%, var(--console-2) 100%);
+  border-bottom:1px solid var(--line);
+  position:relative;
+  padding:28px 24px 22px;
+}
+.console-bar::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:6px;
+  background:repeating-linear-gradient(115deg,
+    var(--orange) 0 18px,
+    #1a1f24 18px 36px);
+  opacity:.9;
+}
+.console-inner{
+  max-width:980px;
+  margin:0 auto;
+}
+.eyebrow-tag{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--orange);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.eyebrow-tag::before{
+  content:"";
+  width:7px;height:7px;
+  border-radius:50%;
+  background:var(--orange);
+  box-shadow:0 0 8px var(--orange);
+}
+h1.title{
+  font-family:var(--font-display);
+  font-weight:600;
+  letter-spacing:.01em;
+  text-transform:uppercase;
+  font-size:clamp(26px,4vw,40px);
+  margin:8px 0 6px;
+  color:var(--text-light);
+}
+.subtitle{
+  color:var(--text-dim);
+  font-size:14.5px;
+  max-width:620px;
+}
+.stat-row{
+  display:flex;
+  gap:22px;
+  margin-top:18px;
+  flex-wrap:wrap;
+}
+.stat{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  color:var(--text-dim);
+  border-left:2px solid var(--line);
+  padding-left:10px;
+}
+.stat b{
+  color:var(--text-light);
+  font-size:15px;
+  display:block;
+  font-weight:600;
+}
+
+/* ---------- Layout ---------- */
+main{
+  max-width:980px;
+  margin:0 auto;
+  padding:26px 24px 80px;
+}
+
+.intro-note{
+  background:var(--console-2);
+  border:1px solid var(--line-soft);
+  border-radius:4px;
+  padding:14px 16px;
+  font-size:13.5px;
+  color:var(--text-dim);
+  margin-bottom:24px;
+}
+.intro-note strong{color:var(--text-light);}
+
+/* ---------- Tab strip ---------- */
+.tab-strip{
+  display:flex;
+  gap:2px;
+  overflow-x:auto;
+  padding-bottom:2px;
+  margin-bottom:22px;
+  border-bottom:1px solid var(--line);
+  scrollbar-width:thin;
+}
+.tab-btn{
+  flex:0 0 auto;
+  background:var(--console-2);
+  border:1px solid var(--line-soft);
+  border-bottom:none;
+  color:var(--text-dim);
+  font-family:var(--font-display);
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  font-size:13px;
+  padding:10px 16px 9px;
+  cursor:pointer;
+  border-radius:4px 4px 0 0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  transition:background .15s, color .15s;
+}
+.tab-btn .n{font-size:15px;font-weight:600;}
+.tab-btn .q{font-family:var(--font-mono);font-size:10px;color:var(--text-dim);}
+.tab-btn:hover{color:var(--text-light);}
+.tab-btn.active{
+  background:var(--orange);
+  color:#1a0e06;
+  border-color:var(--orange);
+}
+.tab-btn.active .q{color:#3a1c08;}
+.tab-btn:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+.tab-btn.done .n::after{
+  content:" •";
+  color:var(--green);
+}
+.tab-btn.active.done .n::after{color:#163;}
+
+/* ---------- Zone panel (LED grid) ---------- */
+.zone-panel{
+  background:var(--console-2);
+  border:1px solid var(--line-soft);
+  border-radius:6px;
+  padding:14px 16px;
+  margin-bottom:22px;
+}
+.zone-panel-label{
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--text-dim);
+  margin-bottom:10px;
+  display:flex;
+  justify-content:space-between;
+}
+.zone-grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+.zone-led{
+  width:26px;height:26px;
+  border-radius:4px;
+  border:1px solid var(--line);
+  background:#262e36;
+  color:var(--text-dim);
+  font-family:var(--font-mono);
+  font-size:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:background .15s, color .15s, box-shadow .15s;
+}
+.zone-led:hover{border-color:var(--text-dim);}
+.zone-led.answered{background:var(--amber);color:#2c1c00;box-shadow:0 0 6px rgba(255,177,0,.5);}
+.zone-led.correct{background:var(--green);color:#fff;box-shadow:0 0 6px rgba(31,138,76,.6);}
+.zone-led.incorrect{background:var(--red);color:#fff;box-shadow:0 0 6px rgba(214,40,40,.6);}
+.zone-led:focus-visible{outline:2px solid var(--amber);outline-offset:1px;}
+
+/* ---------- Score banner ---------- */
+.score-banner{
+  display:none;
+  background:var(--console-2);
+  border:1px solid var(--orange);
+  border-radius:6px;
+  padding:16px 18px;
+  margin-bottom:22px;
+  align-items:center;
+  gap:18px;
+  flex-wrap:wrap;
+}
+.score-banner.show{display:flex;}
+.score-big{
+  font-family:var(--font-mono);
+  font-size:30px;
+  font-weight:600;
+  color:var(--text-light);
+}
+.score-meta{flex:1;min-width:180px;}
+.score-meta .label{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;}
+.score-pass{color:var(--green);font-weight:700;}
+.score-fail{color:var(--red);font-weight:700;}
+.btn{
+  font-family:var(--font-ui);
+  font-weight:600;
+  font-size:13.5px;
+  border:none;
+  border-radius:4px;
+  padding:11px 20px;
+  cursor:pointer;
+  transition:filter .15s, transform .05s;
+}
+.btn:active{transform:translateY(1px);}
+.btn-primary{background:var(--orange);color:#1a0e06;}
+.btn-primary:hover{filter:brightness(1.08);}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--text-light);}
+.btn-ghost:hover{border-color:var(--text-dim);}
+.btn:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+
+/* ---------- Question card (paper sheet) ---------- */
+.q-card{
+  background:var(--paper);
+  color:var(--ink-on-paper);
+  border-radius:3px;
+  margin-bottom:18px;
+  position:relative;
+  padding:20px 22px 18px;
+  box-shadow:0 3px 0 var(--paper-line), 0 10px 24px rgba(0,0,0,.28);
+  border:1px solid var(--paper-line);
+}
+.q-card::before{
+  content:"";
+  position:absolute;
+  top:14px;left:-2px;
+  width:14px;height:26px;
+  background:var(--console-2);
+  border:1px solid var(--line);
+  border-radius:2px 5px 5px 2px;
+}
+.q-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:10px;
+  margin-bottom:8px;
+  flex-wrap:wrap;
+}
+.q-num{
+  font-family:var(--font-mono);
+  font-weight:600;
+  font-size:13px;
+  color:var(--orange-dim);
+}
+.q-source{
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--muted-on-paper);
+}
+.q-text{
+  font-family:var(--font-body);
+  font-size:17px;
+  line-height:1.5;
+  margin:0 0 14px;
+}
+.options{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+.option{
+  display:flex;
+  align-items:flex-start;
+  gap:11px;
+  cursor:pointer;
+  padding:6px 6px;
+  border-radius:4px;
+  transition:background .12s;
+}
+.option:hover{background:rgba(0,0,0,.04);}
+.option input[type="radio"]{
+  position:absolute;
+  opacity:0;
+  width:1px;height:1px;
+}
+.bubble{
+  flex:0 0 auto;
+  width:24px;height:24px;
+  border-radius:50%;
+  border:2px solid var(--muted-on-paper);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-mono);
+  font-size:11px;
+  font-weight:600;
+  color:var(--muted-on-paper);
+  background:rgba(255,255,255,.4);
+  transition:background .15s, border-color .15s, color .15s;
+}
+.option input:checked + .bubble{
+  background:var(--orange);
+  border-color:var(--orange);
+  color:#1a0e06;
+}
+.option input:focus-visible + .bubble{
+  outline:2px solid var(--orange-dim);
+  outline-offset:2px;
+}
+.option-text{
+  font-family:var(--font-ui);
+  font-size:14.5px;
+  padding-top:2px;
+}
+
+/* graded states */
+.q-card.graded .option{cursor:default;}
+.q-card.graded .option:hover{background:transparent;}
+.q-card.graded .bubble{opacity:.55;}
+.q-card.graded .option.is-correct .bubble{
+  opacity:1;
+  background:var(--green);
+  border-color:var(--green);
+  color:#fff;
+}
+.q-card.graded .option.is-wrong-pick .bubble{
+  opacity:1;
+  background:var(--red);
+  border-color:var(--red);
+  color:#fff;
+}
+.q-card.graded.unanswered{border-left:3px solid var(--red);}
+.explain{
+  display:none;
+  margin-top:12px;
+  padding:10px 12px;
+  background:var(--paper-2);
+  border-left:3px solid var(--green);
+  font-size:13px;
+  color:var(--ink-on-paper);
+  border-radius:0 3px 3px 0;
+}
+.q-card.graded .explain{display:block;}
+.explain b{color:var(--green-dim);}
+.unanswered-flag{
+  display:none;
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--red);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin-top:10px;
+}
+.q-card.graded.unanswered .unanswered-flag{display:block;}
+
+/* ---------- Footer action bar ---------- */
+.action-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  background:var(--console-2);
+  border:1px solid var(--line-soft);
+  border-radius:6px;
+  padding:14px 18px;
+  position:sticky;
+  bottom:12px;
+  margin-top:6px;
+}
+.progress-text{
+  font-family:var(--font-mono);
+  font-size:13px;
+  color:var(--text-dim);
+}
+.progress-text b{color:var(--text-light);}
+
+.exam-section{display:none;}
+.exam-section.active{display:block;}
+
+footer.site-footer{
+  text-align:center;
+  color:var(--text-dim);
+  font-size:12px;
+  padding:30px 0 10px;
+  font-family:var(--font-mono);
+}
+
+/* ---------- Confirm overlay ---------- */
+.overlay{
+  position:fixed;inset:0;
+  background:rgba(10,12,15,.72);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  z-index:50;
+}
+.overlay.hidden{display:none;}
+.confirm-card{
+  background:var(--paper);
+  color:var(--ink-on-paper);
+  border-radius:6px;
+  max-width:380px;
+  width:100%;
+  padding:22px 22px 18px;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+}
+.confirm-card h3{
+  font-family:var(--font-display);
+  text-transform:uppercase;
+  font-size:18px;
+  margin:0 0 10px;
+}
+.confirm-card p{font-size:14px;color:var(--muted-on-paper);margin:0 0 18px;}
+.confirm-actions{display:flex;gap:10px;justify-content:flex-end;}
+
+@media (max-width:640px){
+  .console-bar{padding:22px 16px 18px;}
+  main{padding:20px 14px 60px;}
+  .q-card{padding:16px 16px 14px;}
+  .score-big{font-size:24px;}
+  .action-bar{flex-direction:column;align-items:stretch;}
+  .action-bar .btn{width:100%;}
+}
+
+</style>
+</head>
+<body>
+
+<header class="console-bar">
+  <div class="console-inner">
+    <span class="eyebrow-tag">Centro de entrenamiento CFBB</span>
+    <h1 class="title">Simulacro Módulo 3 — CFBB 2026</h1>
+    <p class="subtitle">Banco de preguntas oficial repartido en simulacros de práctica. Marca una alternativa por pregunta y pulsa «Finalizar examen» para calificar tu intento.</p>
+    <div class="stat-row">
+      <div class="stat"><b id="totalQCount">—</b>preguntas totales</div>
+      <div class="stat"><b id="totalExamCount">—</b>simulacros</div>
+      <div class="stat"><b>20</b>preguntas por simulacro<span style="opacity:.7"> (último: <span id="lastExamSize">—</span>)</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="intro-note">
+    <strong>Cómo se usa:</strong> selecciona una sola alternativa por pregunta (las burbujas funcionan como una hoja de respuestas). El panel de control sobre cada simulacro muestra qué preguntas ya respondiste. Puedes finalizar con preguntas pendientes — se contarán como incorrectas — y reintentar cualquier simulacro cuantas veces quieras.
+  </div>
+
+  <nav class="tab-strip" id="tabStrip" role="tablist" aria-label="Selección de simulacro"></nav>
+
+  <div id="examsRoot"></div>
+</main>
+
+<footer class="site-footer">Módulo 3 · CFBB 2026 · Herramienta de práctica generada a partir del banco de preguntas oficial</footer>
+
+<div class="overlay hidden" id="confirmOverlay">
+  <div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <h3 id="confirmTitle">Confirmar</h3>
+    <p id="confirmBody"></p>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" id="confirmNo" type="button">Seguir respondiendo</button>
+      <button class="btn btn-primary" id="confirmYes" type="button">Finalizar de todos modos</button>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="questions-data">[{"qtext": "Un incendio en estructura elevada se define como aquel que ocurre en:", "opts": {"A": "Edificaciones de más de 2 pisos", "B": "Edificaciones de más de 3 pisos", "C": "Edificaciones de más de 4 pisos", "D": "Edificaciones de más de 5 pisos"}, "explanation": null, "answer": "C", "source": "Simulacro 1"}, {"qtext": "¿Cuál es uno de los principales problemas operativos en incendios de edificios elevados?", "opts": {"A": "Exceso de ventilación natural", "B": "Dificultad de acceso al foco del incendio", "C": "Falta de abastecimiento eléctrico", "D": "Ausencia de humo"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "Una vivienda multifamiliar se caracteriza por:", "opts": {"A": "Tener acceso independiente para cada unidad desde la vía pública", "B": "Compartir bienes y servicios comunes con acceso común", "C": "Destinarse únicamente a alquiler temporal", "D": "Estar ubicada en una quinta"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "Durante un incendio en altura, el puesto de comando debe establecerse:", "opts": {"A": "En el interior del edificio", "B": "En el último piso seguro", "C": "Frente a la fachada evitando la zona de colapso", "D": "Sobre la unidad aérea"}, "explanation": null, "answer": "C", "source": "Simulacro 1"}, {"qtext": "Cuando existe red privada contra incendios operativa:", "opts": {"A": "Debe evitarse su uso", "B": "Se utiliza únicamente para ventilación", "C": "Se prefiere para el ataque interior", "D": "Solo sirve para evacuación"}, "explanation": null, "answer": "C", "source": "Simulacro 1"}, {"qtext": "El uso de ascensores por bomberos en incendios de altura se realiza:", "opts": {"A": "Hasta el piso afectado", "B": "Dos pisos por debajo del incendio", "C": "Solo para evacuación civil", "D": "Nunca se utilizan"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "¿Cuál NO es una característica típica de los incendios en sótanos?", "opts": {"A": "Dificultad para localizar víctimas", "B": "Temperaturas elevadas", "C": "Ventilación abundante", "D": "Fatiga del personal"}, "explanation": null, "answer": "C", "source": "Simulacro 1"}, {"qtext": "Un sótano es:", "opts": {"A": "Toda construcción bajo nivel de calle", "B": "Un espacio cuya cubierta está hasta 0,50 m sobre la vereda", "C": "Un área técnica exclusivamente", "D": "Un estacionamiento subterráneo"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "En incendios de sótanos se recomienda:", "opts": {"A": "Utilizar ascensores", "B": "Acceder por escaleras o rampas", "C": "Ingresar individualmente", "D": "Evitar ventilación"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "La principal razón por la que los incendios en sótanos generan altas temperaturas es:", "opts": {"A": "Exceso de oxígeno", "B": "Pocas aberturas y ventilación limitada", "C": "Baja carga combustible", "D": "Presencia de hidrantes"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "¿Cuál es una medida preventiva en sótanos?", "opts": {"A": "Incrementar almacenamiento combustible", "B": "Eliminar detectores de humo", "C": "Verificar instalaciones eléctricas", "D": "Sellar toda ventilación"}, "explanation": null, "answer": "C", "source": "Simulacro 1"}, {"qtext": "En incendios vehiculares, el uso de EPRA es obligatorio porque:", "opts": {"A": "Reduce el consumo de agua", "B": "Disminuye la fatiga muscular", "C": "Existen múltiples gases tóxicos de combustión", "D": "Facilita la comunicación radial"}, "explanation": null, "answer": "C", "source": "Simulacro 1"}, {"qtext": "¿Cuál de los siguientes constituye un riesgo en incendios vehiculares?", "opts": {"A": "Explosión de neumáticos", "B": "Disminución de visibilidad nocturna únicamente", "C": "Vibraciones del motor apagado", "D": "Daño del pavimento"}, "explanation": null, "answer": "A", "source": "Simulacro 1"}, {"qtext": "La primera máquina en una vía debe:", "opts": {"A": "Estacionarse delante del vehículo siniestrado", "B": "Proteger la escena desde su llegada", "C": "Bloquear toda la carretera sin evaluación", "D": "Esperar a la policía"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "La distancia aproximada inicial de estacionamiento respecto a un vehículo incendiado es:", "opts": {"A": "5 m", "B": "10 m", "C": "20 m", "D": "30 m"}, "explanation": null, "answer": "D", "source": "Simulacro 1"}, {"qtext": "La gasolina es:", "opts": {"A": "Soluble en agua", "B": "Líquido inflamable", "C": "Gas comprimido", "D": "Agente oxidante"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "El GNV está compuesto principalmente por:", "opts": {"A": "Propano", "B": "Butano", "C": "Metano", "D": "Etileno"}, "explanation": null, "answer": "C", "source": "Simulacro 1"}, {"qtext": "¿Cuál es una característica del GLP?", "opts": {"A": "Es más liviano que el aire", "B": "Está compuesto por propano y butano", "C": "Tiene presión de trabajo de 200 bar", "D": "Es inodoro"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "La BLEVE corresponde a:", "opts": {"A": "Un fenómeno de combustión lenta", "B": "Una expansión explosiva de vapor de líquido en ebullición", "C": "Una reacción química de espuma", "D": "Un tipo de ventilación"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "En vehículos eléctricos, los cables de alta tensión suelen identificarse por:", "opts": {"A": "Color blanco", "B": "Color verde", "C": "Color naranja", "D": "Color gris"}, "explanation": null, "answer": "C", "source": "Simulacro 1"}, {"qtext": "Antes de intervenir un vehículo eléctrico, una medida prioritaria es:", "opts": {"A": "Abrir el tanque principal", "B": "Cortar el flujo de alto voltaje", "C": "Retirar neumáticos", "D": "Aplicar espuma inmediatamente"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "El ataque defensivo en incendios vehiculares busca principalmente:", "opts": {"A": "Ingreso inmediato al habitáculo", "B": "Protección y control de propagación", "C": "Desmontaje del motor", "D": "Ventilación forzada"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "La espuma extingue incendios de líquidos inflamables porque:", "opts": {"A": "Aumenta el oxígeno", "B": "Incrementa la temperatura", "C": "Separa vapores y enfría", "D": "Genera combustión incompleta"}, "explanation": null, "answer": "C", "source": "Simulacro 1"}, {"qtext": "La reignición en baterías de ion-litio:", "opts": {"A": "Es imposible", "B": "Solo ocurre durante el ataque inicial", "C": "Puede presentarse horas después", "D": "Se evita con arena únicamente"}, "explanation": null, "answer": "C", "source": "Simulacro 1"}, {"qtext": "Los hidrocarburos son:", "opts": {"A": "Mezclas de oxígeno y nitrógeno", "B": "Compuestos formados principalmente por carbono e hidrógeno", "C": "Sales inorgánicas", "D": "Compuestos metálicos"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "Uno de los fenómenos asociados a incendios en líquidos inflamables es:", "opts": {"A": "BLEVE", "B": "Electrólisis", "C": "Corrosión galvánica", "D": "Sublimación"}, "explanation": null, "answer": "A", "source": "Simulacro 1"}, {"qtext": "El acetileno se considera:", "opts": {"A": "Gas inerte", "B": "Gas inflamable", "C": "Líquido combustible", "D": "Agente extintor"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "Una condición necesaria para una explosión es:", "opts": {"A": "Ausencia de combustible", "B": "Mezcla combustible dentro de rango inflamable", "C": "Humedad elevada", "D": "Baja presión"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "La evaluación 360° tiene como finalidad:", "opts": {"A": "Localizar únicamente víctimas", "B": "Reconocer riesgos y condiciones generales", "C": "Medir caudal hidráulico", "D": "Identificar al propietario"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "La ventilación en incendios de edificios elevados busca:", "opts": {"A": "Incrementar la combustión", "B": "Controlar humo y gases", "C": "Reducir personal operativo", "D": "Aumentar la presión interior"}, "explanation": null, "answer": "B", "source": "Simulacro 1"}, {"qtext": "La transferencia de calor en edificios elevados complica principalmente:", "opts": {"A": "El abastecimiento de agua", "B": "El control de humo y gases", "C": "La iluminación", "D": "La señalización"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "Una quinta corresponde a:", "opts": {"A": "Edificio industrial", "B": "Conjunto de viviendas con acceso común", "C": "Hospital privado", "D": "Centro comercial"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "La movilización mínima sugerida para incendio en altura incluye:", "opts": {"A": "1 autobomba", "B": "2 autobombas, escala, rescate y médica", "C": "1 rescate y 1 ambulancia", "D": "3 escalas"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "El personal de reserva debe ubicarse:", "opts": {"A": "Sobre el fuego", "B": "En azotea", "C": "Dos pisos por debajo del incendio", "D": "En el ascensor"}, "explanation": null, "answer": "C", "source": "Simulacro 2"}, {"qtext": "El ataque externo en edificios utiliza preferentemente:", "opts": {"A": "Escaleras internas", "B": "Monitores y unidades aéreas", "C": "Extintores portátiles", "D": "Ventiladores"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "¿Qué tipo de sótano alberga sistemas de climatización y calderas?", "opts": {"A": "Habitacional", "B": "Técnico", "C": "Laboratorio", "D": "Oficinas"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "La propagación del humo desde sótanos puede ocurrir mediante:", "opts": {"A": "Huecos de ascensores", "B": "Conductos de ventilación", "C": "Escotillas", "D": "Todas las anteriores"}, "explanation": null, "answer": "D", "source": "Simulacro 2"}, {"qtext": "En incendios de sótanos, el control de ingreso y salida del personal es importante porque:", "opts": {"A": "Reduce consumo de combustible", "B": "Existen zonas donde se pierde contacto visual", "C": "Evita daños estructurales", "D": "Facilita ventilación"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "Una recomendación de prevención es:", "opts": {"A": "Almacenar combustibles en sótanos", "B": "Incrementar carga combustible", "C": "Mantener vías de evacuación operativas", "D": "Eliminar ventanas"}, "explanation": null, "answer": "C", "source": "Simulacro 2"}, {"qtext": "Los incendios vehiculares suelen asociarse frecuentemente a:", "opts": {"A": "Fallas mecánicas o eléctricas", "B": "Viento fuerte", "C": "Lluvias intensas", "D": "Radiación solar"}, "explanation": null, "answer": "A", "source": "Simulacro 2"}, {"qtext": "¿Cuál es un producto tóxico de combustión incompleta?", "opts": {"A": "CO₂", "B": "CO", "C": "N₂", "D": "He"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "La segregación vial busca:", "opts": {"A": "Aumentar velocidad de circulación", "B": "Alertar y reducir velocidad de los conductores", "C": "Desviar peatones únicamente", "D": "Facilitar estacionamiento"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "Los conos de seguridad se colocan para:", "opts": {"A": "Decoración operacional", "B": "Delimitación y advertencia", "C": "Ventilación", "D": "Iluminación"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "Ninguna unidad debe colocarse:", "opts": {"A": "Frente al PC", "B": "Aguas abajo del vehículo incendiado", "C": "En la berma", "D": "En zona fría"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "La gasolina posee temperatura de inflamación aproximada de:", "opts": {"A": "52°C", "B": "100°C", "C": "-43°C", "D": "280°C"}, "explanation": null, "answer": "C", "source": "Simulacro 2"}, {"qtext": "El diésel se clasifica como:", "opts": {"A": "Líquido combustible", "B": "Gas inflamable", "C": "Oxidante", "D": "Corrosivo"}, "explanation": null, "answer": "A", "source": "Simulacro 2"}, {"qtext": "La presión de trabajo típica del GNV es:", "opts": {"A": "15 bar", "B": "50 bar", "C": "100 bar", "D": "200 bar"}, "explanation": null, "answer": "D", "source": "Simulacro 2"}, {"qtext": "Una señal temprana de BLEVE es:", "opts": {"A": "Formación de espuma", "B": "Activación de válvula de alivio", "C": "Ausencia de fuego", "D": "Disminución de presión"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "Un vehículo híbrido combina:", "opts": {"A": "GLP y GNV", "B": "Diésel y gasolina", "C": "Motor de combustión y sistema eléctrico", "D": "Hidrógeno y vapor"}, "explanation": null, "answer": "C", "source": "Simulacro 2"}, {"qtext": "Para retirar el tapón de servicio en vehículos eléctricos se utilizan:", "opts": {"A": "Guantes de cuero", "B": "Guantes aislantes 1000 V", "C": "Guantes quirúrgicos", "D": "Ninguno"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "El sistema de alto voltaje puede permanecer energizado:", "opts": {"A": "Algunos segundos", "B": "Hasta 10 minutos", "C": "30 minutos", "D": "1 hora"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "Los incendios de magnesio:", "opts": {"A": "Reaccionan favorablemente al agua", "B": "Generan temperaturas muy elevadas", "C": "Son clase A", "D": "No emiten luz intensa"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "La zona caliente en un ataque defensivo vehicular debe ser al menos:", "opts": {"A": "5 m", "B": "10 m", "C": "15 m", "D": "50 m"}, "explanation": null, "answer": "C", "source": "Simulacro 2"}, {"qtext": "El ataque de transición consiste en:", "opts": {"A": "Ataque exterior breve seguido de ofensivo interior", "B": "Ataque exclusivamente defensivo", "C": "Uso único de espuma", "D": "Ventilación positiva"}, "explanation": null, "answer": "A", "source": "Simulacro 2"}, {"qtext": "La espuma actúa suprimiendo:", "opts": {"A": "Corriente eléctrica", "B": "Vapores inflamables", "C": "Radiación solar", "D": "Presión atmosférica"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "La cámara térmica ayuda a:", "opts": {"A": "Medir presión hidráulica", "B": "Reducir consumo de agua", "C": "Detectar posibles reigniciones", "D": "Identificar víctimas únicamente"}, "explanation": null, "answer": "C", "source": "Simulacro 2"}, {"qtext": "El BLEVE requiere:", "opts": {"A": "Recipiente cerrado con líquido o gas licuado calentado", "B": "Humedad elevada", "C": "Ausencia de presión", "D": "Material inerte"}, "explanation": null, "answer": "A", "source": "Simulacro 2"}, {"qtext": "El GNV es:", "opts": {"A": "Más pesado que el aire", "B": "Más liviano que el aire", "C": "Líquido inflamable", "D": "Agente extintor"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "En incendios de altura, el EPP debe incluir:", "opts": {"A": "Casco únicamente", "B": "EPRA y protección estructural completa", "C": "Chaleco reflectivo únicamente", "D": "Guantes solamente"}, "explanation": null, "answer": "B", "source": "Simulacro 2"}, {"qtext": "La evaluación de riesgos y beneficios corresponde principalmente al:", "opts": {"A": "Conductor", "B": "Operador de bomba", "C": "Comandante del Incidente", "D": "Personal médico"}, "explanation": null, "answer": "C", "source": "Simulacro 2"}, {"qtext": "El mayor desafío en incendios de edificios elevados suele ser:", "opts": {"A": "Exceso de agua", "B": "Evacuación y acceso operativo", "C": "Falta de iluminación pública", "D": "Disponibilidad de ascensores"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "Una vivienda taller combina:", "opts": {"A": "Uso residencial y actividad comercial o artesanal", "B": "Dos viviendas independientes", "C": "Oficinas y estacionamiento", "D": "Laboratorio y vivienda"}, "explanation": null, "answer": "A", "source": "Simulacro 3"}, {"qtext": "La ventilación recomendada en incendios de altura incluye:", "opts": {"A": "Solo el piso afectado", "B": "Último piso, afectado y superiores inmediatos", "C": "Sótanos únicamente", "D": "Escaleras externas"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "El ataque interno se realiza:", "opts": {"A": "Sin EPRA", "B": "Solo desde el exterior", "C": "Cuando las condiciones son seguras para el personal", "D": "Únicamente con monitores"}, "explanation": null, "answer": "C", "source": "Simulacro 3"}, {"qtext": "Los ascensores pueden convertirse en:", "opts": {"A": "Vía de ventilación positiva", "B": "Centro de llamadas hacia el piso afectado", "C": "Fuente de abastecimiento", "D": "Ruta segura para evacuación general"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "¿Cuál es un tipo de sótano?", "opts": {"A": "Técnico", "B": "Vertical", "C": "Modular", "D": "Temporal"}, "explanation": null, "answer": "A", "source": "Simulacro 3"}, {"qtext": "La lentitud en la extinción de incendios de sótanos se debe a:", "opts": {"A": "Exceso de ventilación", "B": "Necesidad de localizar el fuego primero", "C": "Falta de agua exclusivamente", "D": "Ausencia de humo"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "El humo de sótanos tiende a:", "opts": {"A": "Permanecer únicamente en el origen", "B": "Ascender por aberturas y ductos", "C": "Desaparecer rápidamente", "D": "Reducir presión interna"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "¿Cuál NO es una medida preventiva?", "opts": {"A": "Detectores de humo", "B": "Extintores portátiles", "C": "Acumular materiales inflamables", "D": "Revisar instalaciones"}, "explanation": null, "answer": "C", "source": "Simulacro 3"}, {"qtext": "Los gases tóxicos en incendios vehiculares pueden superar incluso a los de:", "opts": {"A": "Incendios forestales", "B": "Incendios estructurales", "C": "Incendios clase D", "D": "Fuegos de cocina"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "Un riesgo adicional en carretera es:", "opts": {"A": "Nuevos accidentes por reducción del flujo vehicular", "B": "Exceso de iluminación", "C": "Falta de combustible en unidades", "D": "Congestión peatonal"}, "explanation": null, "answer": "A", "source": "Simulacro 3"}, {"qtext": "El oficial de seguridad puede emplear:", "opts": {"A": "Silbato y vara luminosa", "B": "Escalera aérea", "C": "Motobomba portátil", "D": "Ventilador PPV"}, "explanation": null, "answer": "A", "source": "Simulacro 3"}, {"qtext": "La zona de protección para fuego vehicular es de aproximadamente:", "opts": {"A": "15 m", "B": "20 m", "C": "30 m", "D": "60 m"}, "explanation": null, "answer": "C", "source": "Simulacro 3"}, {"qtext": "El metano es el principal componente del:", "opts": {"A": "GLP", "B": "GNV", "C": "Diésel", "D": "Gasolina"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "Los vapores de gasolina son:", "opts": {"A": "Más livianos que el aire", "B": "Más pesados que el aire", "C": "Neutros", "D": "Oxidantes"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "El cierre de válvula en sistemas de gas vehicular se realiza:", "opts": {"A": "Giro antihorario", "B": "Giro horario", "C": "Presión axial", "D": "Automáticamente"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "Ante una alarma del detector de gases se debe:", "opts": {"A": "Acelerar la inspección", "B": "Detenerse y verificar", "C": "Abrir inmediatamente el maletero", "D": "Aplicar agua"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "La fase previa a la fisura del tanque en una BLEVE suele incluir:", "opts": {"A": "Cambio de coloración del manto", "B": "Formación de espuma", "C": "Ventilación natural", "D": "Enfriamiento espontáneo"}, "explanation": null, "answer": "A", "source": "Simulacro 3"}, {"qtext": "Un vehículo eléctrico puede alcanzar:", "opts": {"A": "48 V", "B": "110 V", "C": "220 V", "D": "650 V"}, "explanation": null, "answer": "D", "source": "Simulacro 3"}, {"qtext": "Los cables de alta tensión deben:", "opts": {"A": "Cortarse inmediatamente", "B": "Evitarse hasta confirmar desenergización", "C": "Enfriarse con espuma", "D": "Utilizarse como referencia de corte"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "Los bastones detectores de algunas compañías:", "opts": {"A": "Detectan toda corriente", "B": "Detectan solo corriente alterna", "C": "Detectan solo corriente continua", "D": "No detectan electricidad"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "El ataque ofensivo busca:", "opts": {"A": "Control rápido del fuego y enfriamiento de puntos críticos", "B": "Esperar agotamiento del combustible", "C": "Solo proteger exposiciones", "D": "Mantener distancia máxima"}, "explanation": null, "answer": "A", "source": "Simulacro 3"}, {"qtext": "La aproximación recomendada es:", "opts": {"A": "Frontal al vehículo", "B": "Desde atrás", "C": "A 45° respecto al eje longitudinal", "D": "Por la línea de proyección"}, "explanation": null, "answer": "C", "source": "Simulacro 3"}, {"qtext": "La línea de protección se enfoca en:", "opts": {"A": "Compartimientos cercanos a la fuente de energía", "B": "Ventanas únicamente", "C": "Conos de seguridad", "D": "Puesto de comando"}, "explanation": null, "answer": "A", "source": "Simulacro 3"}, {"qtext": "La espuma enfría gracias a:", "opts": {"A": "Nitrógeno incorporado", "B": "Agua contenida en ella", "C": "Reacción química exotérmica", "D": "Oxígeno disuelto"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "Las baterías de ion-litio presentan:", "opts": {"A": "Imposibilidad de reignición", "B": "Posibilidad de reencendido posterior", "C": "Extinción inmediata con agua", "D": "Riesgo nulo ambiental"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "En derrames de combustible primero se debe:", "opts": {"A": "Aplicar espuma directamente", "B": "Contener el derrame", "C": "Ventilar el vehículo", "D": "Abrir el tanque"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "Una condición fundamental para combustión de gases es:", "opts": {"A": "Menos de 5% de oxígeno", "B": "Al menos 16% de oxígeno", "C": "Ausencia de fuente de ignición", "D": "Temperatura bajo cero"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "En incendios de sótanos:", "opts": {"A": "El riesgo disminuye con el humo acumulado", "B": "La presión de productos de combustión aumenta", "C": "La temperatura disminuye progresivamente", "D": "La propagación es imposible"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "La seguridad del personal debe prevalecer bajo el criterio:", "opts": {"A": "Ingresar siempre", "B": "No arriesgar bomberos sin vidas creíblemente salvables", "C": "Combatir todo incendio desde el interior", "D": "Priorizar bienes materiales"}, "explanation": null, "answer": "B", "source": "Simulacro 3"}, {"qtext": "¿A partir de cuántos pisos se define técnicamente un \"incendio en estructuras elevadas\" según la Lección 22 del manual?", "opts": {"A": "Más de 2 pisos.", "B": "Más de 3 pisos.", "C": "Más de 4 pisos.", "D": "Más de 5 pisos."}, "source": "Lección 22", "explanation": "Incendios en edificios elevados se desarrollan a partir de más de 4 pisos", "answer": "C"}, {"qtext": "¿Cuál es el cálculo hidráulico correcto para determinar la presión a suministrar en la siamesa de la red privada si el incendio se ubica en el 8.º piso y se trabaja con un pitón de combinación?", "opts": {"A": "140 PSI", "B": "100 PSI", "C": "180 PSI", "D": "90 PSI"}, "source": "Lección 22", "explanation": "Fórmula: 5 PSI x 8 pisos + 100 PSI para pitón de combinación = 140 PSI", "answer": "A"}, {"qtext": "¿Dónde debe establecerse el Puesto de Comando (PC) al llegar a un incendio en un edificio de altura?", "opts": {"A": "En el lobby o recepción del edificio para centralizar las comunicaciones.", "B": "En la acera del frente, en la esquina o al costado de la fachada, fuera de la zona de colapso y caída de objetos.", "C": "En el descanso de la escalera de escape, dos pisos por debajo del incendio.", "D": "En la azotea del edificio contiguo para tener una visión aérea completa."}, "source": "Lección 22", "explanation": "El PC se establece en la esquina o al costado, acera del frente para evitar zona de colapso", "answer": "B"}, {"qtext": "¿Por qué el ascensor representa un riesgo crítico de muerte para los bomberos durante un incendio en edificios?", "opts": {"A": "Porque el motor del ascensor se desactiva inmediatamente al detectar humo.", "B": "Porque las altas temperaturas del incendio funden los circuitos y convierten el piso amagado en el centro de llamadas para todos los ascensores.", "C": "Porque los cables de tracción se estiran por el calor y hacen que la cabina caiga al foso.", "D": "Porque el peso del personal con EPP y EPRA excede la capacidad límite de carga de la cabina."}, "source": "Lección 22", "explanation": "El calor funde circuitos y genera llamadas falsas hacia el piso amagado", "answer": "B"}, {"qtext": "En incendios de estructuras elevadas, ¿dónde se debe establecer el personal y equipo de reserva?", "opts": {"A": "En el Puesto de Comando (PC) en la zona fría.", "B": "Un piso por debajo del nivel del incendio.", "C": "Dos pisos por debajo del nivel del incendio.", "D": "En el descanso de la escalera inmediatamente superior al fuego."}, "source": "Lección 22", "explanation": "Personal y equipo de reserva se establece 2 pisos por debajo del fuego", "answer": "C"}, {"qtext": "¿Qué maniobra facilita tácticamente el avance con líneas de manguera de ataque en las escaleras de escape?", "opts": {"A": "Tender líneas presurizadas de 3\" directamente desde el camión bomba.", "B": "Tender las líneas de ataque de 1 1/2\" en la escalera pisos arriba del nivel amagado para que bajen por gravedad.", "C": "Realizar un tendido directo por la fachada mediante cuerdas de rescate.", "D": "Conectarse directamente a la red húmeda del piso afectado sin presurizar la siamesa."}, "source": "Lección 22", "explanation": "Tender las mangueras pisos arriba para que bajen por gravedad y sea cómodo el ingreso", "answer": "B"}, {"qtext": "¿Cuál es la dotación de unidades mínimas que debe movilizar la central de comunicaciones ante un incendio en estructura elevada?", "opts": {"A": "1 Autobomba, 1 Escala telescópica y 1 Unidad Médica.", "B": "2 Autobombas, 1 Escala, 1 Rescate y 1 Médica.", "C": "2 Autobombas, 1 Cisterna y 1 Rescate.", "D": "3 Autobombas, 2 Escalas y 1 Rescate."}, "source": "Lección 22", "explanation": "Despacho mínimo: 2 autobombas, 1 escala, 1 rescate y 1 médica", "answer": "B"}, {"qtext": "¿Cómo se define técnicamente un \"Sótano\" según el Reglamento Nacional de Edificaciones (RNE) incluido en el manual?", "opts": {"A": "Parte de una edificación cuya superficie superior del techo se encuentra hasta 0.50 m por encima del nivel de la vereda respecto al frente del lote.", "B": "Nivel subterráneo cuya altura total es inferior a 2.10 metros y no cuenta con aberturas al exterior.", "C": "Espacio destinado exclusivamente para servicios técnicos y estacionamiento de vehículos bajo el nivel del suelo.", "D": "Área edificada cuyo piso se encuentra a más de 1.50 metros por debajo del nivel de la vereda."}, "source": "Lección 23", "explanation": "Definición de Sótano: techo hasta 0.50 m por encima del nivel de la vereda", "answer": "A"}, {"qtext": "Durante un incendio en progresión dentro de un sótano, ¿por qué disminuye la tasa de quemado del fuego?", "opts": {"A": "Debido al incremento excesivo de la humedad relativa dentro del sótano.", "B": "Porque el suministro de aire fresco disminuye por la falta de aberturas, aumentando la concentración de productos de combustión nocivos.", "C": "Debido a que el concreto incombustible del sótano absorbe la energía del fuego.", "D": "Porque el plano neutral sube rápidamente, sofocando las llamas por calor radiante."}, "source": "Lección 23", "explanation": "La falta de aire fresco disminuye el oxígeno, reduciendo la combustión y aumentando el humo denso", "answer": "B"}, {"qtext": "Si en un incendio en sótano se determina que \"no existen vidas creíblemente salvables\", ¿cuál es la acción táctica a seguir según la doctrina de seguridad del bombero?", "opts": {"A": "Ingresar inmediatamente con líneas de ataque de 3\" para proteger la propiedad.", "B": "No exponer al personal (\"si no hay vidas creíblemente salvables no habrá por qué arriesgar vidas de bomberos\").", "C": "Inundar el sótano con espuma de alta expansión desde el exterior antes de decidir el ingreso.", "D": "Realizar ventilación vertical ofensiva mediante el uso de mototrozadoras en el techo."}, "source": "Lección 23", "explanation": "\"Si no hay vidas creíblemente salvables no habrá por qué arriesgar vidas de bomberos\"", "answer": "B"}, {"qtext": "Al conectar la primera autobomba a la siamesa de la red privada de un sótano amagado, ¿cuál es el cálculo de presión que se debe aplicar si se usa un pitón de chorro sólido?", "opts": {"A": "100 PSI", "B": "50 PSI", "C": "- 5 PSI por piso hasta el del incendio + 50 PSI para el pitón.", "D": "50 PSI constantes sin importar el número de sótanos comprometidos."}, "source": "Lección 23", "explanation": "Fórmula sótanos: - 5 PSI x piso hasta el del incendio + 50 PSI para pitón de chorro sólido", "answer": "C"}, {"qtext": "¿Por qué es prioritario realizar la ventilación o extracción de humo en un incendio en sótano?", "opts": {"A": "Para aumentar la visibilidad y permitir el ingreso del personal sin necesidad de usar EPRA.", "B": "Para evitar la propagación del fuego, elevar el plano neutral y bajar la temperatura del recinto.", "C": "Para extinguir el fuego por corrientes de aire frío cruzadas.", "D": "Para evitar que las paredes del sótano absorban humedad del agua de extinción."}, "source": "Lección 23", "explanation": "La ventilación del sótano evita propagación, eleva plano neutral y baja la temperatura", "answer": "B"}, {"qtext": "Si no existe una red privada de agua contraincendios en un sótano amagado, ¿cuál es el procedimiento para el tendido de mangueras por las escaleras?", "opts": {"A": "Tender una línea directa de 1 1/2\" cargada con agua desde la bomba.", "B": "Tender una línea de mangueras de 3\" o 2 1/2\", bifurcarla en el descanso de la escalera en 2 líneas de 1 3/4\" de 125 GPM, presurizar y bajar con las mangueras cargadas.", "C": "Utilizar únicamente el manguerín de alta presión de la unidad de rescate rápida.", "D": "Arrojar mangueras de 2 1/2\" vacías por la rampa de acceso y cargarlas una vez abajo."}, "source": "Lección 23", "explanation": "Línea de 3\" o 2 1/2\" bifurcada en 2 líneas de 1 3/4\" cargadas al bajar", "answer": "B"}, {"qtext": "Al llegar a la escena de un incendio de vehículo amagado, ¿cuál es la distancia de seguridad mínima que debe mantener el carro bomba respecto al siniestro?", "opts": {"A": "10 metros.", "B": "15 metros.", "C": "30 metros.", "D": "50 metros."}, "source": "Lección 24", "explanation": "Distancia mínima de seguridad de autobombas: 30 metros del fuego", "answer": "C"}, {"qtext": "¿En qué ángulo con relación al eje longitudinal del vehículo se debe aproximar la línea de ataque para combatir el fuego?", "opts": {"A": "En un ángulo de 90° (perpendicular al vehículo).", "B": "En un ángulo de 45° preferentemente desde el lado opuesto al compartimento de carga.", "C": "De manera frontal directa (0° respecto al parachoques).", "D": "Directamente por la parte posterior (180° respecto a la maletera)."}, "source": "Lección 24", "explanation": "Ángulo de aproximación: 45° con relación al eje longitudinal del vehículo", "answer": "B"}, {"qtext": "¿Por qué está estrictamente prohibido aproximarse a un vehículo incendiado directamente por el frente o por la parte posterior?", "opts": {"A": "Debido a que el calor radiante es mayor en esas zonas.", "B": "Por el alto riesgo de desprendimiento o proyección de partículas de componentes sellados, como amortiguadores hidráulicos de parachoques y capó.", "C": "Porque la dirección del viento siempre viaja en sentido longitudinal al vehículo.", "D": "Debido a la ubicación exclusiva de las bolsas de aire (Airbags)."}, "source": "Lección 24", "explanation": "Peligro de proyección de amortiguadores hidráulicos de parachoques o capó por el calor", "answer": "B"}, {"qtext": "¿Qué gases altamente tóxicos se desprenden de la combustión de la tapicería y los componentes plásticos de un vehículo común?", "opts": {"A": "Únicamente vapor de agua y dióxido de carbono.", "B": "Cloruro de hidrógeno y cianuro de hidrógeno.", "C": "Gas metano y monóxido de carbono puro.", "D": "Vapor de gasolina y óxido de magnesio."}, "source": "Lección 24", "explanation": "Cloruro de hidrógeno y cianuro de hidrógeno desprendidos por plásticos y telas", "answer": "B"}, {"qtext": "En la técnica de segregación vial, ¿a qué distancia del vehículo siniestrado se debe empezar a colocar los conos de seguridad y con qué intervalo?", "opts": {"A": "A 10 metros del vehículo con intervalos de 1 metro.", "B": "Empezando a 100 metros de distancia, colocados en forma diagonal cada 5 metros.", "C": "A 30 metros del vehículo en forma de barrera horizontal.", "D": "Solo alrededor de las llantas de la autobomba a 2 metros de distancia."}, "source": "Lección 24", "explanation": "Conos en diagonal empezando a 100 m con distancias no menores a 5 m entre sí", "answer": "B"}, {"qtext": "¿De qué color es el cableado de alta tensión en vehículos eléctricos e híbridos que puede transportar tensiones de hasta 650 voltios?", "opts": {"A": "Azul o verde limón.", "B": "Amarillo brillante o plomo.", "C": "Naranja o azul eléctrico cubierto con protección color naranja.", "D": "Blanco con franjas negras reflectivas."}, "source": "Lección 24", "explanation": "Cableado de alta tensión: naranja o azul cubierto de naranja", "answer": "C"}, {"qtext": "El sistema de alto voltaje en un vehículo eléctrico/híbrido puede permanecer energizado después de apagar el motor por un periodo de hasta:", "opts": {"A": "Se desenergiza de manera instantánea.", "B": "Entre 5 a 10 minutos.", "C": "24 horas continuas.", "D": "1 hora como mínimo."}, "source": "Lección 24", "explanation": "El sistema de alta tensión retiene energía residual de 5 a 10 minutos después de apagar", "answer": "B"}, {"qtext": "¿Qué agente extintor es el adecuado para combatir incendios que involucran metales combustibles como aros y partes de Magnesio en un vehículo?", "opts": {"A": "Agua en chorro directo.", "B": "Agente extintor de Clase D (específico para metales).", "C": "Espuma de baja expansión AFFF.", "D": "Polvo Químico Seco (PQS) convencional ABC."}, "source": "Lección 24", "explanation": "El magnesio requiere agente extintor Clase D para metales combustibles", "answer": "B"}, {"qtext": "Si no se dispone de un agente extintor Clase D para un fuego de magnesio en un vehículo, ¿cuál es la acción táctica recomendada?", "opts": {"A": "Aplicar espuma química directamente sobre el metal fundido.", "B": "Evitar la propagación lanzando agua a las partes expuestas cercanas y dejando que el metal se consuma solo por enfriamiento y agotamiento.", "C": "Cubrir el metal con aserrín o arena húmeda de inmediato.", "D": "Usar extintores de Dióxido de Carbono (CO2) a corta distancia."}, "source": "Lección 24", "explanation": "Si no hay Clase D, evitar propagación enfriando partes cercanas y dejar consumir el metal solo", "answer": "B"}, {"qtext": "¿Cuál es el procedimiento recomendado para la apertura forzada del área de la maletera de un vehículo sospechoso de usar gas (GLP/GNV)?", "opts": {"A": "Golpear el pasador con el halligan directamente hasta arrancarlo.", "B": "Verificar la presencia de gas combustible con un detector de gases de forma lenta y a favor del viento antes de cualquier maniobra.", "C": "Romper la luneta posterior e introducir una línea de manguera de 1 1/2\".", "D": "Utilizar una mototrozadora para realizar un corte en \"V\" en la tapa de la maletera."}, "source": "Lección 24", "explanation": "Detector de gases a favor del viento de abajo hacia arriba del maletero antes de abrir", "answer": "B"}, {"qtext": "Según la clasificación de la norma NFPA 30, ¿cómo se define un \"Líquido Inflamable\"?", "opts": {"A": "Cualquier líquido que tenga un punto de inflamación igual o mayor a 37.8°C.", "B": "Cualquier líquido que tenga un punto de inflamación menor a 37.8°C y una presión de vapor menor o igual a 276 kPa a 37.8°C.", "C": "Líquido que hierve a temperaturas menores de 100°C en condiciones atmosféricas.", "D": "Aquel que es insoluble en agua y flota sobre ella al encenderse."}, "source": "Lección 25", "explanation": "Líquido inflamable: punto de inflamación menor a 37.8°C y presión de vapor menor/igual a 276 kPa", "answer": "B"}, {"qtext": "Un líquido combustible que tiene un punto de inflamación igual o mayor a 37.8°C pero menor a 60°C pertenece a la clasificación de:", "opts": {"A": "Clase IA.", "B": "Clase IB.", "C": "Clase II.", "D": "Clase IIIA."}, "source": "Lección 25", "explanation": "Punto de inflamación igual/mayor a 37.8°C pero menor a 60°C es Líquido Combustible Clase II", "answer": "C"}, {"qtext": "¿Qué componente interno de un camión cisterna para transporte de combustible es un tabique interno sólido, sin ninguna abertura, que divide el depósito en compartimentos totalmente independientes?", "opts": {"A": "Rompeolas.", "B": "Mamparo.", "C": "Refuerzo exterior.", "D": "Sistema de anclaje."}, "source": "Lección 25", "explanation": "Mamparo: tabique interno sólido sin aberturas que divide el tanque", "answer": "B"}, {"qtext": "¿Cuál es la función del \"Rompeolas\" dentro de un tanque de transporte de combustible líquido?", "opts": {"A": "Permitir el transporte de diferentes productos en el mismo viaje.", "B": "Reducir la energía cinética del oleaje generado por el movimiento del líquido, brindando estabilidad al vehículo.", "C": "Evitar que el tanque implosione debido al vacío generado por las bombas de succión.", "D": "Soportar la presión hidrostática del llenado superior en la cisterna."}, "source": "Lección 25", "explanation": "Rompeolas: reduce la energía cinética de las olas del líquido para dar estabilidad al vehículo", "answer": "B"}, {"qtext": "¿Qué fenómeno físico catastrófico ocurre en tanques de almacenamiento de petróleo crudo cuando la \"onda de calor\" de las fracciones pesadas desciende y entra en contacto con el agua decantada en el fondo?", "opts": {"A": "Slopover.", "B": "Frothover.", "C": "Boilover.", "D": "BLEVE."}, "source": "Lección 25", "explanation": "Boilover: rebosamiento violento por ebullición del agua del fondo en petróleo crudo", "answer": "C"}, {"qtext": "¿A qué velocidad estimada desciende la \"onda de calor\" (fracciones pesadas y calientes) hacia el fondo de un tanque de crudo que experimenta Boilover?", "opts": {"A": "30 cm por hora.", "B": "1 metro por hora.", "C": "2 metros por hora.", "D": "10 cm por hora."}, "source": "Lección 25", "explanation": "La onda de calor de fracciones pesadas desciende a una velocidad de 1 metro por hora", "answer": "B"}, {"qtext": "¿En qué consiste el fenómeno de \"Slopover\" en un tanque de almacenamiento de petróleo?", "opts": {"A": "Es la súbita transformación de toda la masa de agua del fondo del tanque en vapor supercalentado.", "B": "Es un rebosamiento de estratos superficiales cuando la onda de calor entra en contacto con emulsiones o capas de agua libre ubicadas a poca distancia de la superficie.", "C": "Es la ebullición de aceites minerales viscosos no inflamados debido a la carga de asfalto caliente.", "D": "Es la deformación física del manto metálico del tanque por acción del fuego exterior."}, "source": "Lección 25", "explanation": "Slopover: rebosamiento superficial por contacto de onda de calor con emulsiones de agua intermedias", "answer": "B"}, {"qtext": "¿Cuánto se expande 1 volumen de Gas Licuado de Petróleo (GLP) en estado líquido al pasar a su estado gaseoso?", "opts": {"A": "100 veces su volumen.", "B": "150 veces su volumen.", "C": "270 veces su volumen.", "D": "1700 veces su volumen."}, "source": "Lección 26", "explanation": "1 volumen de GLP líquido se expande 270 veces en gas", "answer": "C"}, {"qtext": "Con respecto a la densidad del GLP en comparación con el aire, se puede afirmar que:", "opts": {"A": "Es más liviano que el aire y se disipa rápidamente en ambientes abiertos.", "B": "Es más pesado que el aire (Propano 1.5 veces, Butano 2 veces más pesados), por lo que se acumula en zonas bajas y sótanos.", "C": "Tiene exactamente la misma densidad que el aire a temperatura ambiente.", "D": "Su densidad varía constantemente impidiendo su acumulación."}, "source": "Lección 26", "explanation": "El GLP es más pesado que el aire y tiende a acumularse en zonas bajas", "answer": "B"}, {"qtext": "¿Qué aditivo químico odorizante se añade obligatoriamente al GLP por ley para detectar su presencia al 1% de concentración en el aire?", "opts": {"A": "Etanol puro.", "B": "Etil Mercaptano.", "C": "Acetona saturada.", "D": "Dióxido de azufre."}, "source": "Lección 26", "explanation": "El aditivo odorizante exigido por ley es el Etil Mercaptano", "answer": "B"}, {"qtext": "¿Cuál es la densidad relativa del Gas Natural (GN) en comparación con el aire?", "opts": {"A": "Es más pesado que el aire (densidad de 1.5).", "B": "Es más liviano que el aire (densidad entre 0.55 a 0.65).", "C": "Es idéntico al aire por estar compuesto de metano líquido.", "D": "Varía según la presión de trabajo del cilindro de GNV."}, "source": "Lección 26", "explanation": "El Gas Natural es más liviano que el aire con una densidad de 0.55 a 0.65", "answer": "B"}, {"qtext": "El gas acetileno es químicamente inestable y propenso a la descomposición violenta cuando su presión absoluta supera los:", "opts": {"A": "0.5 bares.", "B": "1 bar.", "C": "2 bares (30 PSI).", "D": "5 bares."}, "source": "Lección 26", "explanation": "El acetileno es inestable a presiones absolutas superiores a 2 bares o 30 PSI", "answer": "C"}, {"qtext": "¿A partir de qué temperatura el acetileno empieza a descomponerse peligrosamente en hidrógeno y carbono dentro de un cilindro expuesto al fuego?", "opts": {"A": "Por encima de 30°C.", "B": "Por encima de 54°C.", "C": "Por encima de 100°C.", "D": "Por encima de 149°C."}, "source": "Lección 26", "explanation": "A temperaturas por encima de 54°C el acetileno se descompone en hidrógeno y carbono", "answer": "B"}, {"qtext": "¿Qué fenómeno físico de incendio se define como la \"ignición diferida de una nube de gases o vapores no confinados en espacio abierto\"?", "opts": {"A": "Jet Fire.", "B": "CVCE (Explosión de nube de vapor confinada).", "C": "UVCE (Unconfined Vapor Cloud Explosion).", "D": "BLEVE."}, "source": "Lección 26", "explanation": "UVCE es la ignición diferida de gases no confinados en nube abierta", "answer": "C"}, {"qtext": "Al refrigerar un recipiente de GLP expuesto al fuego, ¿por qué es de primordial importancia dirigir los chorros de agua hacia la \"cámara de vapores\" (zona superior)?", "opts": {"A": "Porque el líquido en la parte inferior actúa como disipador de calor, mientras que el metal de la cámara de vapores se sobrecalienta rápidamente y pierde resistencia.", "B": "Porque el agua en la parte superior evita que el líquido de abajo hierva.", "C": "Para apagar la válvula de seguridad (alivio) si esta se encuentra activada.", "D": "Para evitar que el agua se evapore y aumente la presión del suelo."}, "source": "Lección 26", "explanation": "El metal de la cámara de vapores se calienta rápido por el mal desempeño disipador del vapor, propiciando el colapso", "answer": "A"}, {"qtext": "¿Cuál es la finalidad fundamental de los primeros respondedores (bomberos de línea) en la investigación de incendios?", "opts": {"A": "Determinar la causa legal y judicial del siniestro para la fiscalía.", "B": "Preservar y proteger la escena y las evidencias físicas del origen y causa del fuego durante las actividades de extinción.", "C": "Detener a las personas sospechosas en el perímetro del incendio.", "D": "Elaborar el informe técnico final de investigación de incendios."}, "source": "Lección 28", "explanation": "Finalidad principal del primer respondedor: preservar y proteger la escena y las evidencias físicas", "answer": "B"}, {"qtext": "¿Qué norma internacional de consenso sirve como guía científica para la investigación y preservación de pruebas de incendios?", "opts": {"A": "NFPA 1001.", "B": "NFPA 1500.", "C": "NFPA 921.", "D": "NFPA 1041."}, "source": "Lección 28", "explanation": "Norma internacional de consenso para investigación: NFPA 921", "answer": "C"}, {"qtext": "¿Qué actividad está terminantemente prohibida para los primeros respondedores en la escena de un incendio?", "opts": {"A": "Tomar fotos o videos del desarrollo del fuego a su llegada.", "B": "Levantar pruebas físicas, fijar indicios o tomar declaraciones de testigos.", "C": "Observar el comportamiento, color de las llamas y características del humo.", "D": "Registrar el estado de las puertas y ventanas a su arribo."}, "source": "Lección 28", "explanation": "Prohibido para primeros respondedores: levantar pruebas físicas o tomar declaraciones legales", "answer": "B"}, {"qtext": "¿Cómo afecta la aplicación excesiva o incorrecta de agua durante el combate a la posterior investigación de incendios?", "opts": {"A": "Facilita la observación de los patrones de carbonización de las paredes.", "B": "Puede destruir, lavar o desplazar pruebas cruciales del punto de origen y la causa del fuego.", "C": "Permite enfriar las pruebas acelerando el trabajo del investigador.", "D": "No tiene ninguna influencia en la escena si se usa agua limpia."}, "source": "Lección 28", "explanation": "El agua en exceso destruye, lava o desplaza pruebas físicas fundamentales", "answer": "B"}, {"qtext": "¿Qué técnica táctica de pitoneo ayuda a preservar los patrones y marcas de fuego en paredes y techos?", "opts": {"A": "Pitonear directamente a las marcas de carbón en las paredes con chorro directo.", "B": "Aplicar chorros adecuados y golpear el techo sobre el fuego en lugar de pitonear la base de manera destructiva innecesariamente.", "C": "Usar neblina de alta presión en toda la habitación de manera circular.", "D": "Utilizar monitores fijos de gran caudal desde la puerta principal."}, "source": "Lección 28", "explanation": "Pitonear al techo sobre el fuego en lugar de pitonear directamente las paredes y marcas", "answer": "B"}, {"qtext": "Con respecto a los equipos eléctricos encontrados en la escena del incendio, ¿qué acción de preservación se debe tomar?", "opts": {"A": "Desconectarlos de los tomacorrientes inmediatamente para evitar riesgos eléctricos.", "B": "Dejarlos en su lugar y no desconectarlos de los tomacorrientes para que el investigador analice su estado original.", "C": "Cortar los cables con hachas de bombero para asegurar el corte de energía.", "D": "Moverlos hacia la zona fría exterior para su resguardo físico."}, "source": "Lección 28", "explanation": "Dejar los equipos eléctricos conectados en su posición para análisis del investigador", "answer": "B"}, {"qtext": "Dentro de las prioridades tácticas en el combate contra incendios, ¿cuál es la primera y más importante?", "opts": {"A": "Conservación de la propiedad.", "B": "Control y extinción del incendio.", "C": "Búsqueda y Rescate de vidas creíblemente salvables.", "D": "Ventilación táctica horizontal."}, "source": "Lección 29", "explanation": "Búsqueda y Rescate de vidas creíblemente salvables es la primera prioridad táctica", "answer": "C"}, {"qtext": "¿Qué caracteriza a la \"Búsqueda Primaria\" durante un incendio estructural?", "opts": {"A": "Es una revisión lenta y minuciosa realizada cuando el incendio ya está controlado.", "B": "Es una acción rápida y sistemática realizada antes y durante la fase de ataque ofensivo al arribar la primera unidad.", "C": "Se realiza exclusivamente por el oficial de seguridad sin mangueras presurizadas.", "D": "Se ejecuta sin la obligatoriedad del uso de EPP completo ni EPRA."}, "source": "Lección 29", "explanation": "Búsqueda Primaria: rápida y sistemática realizada antes o durante el ataque ofensivo", "answer": "B"}, {"qtext": "¿Qué caracteriza a la \"Búsqueda Secundaria\" en una estructura incendiada?", "opts": {"A": "Es una revisión minuciosa y a conciencia para ubicar víctimas, realizada una vez controlado el incendio y ventilada la estructura, preferentemente por un equipo diferente.", "B": "Se realiza corriendo por los pasillos principales de la estructura.", "C": "Es una búsqueda rápida efectuada bajo condiciones de fuego activo.", "D": "Se limita a revisar únicamente las habitaciones principales y salas."}, "source": "Lección 29", "explanation": "Búsqueda Secundaria: minuciosa realizada por un equipo diferente tras controlar el incendio", "answer": "A"}, {"qtext": "Según el estándar NFPA 1500 y el principio \"2-IN / 2-OUT\", ¿cuántos bomberos como mínimo deben estar presentes en escena para iniciar un ataque ofensivo interior seguro?", "opts": {"A": "2 bomberos.", "B": "3 bomberos.", "C": "4 bomberos (2 adentro amagados, 2 afuera de soporte).", "D": "6 bomberos bien equipados."}, "source": "Lección 29", "explanation": "Principio \"2-IN / 2-OUT\" exige al menos 4 bomberos en la escena para operaciones ofensivas seguras", "answer": "C"}, {"qtext": "En el protocolo de reporte de un bombero en peligro (MAYDAY), ¿qué información se debe transmitir bajo el acrónimo \"LUNAR\"?", "opts": {"A": "Línea, Uniforme, Nudo, Anclaje, Rescate.", "B": "Lugar, Unidad, Nombre, Aire (capacidad), Recursos necesarios.", "C": "Linterna, Ubicación, Nivel, Alarma, Ruta de escape.", "D": "Límite de tiempo, Utilidad, Nivel de respuesta, Área amagada, Radio de acción."}, "source": "Lección 29", "explanation": "MAYDAY LUNAR: Lugar, Unidad, Nombre, Aire (capacidad), Recursos necesarios", "answer": "B"}, {"qtext": "¿En qué consiste la técnica de respiración de emergencia \"Reilly\" (R-EBT) para la supervivencia del bombero atrapado?", "opts": {"A": "Inhalar rápido y exhalar en bocanadas cortas para oxigenar la sangre.", "B": "Inhalar normalmente y extender la duración de la exhalación el máximo tiempo posible generando una vibración lenta y constante (\"hum\").", "C": "Aguantar la respiración por periodos de 45 segundos de manera intermitente.", "D": "Respirar profundamente solo por la nariz manteniendo los ojos cerrados."}, "source": "Lección 29", "explanation": "Autorescate pasivo R-EBT: inhalar normal, exhalar lento haciendo zumbido \"hum\" constante", "answer": "B"}, {"qtext": "Según el Reglamento Nacional de Edificaciones (RNE) del Perú, ¿a partir de cuántos pisos es obligatoria la instalación de ascensores en edificaciones?", "opts": {"A": "A partir de 3 pisos.", "B": "A partir de 4 pisos.", "C": "A partir de 5 pisos.", "D": "A partir de 6 pisos."}, "source": "Lección 30", "explanation": "Ascensores obligatorios a partir de los 5 pisos", "answer": "C"}, {"qtext": "¿Qué sucede con un ascensor cuando se activa el \"Pulsador de Bomberos\" en la planta principal de acceso al edificio?", "opts": {"A": "Se detiene inmediatamente donde esté y abre las puertas.", "B": "Viaja directo a la planta principal, abre sus puertas, anula llamadas exteriores y obedece solo llamadas interiores de una en una.", "C": "Sube de inmediato a la azotea del edificio para ventilar la cabina.", "D": "Corta su suministro eléctrico y activa los paracaídas de seguridad."}, "source": "Lección 30", "explanation": "El pulsador de bomberos lleva el ascensor a planta principal, anula llamadas exteriores y obedece solo las internas de una en una", "answer": "B"}, {"qtext": "¿Cuál es la primera medida de seguridad obligatoria antes de realizar maniobras de rescate en el cuarto de máquinas, ducto o foso de un ascensor?", "opts": {"A": "Lubricar las guías de cabina para evitar chispas.", "B": "Cortar y comprobar la ausencia de suministro eléctrico en el interruptor principal y bloquearlo.", "C": "Utilizar la llave de desenclave en la puerta del foso con la energía encendida.", "D": "Activar manualmente el limitador de velocidad en el cuarto de máquinas."}, "source": "Lección 30", "explanation": "Medida de seguridad número 1: Cortar, comprobar la ausencia de energía y bloquear el interruptor principal", "answer": "B"}, {"qtext": "Durante un rescate en ascensor sin movimiento, si la distancia entre el nivel del piso y la cabina es mayor de 80 cm, ¿hacia dónde se debe realizar el rescate?", "opts": {"A": "Hacia el piso inferior con la ayuda de una camilla.", "B": "Hacia el piso superior utilizando el espacio libre generado.", "C": "Rompiendo el techo de la cabina con herramientas hidráulicas.", "D": "Se prohíbe realizar el rescate y se debe esperar al técnico de mantenimiento."}, "source": "Lección 30", "explanation": "Si la distancia es mayor a 80 cm, el rescate se realiza hacia el piso superior", "answer": "B"}, {"qtext": "¿Qué tipo de cuerda es la recomendada para operaciones de rescate técnico de personas debido a su baja elasticidad (elongación menor al 4%)?", "opts": {"A": "Cuerda dinámica.", "B": "Cuerda estática o semiestática.", "C": "Cuerda utilitaria de polipropileno.", "D": "Cuerda trenzada de sisal."}, "source": "Lección 31", "explanation": "Cuerda estática o semiestática por su baja elasticidad menor al 4%", "answer": "B"}, {"qtext": "En operaciones de rescate con cuerdas, ¿cuál es la resistencia mínima exigida para un punto de anclaje principal certificado?", "opts": {"A": "5 kN.", "B": "10 kN.", "C": "15 kN (aproximadamente 1500 kgf).", "D": "30 kN."}, "source": "Lección 31", "explanation": "Resistencia mínima para punto de anclaje de rescate con cuerdas: 15 kN o 1500 kgf", "answer": "C"}, {"qtext": "¿Qué es el \"Síndrome del Arnés\" (Trauma por Suspensión) y en cuánto tiempo de inmovilidad en suspensión inerte puede aparecer?", "opts": {"A": "Es una fobia irracional a las alturas; aparece de inmediato a los 2 minutos.", "B": "Es una patología grave por acumulación de sangre en las piernas debido a la compresión de venas femorales por el arnés en suspensión inerte; aparece entre 5 a 20 minutos.", "C": "Un calambre muscular generalizado en la espalda por mala postura.", "D": "Una lesión medular por caída detenida por absorbedor de impacto."}, "source": "Lección 31", "explanation": "Trauma por suspensión: compresión de venas femorales por el arnés en inercia; aparece entre 5 a 20 minutos", "answer": "B"}, {"qtext": "En la evaluación del nivel de respuesta de un paciente mediante el protocolo \"AVDI\", ¿qué significan las siglas?", "opts": {"A": "Alerta, Verbal, Dolor, Inconsciente.", "B": "Aire, Ventilación, Diagnóstico, Intervención.", "C": "Arterial, Venoso, Directo, Indirecto.", "D": "Apoyo, Valoración, Despeje, Inspección."}, "source": "Lección 32 y 33", "explanation": "AVDI: Alerta, Verbal, Dolor, Inconsciente", "answer": "A"}, {"qtext": "Durante la evaluación inicial de un paciente en APH, ¿cuánto tiempo máximo debe tomar la palpación del pulso carotídeo y la verificación de la respiración (VOS)?", "opts": {"A": "5 segundos para ambos procesos.", "B": "10 segundos como máximo para cada procedimiento de manera independiente.", "C": "30 segundos continuos.", "D": "1 minuto en total."}, "source": "Lección 32 y 33", "explanation": "Tomar pulso carotideo y verificar respiración (VOS) no debe tomar más de 10 segundos cada uno", "answer": "B"}, {"qtext": "¿Cuáles son las prioridades de atención por colores utilizadas en el método de clasificación de víctimas en masa (Triage START)?", "opts": {"A": "Azul, Verde, Blanco, Gris.", "B": "Rojo (Inmediato), Amarillo (Diferido), Verde (Leve), Negro (Fallecido).", "C": "Negro, Blanco, Naranja, Azul.", "D": "Rojo, Amarillo, Celeste, Morado."}, "source": "Lección 32 y 33", "explanation": "Colores START: Rojo (Inmediato), Amarillo (Diferido), Verde (Leve), Negro (Fallecido)", "answer": "B"}]</script>
+<script>
+(function(){
+  "use strict";
+
+  var raw = document.getElementById('questions-data').textContent;
+  var QUESTIONS = JSON.parse(raw);
+  var CHUNK = 20;
+  var PASS_PCT = 70;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var chunks = [];
+  for (var i = 0; i < QUESTIONS.length; i += CHUNK) {
+    chunks.push(QUESTIONS.slice(i, i + CHUNK));
+  }
+
+  var tabStrip = document.getElementById('tabStrip');
+  var examsRoot = document.getElementById('examsRoot');
+  var overlay = document.getElementById('confirmOverlay');
+  var confirmTitle = document.getElementById('confirmTitle');
+  var confirmBody = document.getElementById('confirmBody');
+  var confirmYes = document.getElementById('confirmYes');
+  var confirmNo = document.getElementById('confirmNo');
+
+  function letterIndex(l){ return ['A','B','C','D'].indexOf(l); }
+
+  function buildTabs(){
+    chunks.forEach(function(chunk, idx){
+      var btn = document.createElement('button');
+      btn.className = 'tab-btn';
+      btn.type = 'button';
+      btn.id = 'tabbtn-' + idx;
+      btn.setAttribute('role','tab');
+      btn.setAttribute('aria-selected', idx === 0 ? 'true' : 'false');
+      btn.innerHTML = '<span class="n">Simulacro ' + (idx + 1) + '</span><span class="q">' + chunk.length + ' PREG.</span>';
+      btn.addEventListener('click', function(){ showTab(idx); });
+      tabStrip.appendChild(btn);
+    });
+  }
+
+  function showTab(idx){
+    for (var i = 0; i < chunks.length; i++) {
+      document.getElementById('tabbtn-' + i).classList.toggle('active', i === idx);
+      document.getElementById('tabbtn-' + i).setAttribute('aria-selected', i === idx ? 'true' : 'false');
+      document.getElementById('exam-' + i).classList.toggle('active', i === idx);
+    }
+  }
+
+  function buildExamSection(chunk, idx){
+    var section = document.createElement('section');
+    section.className = 'exam-section' + (idx === 0 ? ' active' : '');
+    section.id = 'exam-' + idx;
+    section.setAttribute('role','tabpanel');
+
+    // zone panel
+    var zone = document.createElement('div');
+    zone.className = 'zone-panel';
+    zone.innerHTML = '<div class="zone-panel-label"><span>Panel de control — Simulacro ' + (idx+1) + '</span><span id="progress-mini-' + idx + '">0/' + chunk.length + '</span></div>';
+    var grid = document.createElement('div');
+    grid.className = 'zone-grid';
+    chunk.forEach(function(q, qi){
+      var led = document.createElement('div');
+      led.className = 'zone-led';
+      led.id = 'led-' + idx + '-' + qi;
+      led.textContent = (qi + 1);
+      led.tabIndex = 0;
+      led.setAttribute('role','button');
+      led.setAttribute('aria-label', 'Ir a la pregunta ' + (qi + 1));
+      led.addEventListener('click', function(){ jumpTo(idx, qi); });
+      led.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); jumpTo(idx, qi); }
+      });
+      grid.appendChild(led);
+    });
+    zone.appendChild(grid);
+    section.appendChild(zone);
+
+    // score banner
+    var banner = document.createElement('div');
+    banner.className = 'score-banner';
+    banner.id = 'banner-' + idx;
+    section.appendChild(banner);
+
+    // questions
+    chunk.forEach(function(q, qi){
+      section.appendChild(buildQuestionCard(q, idx, qi));
+    });
+
+    // action bar
+    var actionBar = document.createElement('div');
+    actionBar.className = 'action-bar';
+    actionBar.innerHTML =
+      '<span class="progress-text" id="progress-' + idx + '">0 de ' + chunk.length + ' respondidas</span>';
+    var btnGroup = document.createElement('div');
+    btnGroup.style.display = 'flex';
+    btnGroup.style.gap = '10px';
+
+    var finishBtn = document.createElement('button');
+    finishBtn.className = 'btn btn-primary';
+    finishBtn.id = 'finish-' + idx;
+    finishBtn.type = 'button';
+    finishBtn.textContent = 'Finalizar examen';
+    finishBtn.addEventListener('click', function(){ requestFinish(idx); });
+
+    var retryBtn = document.createElement('button');
+    retryBtn.className = 'btn btn-ghost';
+    retryBtn.id = 'retry-' + idx;
+    retryBtn.type = 'button';
+    retryBtn.textContent = 'Reintentar simulacro';
+    retryBtn.style.display = 'none';
+    retryBtn.addEventListener('click', function(){ resetExam(idx); });
+
+    btnGroup.appendChild(finishBtn);
+    btnGroup.appendChild(retryBtn);
+    actionBar.appendChild(btnGroup);
+    section.appendChild(actionBar);
+
+    return section;
+  }
+
+  function buildQuestionCard(q, examIdx, qIdx){
+    var card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = 'card-' + examIdx + '-' + qIdx;
+    card.setAttribute('data-answer', q.answer);
+
+    var head = document.createElement('div');
+    head.className = 'q-head';
+    head.innerHTML = '<span class="q-num">PREGUNTA ' + (qIdx + 1) + '</span>' +
+      (q.source ? '<span class="q-source">' + escapeHtml(q.source) + '</span>' : '');
+    card.appendChild(head);
+
+    var qt = document.createElement('p');
+    qt.className = 'q-text';
+    qt.textContent = q.qtext;
+    card.appendChild(qt);
+
+    var opts = document.createElement('div');
+    opts.className = 'options';
+    ['A','B','C','D'].forEach(function(letter){
+      if (!q.opts[letter]) return;
+      var label = document.createElement('label');
+      label.className = 'option';
+      label.id = 'opt-' + examIdx + '-' + qIdx + '-' + letter;
+
+      var input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'q_' + examIdx + '_' + qIdx;
+      input.value = letter;
+      input.addEventListener('change', function(){ onAnswer(examIdx, qIdx); });
+
+      var bubble = document.createElement('span');
+      bubble.className = 'bubble';
+      bubble.textContent = letter;
+
+      var txt = document.createElement('span');
+      txt.className = 'option-text';
+      txt.textContent = q.opts[letter];
+
+      label.appendChild(input);
+      label.appendChild(bubble);
+      label.appendChild(txt);
+      opts.appendChild(label);
+    });
+    card.appendChild(opts);
+
+    var explain = document.createElement('div');
+    explain.className = 'explain';
+    explain.id = 'explain-' + examIdx + '-' + qIdx;
+    card.appendChild(explain);
+
+    var flag = document.createElement('div');
+    flag.className = 'unanswered-flag';
+    flag.textContent = 'Sin responder';
+    card.appendChild(flag);
+
+    return card;
+  }
+
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function onAnswer(examIdx, qIdx){
+    var led = document.getElementById('led-' + examIdx + '-' + qIdx);
+    if (led && !led.classList.contains('correct') && !led.classList.contains('incorrect')) {
+      led.classList.add('answered');
+    }
+    updateProgress(examIdx);
+  }
+
+  function updateProgress(examIdx){
+    var chunk = chunks[examIdx];
+    var answered = 0;
+    chunk.forEach(function(q, qi){
+      var checked = document.querySelector('input[name="q_' + examIdx + '_' + qi + '"]:checked');
+      if (checked) answered++;
+    });
+    document.getElementById('progress-' + examIdx).innerHTML =
+      '<b>' + answered + '</b> de ' + chunk.length + ' respondidas';
+    document.getElementById('progress-mini-' + examIdx).textContent = answered + '/' + chunk.length;
+  }
+
+  function jumpTo(examIdx, qIdx){
+    var card = document.getElementById('card-' + examIdx + '-' + qIdx);
+    if (card && card.scrollIntoView) card.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+  }
+
+  // ---------- confirm dialog ----------
+  var pendingResolve = null;
+  function askConfirm(title, body){
+    confirmTitle.textContent = title;
+    confirmBody.textContent = body;
+    overlay.classList.remove('hidden');
+    confirmYes.focus();
+    return new Promise(function(resolve){ pendingResolve = resolve; });
+  }
+  function closeConfirm(result){
+    overlay.classList.add('hidden');
+    if (pendingResolve) { pendingResolve(result); pendingResolve = null; }
+  }
+  confirmYes.addEventListener('click', function(){ closeConfirm(true); });
+  confirmNo.addEventListener('click', function(){ closeConfirm(false); });
+  overlay.addEventListener('click', function(e){ if (e.target === overlay) closeConfirm(false); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && !overlay.classList.contains('hidden')) closeConfirm(false);
+  });
+
+  function requestFinish(examIdx){
+    var chunk = chunks[examIdx];
+    var answered = 0;
+    chunk.forEach(function(q, qi){
+      if (document.querySelector('input[name="q_' + examIdx + '_' + qi + '"]:checked')) answered++;
+    });
+    var pending = chunk.length - answered;
+    if (pending > 0) {
+      askConfirm(
+        'Aún hay preguntas sin responder',
+        'Te faltan ' + pending + ' de ' + chunk.length + ' preguntas. Si finalizas ahora, esas preguntas se calificarán como incorrectas. ¿Deseas finalizar de todos modos?'
+      ).then(function(ok){ if (ok) gradeExam(examIdx); });
+    } else {
+      gradeExam(examIdx);
+    }
+  }
+
+  function gradeExam(examIdx){
+    var chunk = chunks[examIdx];
+    var correctCount = 0;
+
+    chunk.forEach(function(q, qi){
+      var card = document.getElementById('card-' + examIdx + '-' + qi);
+      var checked = document.querySelector('input[name="q_' + examIdx + '_' + qi + '"]:checked');
+      var picked = checked ? checked.value : null;
+      var isCorrect = picked === q.answer;
+      if (isCorrect) correctCount++;
+
+      card.classList.add('graded');
+      card.classList.toggle('unanswered', !picked);
+
+      ['A','B','C','D'].forEach(function(letter){
+        var optLabel = document.getElementById('opt-' + examIdx + '-' + qi + '-' + letter);
+        if (!optLabel) return;
+        optLabel.classList.remove('is-correct','is-wrong-pick');
+        if (letter === q.answer) optLabel.classList.add('is-correct');
+        if (picked === letter && letter !== q.answer) optLabel.classList.add('is-wrong-pick');
+        var input = optLabel.querySelector('input');
+        input.disabled = true;
+      });
+
+      var explain = document.getElementById('explain-' + examIdx + '-' + qi);
+      var correctText = q.opts[q.answer];
+      var html = '<b>Respuesta correcta: ' + q.answer + ')</b> ' + escapeHtml(correctText);
+      if (q.explanation) html += '<br>' + escapeHtml(q.explanation) + '.';
+      explain.innerHTML = html;
+
+      var led = document.getElementById('led-' + examIdx + '-' + qi);
+      led.classList.remove('answered');
+      led.classList.add(isCorrect ? 'correct' : 'incorrect');
+    });
+
+    var pct = Math.round((correctCount / chunk.length) * 100);
+    var passed = pct >= PASS_PCT;
+    var banner = document.getElementById('banner-' + examIdx);
+    banner.classList.add('show');
+    banner.innerHTML =
+      '<div class="score-big">' + correctCount + '/' + chunk.length + '</div>' +
+      '<div class="score-meta"><div class="label">Resultado del simulacro ' + (examIdx + 1) + '</div>' +
+      '<div>' + pct + '% — <span class="' + (passed ? 'score-pass' : 'score-fail') + '">' +
+      (passed ? 'Aprobado' : 'No aprobado') + '</span> ' +
+      '<span style="color:var(--text-dim);font-size:12px;">(referencial, ≥ ' + PASS_PCT + '%)</span></div></div>';
+
+    document.getElementById('finish-' + examIdx).style.display = 'none';
+    document.getElementById('retry-' + examIdx).style.display = 'inline-block';
+
+    document.getElementById('tabbtn-' + examIdx).classList.add('done');
+
+    banner.scrollIntoView && banner.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  function resetExam(examIdx){
+    var chunk = chunks[examIdx];
+    chunk.forEach(function(q, qi){
+      var card = document.getElementById('card-' + examIdx + '-' + qi);
+      card.classList.remove('graded','unanswered');
+      ['A','B','C','D'].forEach(function(letter){
+        var optLabel = document.getElementById('opt-' + examIdx + '-' + qi + '-' + letter);
+        if (!optLabel) return;
+        optLabel.classList.remove('is-correct','is-wrong-pick');
+        var input = optLabel.querySelector('input');
+        input.disabled = false;
+        input.checked = false;
+      });
+      document.getElementById('explain-' + examIdx + '-' + qi).innerHTML = '';
+      var led = document.getElementById('led-' + examIdx + '-' + qi);
+      led.classList.remove('answered','correct','incorrect');
+    });
+    var banner = document.getElementById('banner-' + examIdx);
+    banner.classList.remove('show');
+    banner.innerHTML = '';
+    document.getElementById('finish-' + examIdx).style.display = 'inline-block';
+    document.getElementById('retry-' + examIdx).style.display = 'none';
+    document.getElementById('tabbtn-' + examIdx).classList.remove('done');
+    updateProgress(examIdx);
+    var sec = document.getElementById('exam-' + examIdx);
+    sec.scrollIntoView && sec.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  // ---------- init ----------
+  buildTabs();
+  chunks.forEach(function(chunk, idx){
+    examsRoot.appendChild(buildExamSection(chunk, idx));
+  });
+  chunks.forEach(function(chunk, idx){ updateProgress(idx); });
+
+  document.getElementById('totalQCount').textContent = QUESTIONS.length;
+  document.getElementById('totalExamCount').textContent = chunks.length;
+  document.getElementById('lastExamSize').textContent = chunks[chunks.length - 1].length;
+
+})();
+
+</script>
+</body>
+</html>

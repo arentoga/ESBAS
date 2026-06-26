@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulacro Examen Final CFBB - Módulo III</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f7fc;
+            padding: 20px;
+            color: #1a1a2e;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 2rem;
+            color: #0b3b5c;
+            border-bottom: 3px solid #e63946;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            background: #e9f0f9;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border-left: 5px solid #e63946;
+        }
+        .examen {
+            background: #ffffff;
+            border: 1px solid #dce3ed;
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+        .examen h2 {
+            font-size: 1.6rem;
+            color: #1d3557;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .examen h2 small {
+            font-size: 1rem;
+            font-weight: normal;
+            color: #457b9d;
+        }
+        .pregunta {
+            padding: 14px 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        .pregunta:last-of-type { border-bottom: none; }
+        .pregunta .enunciado {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+        .pregunta .opciones {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 20px;
+            padding-left: 12px;
+        }
+        @media (max-width: 700px) {
+            .pregunta .opciones { grid-template-columns: 1fr; }
+        }
+        .pregunta .opciones label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.98rem;
+            padding: 4px 6px;
+            border-radius: 6px;
+            transition: background 0.15s;
+            cursor: pointer;
+        }
+        .pregunta .opciones label:hover {
+            background: #f0f5fe;
+        }
+        .pregunta .opciones input[type="radio"] {
+            accent-color: #e63946;
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+        .incorrecto { background: #ffe6e6 !important; }
+        .correcto { background: #e6f7e6 !important; }
+        .resultado {
+            margin-top: 20px;
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            background: #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .btn-corregir {
+            background: #1d3557;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 5px;
+        }
+        .btn-corregir:hover {
+            background: #0b2a44;
+        }
+        .btn-corregir:active {
+            transform: scale(0.97);
+        }
+        .badge {
+            display: inline-block;
+            background: #e63946;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #6c7a8e;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🚒 Simulacro Examen Final – CFBB Módulo III</h1>
+    <div class="subtitle">
+        <strong>Instrucciones:</strong> Responde las 100 preguntas distribuidas en 5 exámenes de 20 preguntas cada uno.
+        Al final de cada bloque presiona <strong>“Corregir Examen”</strong> para ver tu puntaje y las respuestas correctas.
+        ¡Éxito!
+    </div>
+    <div id="examenes"></div>
+    <footer>Simulacro basado en las lecciones 22 a 33 del Curso de Formación Básica de Bomberos (CFBB-Ver-2025)</footer>
+</div>
+
+<script>
+    // ------------------------------------------------------------
+    // 1. BASE DE DATOS DE PREGUNTAS (100 preguntas)
+    // ------------------------------------------------------------
+    const preguntas = [
+        // Lección 22 (IDs 1-6)
+        { id:1, texto: "Durante un incendio en un edificio de 12 pisos, la primera autobomba se conecta a la siamesa de la red privada para presurizar el sistema. Si el incendio se encuentra en el piso 8 y se utiliza un pitón de combinación, ¿cuál es la presión mínima que debe suministrar la bomba?", opciones: ["A) 100 psi", "B) 140 psi", "C) 150 psi", "D) 180 psi"], correcta: "C" },
+        { id:2, texto: "En la estrategia de ataque contra incendios en edificios altos, la colocación de la primera autobomba debe considerar la zona de colapso y caída de objetos. ¿Cuál es la posición recomendada para esta unidad?", opciones: ["A) Estacionarse justo frente a la fachada para facilitar el despliegue de escalas.", "B) Pasar la fachada y estacionarse más allá de la zona de colapso, conectándose al hidrante.", "C) Estacionarse en la acera opuesta para evitar el humo.", "D) Estacionarse en la esquina para tener mejor visibilidad."], correcta: "B" },
+        { id:3, texto: "El uso de ascensores durante un incendio en edificios altos está permitido, pero con restricciones. Según el material, ¿hasta qué nivel se puede utilizar el ascensor con llave de bomberos?", opciones: ["A) Hasta el piso del incendio.", "B) Hasta dos pisos por debajo del piso del incendio.", "C) Hasta el piso inmediatamente inferior al incendio.", "D) Solo hasta la mitad de la altura del edificio."], correcta: "B" },
+        { id:4, texto: "Uno de los problemas que enfrentan los bomberos en incendios de estructuras elevadas es la fatiga debido al esfuerzo de subir con equipo pesado. Además, se menciona que el personal debe subir con:", opciones: ["A) Solo el traje estructural y una linterna.", "B) Uniforme contra incendios, equipo de respiración autónomo y material de combate adicional.", "C) Únicamente el equipo de respiración autónoma.", "D) El equipo de rescate y una escala de mano."], correcta: "B" },
+        { id:5, texto: "En la operación de ataque interno en un edificio alto, se recomienda tender líneas de mangueras de 3\" o 2½\" por las escaleras. En el descanso inferior al fuego, se bifurca en dos líneas de 1¾\". ¿Cuál es la razón principal de esta estrategia?", opciones: ["A) Aumentar la presión en las líneas de ataque.", "B) Permitir que las líneas de ataque bajen por gravedad y faciliten el ingreso.", "C) Reducir la cantidad de agua utilizada.", "D) Facilitar la conexión a la red de hidrantes."], correcta: "B" },
+        { id:6, texto: "En cuanto a la transferencia de calor en incendios de edificios, uno de los elementos a considerar es:", opciones: ["A) La baja conductividad térmica del hormigón.", "B) La forma de transferencia de calor considerando la configuración del edificio, que aumenta el problema de control de humo y gases.", "C) La alta capacidad calorífica del acero estructural.", "D) La rápida disipación del calor por las ventanas abiertas."], correcta: "B" },
+
+        // Lección 23 (IDs 7-12)
+        { id:7, texto: "Para presurizar la siamesa de la red privada en un incendio en el sótano 2 (segundo sótano) y utilizando un pitón de chorro sólido, la presión aproximada que debe suministrar la bomba es:", opciones: ["A) 50 psi", "B) 60 psi", "C) 40 psi", "D) 10 psi"], correcta: "C" },
+        { id:8, texto: "Una de las características principales de los incendios en sótanos es la dificultad para ventilar el humo. Esto se debe a:", opciones: ["A) La gran cantidad de aberturas en el sótano.", "B) La baja temperatura de los gases.", "C) El número limitado de aberturas, lo que provoca acumulación de humo y altas temperaturas.", "D) La alta presión de los sistemas de ventilación forzada."], correcta: "C" },
+        { id:9, texto: "Durante la extinción de un incendio en un sótano, se indica NO utilizar los ascensores. ¿Cuál es la razón principal?", opciones: ["A) Los ascensores pueden quedar atrapados por el corte de energía.", "B) El ascensor puede convertirse en un conducto para la propagación del humo y el fuego, y además puede fallar por altas temperaturas.", "C) Los ascensores no tienen suficiente capacidad para transportar equipo.", "D) Las puertas de los ascensores no pueden abrirse sin energía."], correcta: "B" },
+        { id:10, texto: "En la prevención de incendios en sótanos, una de las medidas recomendadas es:", opciones: ["A) Almacenar la mayor cantidad de material combustible posible para evitar espacios vacíos.", "B) No instalar detectores de humo para evitar falsas alarmas.", "C) Verificar el estado de los cables y cajas eléctricas, y no elevar la carga combustible.", "D) Mantener las puertas y ventanas cerradas herméticamente."], correcta: "C" },
+        { id:11, texto: "Al llegar a un incendio en un sótano, la primera autobomba debe estacionarse considerando la zona de colapso. Adicionalmente, la presión en la siamesa se calcula con una fórmula que incluye un valor negativo por piso. Esto se debe a que:", opciones: ["A) El sótano está por debajo del nivel de la calle, lo que requiere menor presión.", "B) Se debe compensar la altura negativa para llevar agua al sótano.", "C) La red privada en sótanos tiene menor capacidad.", "D) Se utiliza una bomba de menor caudal."], correcta: "B" },
+        { id:12, texto: "Uno de los fenómenos que puede ocurrir en un incendio de sótano es la \"lentitud en la extinción\". Esto se debe principalmente a:", opciones: ["A) La falta de agua en los hidrantes cercanos.", "B) La necesidad de localizar el incendio antes de poder extinguirlo, debido a la poca visibilidad y la acumulación de humo.", "C) La ausencia de personal capacitado.", "D) La baja temperatura del fuego en sótanos."], correcta: "B" },
+
+        // Lección 24 (IDs 13-24)
+        { id:13, texto: "En un incendio vehicular, la distancia mínima de seguridad para estacionar la primera unidad de bomberos, considerando una situación de fuego sin materiales peligrosos, es de:", opciones: ["A) 15 metros", "B) 30 metros", "C) 50 metros", "D) 100 metros"], correcta: "B" },
+        { id:14, texto: "Al llegar a un incendio de vehículo en una carretera, el oficial debe aplicar técnicas de segregación vial. La colocación de conos de seguridad debe iniciarse a una distancia de:", opciones: ["A) 50 metros del vehículo siniestrado.", "B) 100 metros del vehículo siniestrado.", "C) 30 metros del vehículo siniestrado.", "D) 200 metros del vehículo siniestrado."], correcta: "B" },
+        { id:15, texto: "En un vehículo eléctrico o híbrido, después de desconectar la batería auxiliar de 12 V, ¿cuánto tiempo puede permanecer energizado el sistema de alto voltaje?", opciones: ["A) Hasta 1 minuto.", "B) Hasta 5 minutos.", "C) Hasta 10 minutos.", "D) Hasta 30 minutos."], correcta: "C" },
+        { id:16, texto: "El Gas Licuado de Petróleo (GLP) utilizado en vehículos tiene una temperatura de autoignición aproximada de:", opciones: ["A) 493 °C para el propano.", "B) 280 °C para la gasolina.", "C) 260 °C para el diésel.", "D) 480 °C para la mezcla GLP."], correcta: "D" },
+        { id:17, texto: "En el combate de incendios de vehículos, se menciona la posibilidad de un BLEVE en tanques de GLP. ¿Cuál de las siguientes NO es una fase del BLEVE?", opciones: ["A) Fuego directo en contacto con el recipiente.", "B) Activación de la válvula de alivio de presión.", "C) Cambio de coloración en el manto del estanque.", "D) Formación de una nube de vapor no confinada (UVCE)."], correcta: "D" },
+        { id:18, texto: "En un vehículo con GNV (Gas Natural Vehicular), la presión de trabajo de los tanques es de:", opciones: ["A) 200 bar.", "B) 15 bar.", "C) 50 bar.", "D) 100 bar."], correcta: "A" },
+        { id:19, texto: "Al realizar la detección de fugas de gas en un vehículo, el procedimiento correcto es:", opciones: ["A) Acercarse en contra del viento para detectar mejor el olor.", "B) Avanzar con el detector hacia el maletero desde la parte alta hacia la baja.", "C) Realizar la detección desde parte baja hacia la parte alta, a favor del viento.", "D) Utilizar un bastón detector de corriente alterna."], correcta: "C" },
+        { id:20, texto: "En un incendio de vehículo con derrame de combustible, se debe contener el derrame con aserrín o arena y luego cubrir con espuma de baja expansión. ¿Cuál es el objetivo principal de la espuma?", opciones: ["A) Enfriar el combustible.", "B) Suprimir los vapores inflamables y evitar la reignición.", "C) Disolver el combustible.", "D) Aumentar la presión de vapor."], correcta: "B" },
+        { id:21, texto: "Los incendios de metales combustibles como el magnesio en vehículos presentan un riesgo especial. Si no se dispone de agente Clase D, la estrategia recomendada es:", opciones: ["A) Aplicar agua en forma de niebla para enfriar el metal.", "B) Dejar que el metal se consuma por sí mismo, enfriando las zonas expuestas cercanas con agua.", "C) Utilizar espuma AFFF para cubrir el metal.", "D) Retirar el metal con herramientas manuales."], correcta: "B" },
+        { id:22, texto: "En un ataque ofensivo a un incendio de vehículo, se debe acercar en un ángulo de 45° con relación al eje longitudinal y preferentemente desde:", opciones: ["A) El frente del vehículo.", "B) La parte trasera.", "C) El lado opuesto al compartimiento de carga.", "D) El lado del conductor."], correcta: "C" },
+        { id:23, texto: "¿Cuál de los siguientes gases tóxicos NO se genera comúnmente en la combustión de un vehículo?", opciones: ["A) Monóxido de carbono.", "B) Cianuro de hidrógeno.", "C) Cloruro de hidrógeno.", "D) Ozono."], correcta: "D" },
+        { id:24, texto: "En un vehículo híbrido, para desconectar el sistema eléctrico de alto voltaje, además de apagar el motor, se puede remover el fusible principal o:", opciones: ["A) Cortar el cableado naranja con una herramienta aislada.", "B) Retirar el tapón de servicio con guantes aislantes de 1000 V.", "C) Desconectar la batería de litio directamente.", "D) Accionar el interruptor de emergencia en el maletero."], correcta: "B" },
+
+        // Lección 25 (IDs 25-32)
+        { id:25, texto: "Según la NFPA 30, un líquido con punto de inflamación de 30 °C y punto de ebullición de 40 °C se clasifica como:", opciones: ["A) Líquido Clase IA.", "B) Líquido Clase IB.", "C) Líquido Clase IC.", "D) Líquido Clase II."], correcta: "C" },
+        { id:26, texto: "En un tanque de almacenamiento de petróleo crudo en llamas, el fenómeno de Boilover se produce cuando:", opciones: ["A) El agua del fondo del tanque entra en ebullición y expande el combustible encendido violentamente.", "B) Se forma una capa de espuma que rebosa el tanque.", "C) La presión interna del tanque supera la resistencia del techo.", "D) El combustible se enfría rápidamente y se solidifica."], correcta: "A" },
+        { id:27, texto: "El fenómeno conocido como Slopover (rebosamiento superficial) se diferencia del Boilover en que:", opciones: ["A) Ocurre solo en tanques de techo flotante.", "B) Es un rebosamiento parcial debido al contacto de la onda de calor con estratos de agua intermedios, sin llegar al fondo.", "C) Es más violento y genera una bola de fuego de mayor tamaño.", "D) Se produce exclusivamente en líquidos combustibles como el diésel."], correcta: "B" },
+        { id:28, texto: "En un camión cisterna, el dispositivo que divide el depósito en compartimentos totalmente independientes y sin aberturas se denomina:", opciones: ["A) Rompeolas.", "B) Mamparo.", "C) Refuerzo exterior.", "D) Válvula de fondo."], correcta: "B" },
+        { id:29, texto: "La válvula de seguridad en una cisterna tiene la función de:", opciones: ["A) Permitir la entrada de aire durante la descarga.", "B) Eliminar sobrepresiones que puedan producirse en el interior del depósito.", "C) Controlar el flujo de líquido durante el llenado.", "D) Actuar como sistema de drenaje."], correcta: "B" },
+        { id:30, texto: "Para que se produzca el fenómeno de Frothover (rebosamiento espumoso), se requiere:", opciones: ["A) Un incendio activo en la superficie del líquido.", "B) Aceites minerales viscosos a altas temperaturas en contacto con agua en el fondo.", "C) La presencia de solventes polares.", "D) Una onda de choque externa."], correcta: "B" },
+        { id:31, texto: "Uno de los métodos de extinción de incendios de líquidos inflamables es la eliminación del suministro de combustible. Esto se logra mediante:", opciones: ["A) Aplicación de espuma sobre la superficie.", "B) Cierre de válvulas y desviación de flujo.", "C) Enfriamiento con agua en forma de niebla.", "D) Dilución con gas inerte."], correcta: "B" },
+        { id:32, texto: "En la estructura de una cisterna, el rompeolas tiene aberturas que permiten el paso del líquido. Su función principal es:", opciones: ["A) Dividir el tanque en compartimentos estancos.", "B) Disminuir la energía cinética de las olas generadas por el movimiento del líquido.", "C) Servir como punto de anclaje para las mangueras.", "D) Facilitar la limpieza interna del tanque."], correcta: "B" },
+
+        // Lección 26 (IDs 33-44)
+        { id:33, texto: "El Gas Licuado de Petróleo (GLP) es más denso que el aire. ¿Cuántas veces es más pesado el butano que el aire en condiciones normales?", opciones: ["A) 1,5 veces.", "B) 2 veces.", "C) 2,5 veces.", "D) 3 veces."], correcta: "B" },
+        { id:34, texto: "La temperatura de ignición del propano es de 493 °C, mientras que la del butano es de 482 °C. ¿Cuál es la temperatura máxima de llama del propano?", opciones: ["A) 1900 °C", "B) 1998 °C", "C) 2100 °C", "D) 1800 °C"], correcta: "B" },
+        { id:35, texto: "El límite inferior de explosividad (LEL) del gas natural (metano) es de:", opciones: ["A) 1,5%", "B) 2,1%", "C) 4,0%", "D) 5,0%"], correcta: "D" },
+        { id:36, texto: "En un cilindro de acetileno expuesto al fuego, se puede producir descomposición del gas a temperaturas superiores a:", opciones: ["A) 54 °C.", "B) 100 °C.", "C) 150 °C.", "D) 200 °C."], correcta: "A" },
+        { id:37, texto: "Uno de los fenómenos físicos de incendio de gases es el \"Jet Fire\" (fuego en chorro). Este se caracteriza por:", opciones: ["A) Una bola de fuego de gran diámetro.", "B) Una llama similar a la de un soplete, con radiación calórica intensa.", "C) Una onda de sobrepresión supersónica.", "D) Una nube de vapor que se inflama diferidamente."], correcta: "B" },
+        { id:38, texto: "La explosión de nube de vapor confinada (CVCE) se manifiesta principalmente por:", opciones: ["A) Intensa radiación térmica de corta duración.", "B) Generación de onda de choque de alto poder destructivo y proyección de fragmentos.", "C) Formación de una nube de gas que se eleva en forma de hongo.", "D) Una deflagración subsónica sin onda de choque significativa."], correcta: "B" },
+        { id:39, texto: "En la refrigeración de recipientes que contienen GLP, es prioritario enfriar la zona de la cámara de vapores (parte superior) porque:", opciones: ["A) Es donde se produce la mayor presión.", "B) El vapor es mal disipador del calor y puede provocar el colapso estructural.", "C) El líquido no necesita enfriamiento.", "D) La válvula de seguridad está en esa zona."], correcta: "B" },
+        { id:40, texto: "En caso de fuga de GLP, una de las acciones que NO debe realizar el bombero es:", opciones: ["A) Evacuar el área.", "B) Ventilar el área.", "C) Encender o apagar interruptores eléctricos.", "D) Utilizar cortina de agua para protegerse."], correcta: "C" },
+        { id:41, texto: "El BLEVE (Boiling Liquid Expanding Vapor Explosion) es un fenómeno que ocurre en recipientes con líquidos sobrecalentados. Una condición fundamental para que se produzca es:", opciones: ["A) Presencia de agua en el fondo del recipiente.", "B) Súbita baja de presión en el interior del recipiente.", "C) Incendio total con voladura del techo.", "D) Mezcla de gas con aire en el rango de inflamabilidad."], correcta: "B" },
+        { id:42, texto: "En la respuesta a emergencias con acetileno, si un cilindro está expuesto al fuego y comienza a vaporizar, la acción recomendada es:", opciones: ["A) Apagar el fuego inmediatamente.", "B) Refrigerar el cilindro con chorro de agua abundante desde la mayor distancia posible.", "C) Acercarse y cerrar la válvula manualmente.", "D) Sumergir el cilindro en agua fría de inmediato."], correcta: "B" },
+        { id:43, texto: "El Gas Natural Vehicular (GNV) es más liviano que el aire. Su rango de inflamabilidad es de:", opciones: ["A) 1,8% a 9,5%.", "B) 5% a 15%.", "C) 2,1% a 9,5%.", "D) 1,5% a 8,5%."], correcta: "B" },
+        { id:44, texto: "Durante la refrigeración de recipientes criogénicos, ¿por qué se debe tener precaución al aplicar agua?", opciones: ["A) El agua puede congelarse y bloquear las válvulas.", "B) El agua a temperatura normal puede aumentar la presión interna al calentar el gas.", "C) El agua reacciona con el gas criogénico.", "D) No hay riesgo, es igual que con GLP."], correcta: "B" },
+
+        // Lección 27 (IDs 45-53)
+        { id:45, texto: "La espuma contra incendios extingue por varios mecanismos. Uno de ellos es la supresión, que consiste en:", opciones: ["A) Enfriar el combustible por debajo de su punto de ignición.", "B) Crear una barrera entre el combustible y el fuego.", "C) Evitar la liberación de vapores inflamables, reduciendo la ignición y reignición.", "D) Diluir el oxígeno del aire."], correcta: "C" },
+        { id:46, texto: "El tetraedro de la espuma está compuesto por: concentrado de espuma, agua, aire y:", opciones: ["A) Agitación mecánica.", "B) Calor.", "C) Combustible.", "D) Tensión superficial."], correcta: "A" },
+        { id:47, texto: "Una espuma de baja expansión tiene una relación de expansión de:", opciones: ["A) 1:1 a 1:5.", "B) 1:20 (aproximadamente).", "C) 1:100 a 1:200.", "D) 1:200 a 1:1000."], correcta: "B" },
+        { id:48, texto: "El método de aplicación de espuma llamado \"rodaje\" consiste en:", opciones: ["A) Descargar la espuma sobre un objeto elevado para que caiga sobre el combustible.", "B) Dirigir el chorro al aire para que la espuma caiga suavemente sobre la superficie.", "C) Descargar el chorro de espuma en el suelo cerca del charco y dejar que ruede sobre el combustible.", "D) Inyectar espuma por la base del tanque."], correcta: "C" },
+        { id:49, texto: "¿Cuál de las siguientes espumas es la adecuada para incendios de solventes polares (alcoholes, acetona)?", opciones: ["A) Espuma proteica.", "B) Espuma fluorproteica.", "C) Espuma AFFF.", "D) Espuma AR-AFFF (resistente al alcohol)."], correcta: "D" },
+        { id:50, texto: "La espuma de Clase A se caracteriza por:", opciones: ["A) Ser un agente humectante que reduce la tensión superficial del agua.", "B) Ser utilizada exclusivamente para líquidos inflamables.", "C) Tener una expansión alta.", "D) Ser resistente al alcohol."], correcta: "A" },
+        { id:51, texto: "En el método de inducción para dosificar espuma, se utiliza el efecto Venturi para:", opciones: ["A) Agregar aire a la solución de espuma.", "B) Succionar el concentrado de espuma al caudal de agua.", "C) Mezclar el concentrado con el agua en el tanque.", "D) Inyectar espuma a presión."], correcta: "B" },
+        { id:52, texto: "La espuma fluorproteica formadora de película acuosa (FFFF) tiene la propiedad de:", opciones: ["A) Ser solo para combustibles de Clase A.", "B) Formar una película acuosa sobre la superficie de hidrocarburos.", "C) Ser incompatible con agentes químicos secos.", "D) Tener una expansión muy alta."], correcta: "B" },
+        { id:53, texto: "¿Cuál es la restricción principal para el uso de espuma en fuegos clase C (equipos eléctricos energizados)?", opciones: ["A) La espuma puede reaccionar con los metales.", "B) La espuma contiene agua y es conductora de electricidad.", "C) La espuma no es efectiva para enfriar.", "D) La espuma genera gases tóxicos al contacto con la electricidad."], correcta: "B" },
+
+        // Lección 28 (IDs 54-59)
+        { id:54, texto: "El primer respondedor en la escena de un incendio debe considerar que la escena es una evidencia completa. Por lo tanto, una de sus acciones prioritarias debe ser:", opciones: ["A) Mover los objetos para facilitar la extinción.", "B) Utilizar chorros directos sobre las paredes para enfriar rápidamente.", "C) Minimizar el uso de agua y evitar mover objetos innecesariamente.", "D) Desconectar todos los equipos eléctricos para evitar cortocircuitos."], correcta: "C" },
+        { id:55, texto: "En la investigación de incendios, la observación del comportamiento del fuego y el humo, así como el tamaño y color de las llamas, corresponde al criterio de:", opciones: ["A) Personas.", "B) Tácticas de combate.", "C) Fuego.", "D) Condiciones anómalas."], correcta: "C" },
+        { id:56, texto: "La maniobra de apertura de vía aérea que se debe utilizar en un paciente con sospecha de trauma cervical es:", opciones: ["A) Extensión de cabeza y elevación mandibular (EXCELM).", "B) Empuje mandibular (EM).", "C) Inclinación lateral de la cabeza.", "D) Flexión de la cabeza hacia adelante."], correcta: "B" },
+        { id:57, texto: "Durante la preservación de la escena, los primeros respondedores deben documentar observaciones como:", opciones: ["A) Solo las condiciones climáticas.", "B) El estado de puertas y ventanas a su llegada, y cualquier condición anómala.", "C) La lista de todos los bomberos presentes.", "D) Las opiniones de los testigos sin registro escrito."], correcta: "B" },
+        { id:58, texto: "Según la NFPA 921, los bomberos son responsables de:", opciones: ["A) Realizar la detención de los sospechosos.", "B) La conservación de las pruebas.", "C) Interrogar a los testigos.", "D) Determinar la causa exacta del incendio en el lugar."], correcta: "B" },
+        { id:59, texto: "El primer respondedor puede contribuir a la investigación de incendios mediante:", opciones: ["A) La fijación de indicios y levantamiento de pruebas.", "B) La observación de la geometría del comportamiento del fuego y la identificación de combustibles.", "C) La toma de declaraciones juradas a los propietarios.", "D) La detención de personas sospechosas."], correcta: "B" },
+
+        // Lección 29 (IDs 60-70)
+        { id:60, texto: "En la búsqueda primaria, el equipo de rescate debe realizar una acción rápida para localizar víctimas. ¿Cuál de las siguientes es una técnica adecuada durante la búsqueda primaria?", opciones: ["A) Realizar llamados y pausas para escuchar respuestas.", "B) Avanzar gateando siempre, independientemente de la altura del plano neutro.", "C) Mover los muebles para buscar debajo.", "D) Utilizar únicamente la cámara termográfica sin llamado verbal."], correcta: "A" },
+        { id:61, texto: "La posición de búsqueda de \"3 puntos\" se recomienda cuando:", opciones: ["A) El plano neutro está muy bajo y la visibilidad es nula.", "B) El plano neutro se encuentra al menos a 1.5 metros de altura.", "C) Se está en una escalera.", "D) Se realiza búsqueda secundaria."], correcta: "B" },
+        { id:62, texto: "Al emitir un MAYDAY, el protocolo LUNAR incluye la información de:", opciones: ["A) Lugar, Unidad, Nombre, Aire, Recursos.", "B) Localización, Uniforme, Nivel, Aire, Ruta.", "C) Llamada, Unidad, Número, Aire, Rescate.", "D) Línea, Uso, Nombre, Acción, Riesgo."], correcta: "A" },
+        { id:63, texto: "En un rescate activo, el bombero atrapado debe intentar salir por sus propios medios. Una de las acciones iniciales es:", opciones: ["A) Esperar a ser rescatado en una posición segura.", "B) Realizar el llamado MAYDAY y luego intentar seguir una cuerda o manguera hacia la salida.", "C) Apagar el equipo PASS para ahorrar batería.", "D) Retirarse el EPRA para moverse más rápido."], correcta: "B" },
+        { id:64, texto: "La técnica de respiración de emergencia Reilly (R-EBT) consiste en:", opciones: ["A) Inhalar profundamente y exhalar rápidamente.", "B) Inhalar normalmente y exhalar de forma prolongada y controlada generando vibración.", "C) Respirar en una bolsa de papel.", "D) Contener la respiración el mayor tiempo posible."], correcta: "B" },
+        { id:65, texto: "Durante la búsqueda y rescate, se debe mantener una comunicación constante con el Puesto de Comando. La función de la pareja de \"backup\" es:", opciones: ["A) Realizar la búsqueda primaria.", "B) Supervisar la seguridad y estar listos para relevar o rescatar a la pareja de búsqueda.", "C) Combatir el incendio en el sector.", "D) Ventilar la estructura."], correcta: "B" },
+        { id:66, texto: "El uso de la cuerda guía en la búsqueda tiene como objetivo principal:", opciones: ["A) Facilitar el arrastre de víctimas.", "B) Mantener la orientación y asegurar una ruta de entrada y salida.", "C) Medir las distancias dentro de la estructura.", "D) Atar a las víctimas encontradas."], correcta: "B" },
+        { id:67, texto: "En la gestión personal del aire con EPRA, se recomienda aplicar la regla de los \"medios\", que consiste en:", opciones: ["A) Usar la mitad del aire para ingresar y trabajar, y la otra mitad para salir y reserva.", "B) Usar un tercio para ingreso, un tercio para trabajo y un tercio para salida.", "C) Salir cuando se active la alarma de aire bajo.", "D) Intercambiar el cilindro a la mitad del tiempo de trabajo."], correcta: "A" },
+        { id:68, texto: "¿Cuál de las siguientes condiciones justifica la emisión de un MAYDAY personal?", opciones: ["A) Se ha controlado el incendio.", "B) Falta de agua en la línea de ataque e impedimento de evacuar.", "C) Se ha completado la búsqueda primaria.", "D) El oficial lo solicita."], correcta: "B" },
+        { id:69, texto: "En el rescate pasivo, el bombero atrapado debe buscar un lugar seguro y esperar ayuda. Una acción importante es:", opciones: ["A) Seguir moviéndose para intentar salir.", "B) Prender todas las linternas y realizar el llamado MAYDAY.", "C) Cortar la comunicación radial para evitar interferencias.", "D) Intentar derribar paredes para salir."], correcta: "B" },
+        { id:70, texto: "El principio \"2-IN / 2-OUT\" respaldado por OSHA establece que para operaciones ofensivas en interior:", opciones: ["A) Deben ingresar al menos 4 bomberos juntos.", "B) Deben haber 2 bomberos trabajando en el área peligrosa y 2 fuera disponibles para rescate.", "C) Se necesita un oficial de seguridad en el exterior.", "D) Se debe tener una línea de agua de 2½\"."], correcta: "B" },
+
+        // Lección 30 (IDs 71-78)
+        { id:71, texto: "En un ascensor eléctrico sin engranajes (sin grupo reductor), la velocidad de la cabina puede alcanzar hasta:", opciones: ["A) 0,1 m/s.", "B) 1,75 m/s.", "C) 10 m/s.", "D) 20 m/s."], correcta: "C" },
+        { id:72, texto: "El sistema de tracción de un ascensor eléctrico se basa en la adherencia entre los cables de acero y la polea de tracción. El contrapeso tiene una función principal:", opciones: ["A) Equilibrar la carga para reducir la potencia necesaria del motor.", "B) Servir como freno de emergencia.", "C) Activar los sistemas de seguridad.", "D) Conectar con la red eléctrica."], correcta: "A" },
+        { id:73, texto: "En un ascensor hidráulico de impulsión diferencial o tracción indirecta 2:1, por cada centímetro que recorre el pistón, la cabina se desplaza:", opciones: ["A) 1 cm.", "B) 2 cm.", "C) 0,5 cm.", "D) 4 cm."], correcta: "B" },
+        { id:74, texto: "En el rescate de un ascensor sin movimiento de cabina, si la distancia entre la cabina y el nivel del piso es mayor de 80 cm, ¿cuál es la vía de rescate recomendada?", opciones: ["A) Rescate hacia el piso inferior.", "B) Rescate hacia el piso superior.", "C) Rescate a través del techo de la cabina.", "D) Esperar al técnico."], correcta: "B" },
+        { id:75, texto: "Antes de realizar cualquier maniobra de rescate en un ascensor, la medida de seguridad fundamental es:", opciones: ["A) Asegurar el suministro eléctrico.", "B) Cortar y comprobar la ausencia de suministro eléctrico.", "C) Activar el pulsador de bomberos.", "D) Colocar conos de seguridad en el piso."], correcta: "B" },
+        { id:76, texto: "El dispositivo que permite detener la cabina mediante un paracaídas cuando la velocidad supera un valor determinado se denomina:", opciones: ["A) Freno de emergencia.", "B) Limitador de velocidad.", "C) Volante de maniobra.", "D) Interruptor de corte."], correcta: "B" },
+        { id:77, texto: "En un ascensor con pulsador de bomberos, al activarlo, el ascensor:", opciones: ["A) Se detiene inmediatamente donde está y abre puertas.", "B) Se dirige a la planta principal, abre puertas y solo obedece llamadas interiores.", "C) Sube al piso del incendio.", "D) Se apaga completamente."], correcta: "B" },
+        { id:78, texto: "La maniobra de desenclave de puertas de piso se realiza:", opciones: ["A) Con el ascensor en movimiento para facilitar la operación.", "B) Con suministro eléctrico operativo para no dañar los mecanismos.", "C) Cortando el suministro eléctrico y utilizando la llave correspondiente.", "D) Forzando la puerta con una palanca."], correcta: "C" },
+
+        // Lección 31 (IDs 79-91)
+        { id:79, texto: "El factor de caída (FC) se calcula como la relación entre la distancia de caída y la longitud de cuerda disponible. Un factor de caída de 2 significa que:", opciones: ["A) La caída es igual a la longitud de cuerda.", "B) La caída es el doble de la longitud de cuerda, lo que representa máximo peligro.", "C) No hay caída libre.", "D) La caída es la mitad de la longitud de cuerda."], correcta: "B" },
+        { id:80, texto: "La fuerza de choque máxima que puede soportar una persona en una caída, según los estándares, no debe superar los:", opciones: ["A) 4 kN.", "B) 6 kN.", "C) 10 kN.", "D) 15 kN."], correcta: "B" },
+        { id:81, texto: "Un anclaje estructural debe ser capaz de soportar una carga mínima de:", opciones: ["A) 5 kN.", "B) 10 kN.", "C) 15 kN.", "D) 22 kN."], correcta: "C" },
+        { id:82, texto: "En un sistema de ventaja mecánica compuesto por un sistema 2:1 que soporta a otro sistema 2:1, la ventaja mecánica total es:", opciones: ["A) 2:1.", "B) 3:1.", "C) 4:1.", "D) 5:1."], correcta: "C" },
+        { id:83, texto: "El síndrome del arnés (síndrome de suspensión inerte) se produce por:", opciones: ["A) Compresión de las venas de las piernas, reduciendo el retorno venoso.", "B) Falta de oxígeno en la máscara.", "C) Hipoglicemia por ayuno prolongado.", "D) Estrés postraumático."], correcta: "A" },
+        { id:84, texto: "En el tratamiento del síndrome del arnés, ¿qué acción NO se recomienda?", opciones: ["A) Liberar al paciente de la suspensión inmediatamente.", "B) Acostar al paciente de inmediato en posición horizontal.", "C) Sentar o semi-recostar al paciente por 30-40 minutos.", "D) Administrar oxígeno suplementario."], correcta: "B" },
+        { id:85, texto: "Las cuerdas de rescate estáticas tienen una elongación menor al 4%, mientras que las dinámicas pueden tener una elongación mayor al 6%. En rescate técnico se prefieren las estáticas porque:", opciones: ["A) Absorben mejor la energía de una caída.", "B) Evitan rebotes o estiramientos no controlados.", "C) Son más livianas.", "D) Son más económicas."], correcta: "B" },
+        { id:86, texto: "Los vientos en un sistema de rescate con cuerdas tienen como objetivo principal:", opciones: ["A) Soporte principal de la carga.", "B) Controlar el movimiento horizontal y estabilizar la carga.", "C) Actuar como línea de seguridad adicional.", "D) Permitir el ascenso de la carga."], correcta: "B" },
+        { id:87, texto: "Al utilizar un vehículo como anclaje móvil, la fuerza debe dirigirse:", opciones: ["A) En sentido perpendicular al desplazamiento del vehículo y bajo su centro de gravedad.", "B) Hacia arriba para evitar vuelcos.", "C) En cualquier dirección, siempre que el vehículo esté con freno de mano.", "D) Hacia adelante para mayor estabilidad."], correcta: "A" },
+        { id:88, texto: "La construcción kernmantle de una cuerda de rescate consta de:", opciones: ["A) Un núcleo trenzado que soporta la mayor parte de la carga y una funda protectora.", "B) Una sola capa de fibras continuas.", "C) Varios cables de acero entrelazados.", "D) Fibras de poliéster con recubrimiento de plástico."], correcta: "A" },
+        { id:89, texto: "En un sistema de ventaja mecánica 4:1, la relación entre la fuerza aplicada y la carga es:", opciones: ["A) La fuerza es 4 veces la carga.", "B) La carga es 4 veces la fuerza aplicada (reducción de esfuerzo a la cuarta parte).", "C) No hay reducción de esfuerzo.", "D) La fuerza y la carga son iguales."], correcta: "B" },
+        { id:90, texto: "El maletín de primera respuesta para rescate con cuerdas debe incluir, entre otros:", opciones: ["A) Cuerda de rescate de 11-12.5 mm, mosquetones, poleas, arnés, controlador de descenso.", "B) Solo cuerdas estáticas y dinámicas.", "C) Una escalera de mano y cuerdas de 8 mm.", "D) Material de oxicorte."], correcta: "A" },
+        { id:91, texto: "En la inspección en parejas antes de un rescate, se debe verificar que el arnés:", opciones: ["A) Esté holgado para mayor comodidad.", "B) Esté bien ajustado, con hebillas aseguradas y puntos de anclaje accesibles.", "C) No tenga costuras visibles.", "D) Sea del color reglamentario."], correcta: "B" },
+
+        // Lección 32 (IDs 92-96)
+        { id:92, texto: "En la evaluación inicial de un paciente, el primer paso es la impresión general del estado (GEPONLAS). ¿Qué información incluye?", opciones: ["A) Género, Edad, Posición, Nivel de respuesta, Lesiones, Agresivo, Signos de shock.", "B) Glucosa, Electrocardiograma, Presión, Oxígeno, Neurología, Laringe, Abdomen.", "C) Gasto cardíaco, Estado mental, Pulso, Oximetría, Nivel de conciencia, Llenado capilar.", "D) Genética, Enfermedades previas, Pruebas, Orina, Nutrición, Lesiones, Ansiedad."], correcta: "A" },
+        { id:93, texto: "En un paciente con trauma, la maniobra de apertura de vía aérea que debe realizar el APH que fija la cabeza es:", opciones: ["A) Extensión de cabeza y elevación mandibular (EXCELM).", "B) Empuje mandibular (EM).", "C) Inclinación lateral.", "D) Tracción de la lengua."], correcta: "B" },
+        { id:94, texto: "Durante el triage START, una víctima que no respira después de abrir la vía aérea debe ser etiquetada como:", opciones: ["A) Rojo.", "B) Amarillo.", "C) Verde.", "D) Negro."], correcta: "D" },
+        { id:95, texto: "En el método START, una víctima que puede caminar se clasifica como:", opciones: ["A) Rojo.", "B) Amarillo.", "C) Verde.", "D) Negro."], correcta: "C" },
+        { id:96, texto: "El orden correcto de la evaluación inicial (seis pasos) es:", opciones: ["A) Impresión general, Abrir vía aérea, Respiración, Circulación, Nivel de respuesta, Hemorragias.", "B) Impresión general, Nivel de respuesta, Circulación, Abrir vía aérea, Respiración, Hemorragias.", "C) Nivel de respuesta, Circulación, Abrir vía aérea, Respiración, Hemorragias, Impresión general.", "D) Circulación, Respiración, Abrir vía aérea, Nivel de respuesta, Hemorragias, Impresión general."], correcta: "B" },
+
+        // Lección 33 (IDs 97-100)
+        { id:97, texto: "El signo universal de atragantamiento en una obstrucción grave de la vía aérea es:", opciones: ["A) Tos fuerte y efectiva.", "B) Agarrarse el cuello con ambas manos.", "C) Dificultad para hablar pero puede respirar.", "D) Silbido al respirar."], correcta: "B" },
+        { id:98, texto: "En una víctima embarazada con obstrucción grave de la vía aérea (OVACE) consciente, la maniobra a realizar es:", opciones: ["A) Compresiones abdominales (Heimlich) con mayor fuerza.", "B) Compresiones torácicas en lugar de abdominales.", "C) Golpes en la espalda.", "D) Ventilaciones de rescate inmediatas."], correcta: "B" },
+        { id:99, texto: "La cadena de supervivencia extrahospitalaria para adultos incluye 6 eslabones. El segundo eslabón es:", opciones: ["A) Desfibrilación rápida.", "B) RCP de alta calidad temprana.", "C) Activación de la respuesta a emergencias.", "D) Soporte vital avanzado."], correcta: "B" },
+        { id:100, texto: "En la RCP de alta calidad en adultos, la profundidad de las compresiones torácicas debe ser de:", opciones: ["A) 2 a 3 cm.", "B) 4 a 5 cm.", "C) 5 a 6 cm.", "D) 7 a 8 cm."], correcta: "C" }
+    ];
+
+    // ------------------------------------------------------------
+    // 2. DISTRIBUCIÓN DE PREGUNTAS EN 5 EXÁMENES
+    // ------------------------------------------------------------
+    const examenes = [
+        [1, 7, 13, 14, 25, 26, 33, 34, 35, 45, 46, 54, 60, 61, 71, 79, 80, 81, 92, 97],
+        [2, 8, 9, 15, 16, 27, 36, 37, 47, 48, 55, 62, 63, 72, 73, 82, 83, 84, 93, 98],
+        [3, 4, 10, 17, 18, 19, 28, 29, 38, 39, 49, 50, 56, 64, 65, 74, 75, 85, 86, 94],
+        [5, 11, 20, 21, 30, 31, 40, 41, 51, 52, 57, 58, 66, 67, 68, 76, 87, 88, 95, 99],
+        [6, 12, 22, 23, 24, 32, 42, 43, 44, 53, 59, 69, 70, 77, 78, 89, 90, 91, 96, 100]
+    ];
+
+    // ------------------------------------------------------------
+    // 3. FUNCIÓN PARA GENERAR EL HTML DE LOS EXÁMENES
+    // ------------------------------------------------------------
+    function generarExamenes() {
+        const contenedor = document.getElementById('examenes');
+        let html = '';
+
+        for (let e = 0; e < examenes.length; e++) {
+            const ids = examenes[e];
+            const numExamen = e + 1;
+            html += `<div class="examen" id="examen${numExamen}">`;
+            html += `<h2>📘 Examen ${numExamen} <small>20 preguntas</small></h2>`;
+            html += `<div class="preguntas">`;
+
+            for (let i = 0; i < ids.length; i++) {
+                const id = ids[i];
+                const p = preguntas.find(q => q.id === id);
+                if (!p) continue;
+                const name = `e${numExamen}_p${i}`;
+                html += `<div class="pregunta" id="pregunta-${numExamen}-${i}">`;
+                html += `<div class="enunciado">${i+1}. ${p.texto}</div>`;
+                html += `<div class="opciones">`;
+                p.opciones.forEach((op, idx) => {
+                    const letra = String.fromCharCode(65 + idx); // A, B, C, D
+                    html += `<label><input type="radio" name="${name}" value="${letra}"> ${op}</label>`;
+                });
+                html += `</div>`;
+                html += `</div>`;
+            }
+
+            html += `</div>`;
+            html += `<div class="resultado" id="resultado${numExamen}">`;
+            html += `<span>🔍 <strong>Puntaje:</strong> <span id="puntaje${numExamen}">--</span> / 20</span>`;
+            html += `<button class="btn-corregir" onclick="corregirExamen(${numExamen})">✅ Corregir Examen ${numExamen}</button>`;
+            html += `</div>`;
+            html += `</div>`;
+        }
+
+        contenedor.innerHTML = html;
+    }
+
+    // ------------------------------------------------------------
+    // 4. FUNCIÓN PARA CORREGIR UN EXAMEN
+    // ------------------------------------------------------------
+    function corregirExamen(num) {
+        const ids = examenes[num - 1];
+        let correctas = 0;
+        const resultados = [];
+
+        for (let i = 0; i < ids.length; i++) {
+            const id = ids[i];
+            const p = preguntas.find(q => q.id === id);
+            const name = `e${num}_p${i}`;
+            const radios = document.getElementsByName(name);
+            let seleccionada = null;
+            for (let r of radios) {
+                if (r.checked) {
+                    seleccionada = r.value;
+                    break;
+                }
+            }
+            const esCorrecta = (seleccionada === p.correcta);
+            if (esCorrecta) correctas++;
+            resultados.push({ id: i, correcta: p.correcta, seleccionada: seleccionada, esCorrecta });
+
+            // Marcar visualmente la pregunta
+            const divPregunta = document.getElementById(`pregunta-${num}-${i}`);
+            const opcionesLabels = divPregunta.querySelectorAll('.opciones label');
+            // Limpiar clases previas
+            opcionesLabels.forEach(label => {
+                label.classList.remove('correcto', 'incorrecto');
+            });
+            // Marcar la correcta y la seleccionada
+            opcionesLabels.forEach(label => {
+                const input = label.querySelector('input[type="radio"]');
+                if (input.value === p.correcta) {
+                    label.classList.add('correcto');
+                }
+                if (input.checked && input.value !== p.correcta) {
+                    label.classList.add('incorrecto');
+                }
+            });
+        }
+
+        // Mostrar puntaje
+        document.getElementById(`puntaje${num}`).textContent = `${correctas}`;
+
+        // Mensaje adicional
+        const resultadoDiv = document.getElementById(`resultado${num}`);
+        const mensaje = correctas === 20 ? '🎉 ¡Perfecto!' :
+                        correctas >= 16 ? '👍 Muy bien' :
+                        correctas >= 12 ? '📖 Puedes mejorar' :
+                        '📚 Estudia más';
+        resultadoDiv.querySelector('span').innerHTML = `🔍 <strong>Puntaje:</strong> ${correctas} / 20 &nbsp;&nbsp; ${mensaje}`;
+    }
+
+    // ------------------------------------------------------------
+    // 5. INICIALIZAR
+    // ------------------------------------------------------------
+    document.addEventListener('DOMContentLoaded', generarExamenes);
+</script>
+</body>
+</html>

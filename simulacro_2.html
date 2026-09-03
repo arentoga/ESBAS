@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulacro Examen Final CFBB</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            color: #222;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #b31b1b;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        .question-block {
+            background: #fafafa;
+            border-left: 5px solid #b31b1b;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        .question-block .q-title {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+        }
+        .question-block .q-tag {
+            display: inline-block;
+            background: #e0e0e0;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 4px;
+            transition: background 0.15s;
+        }
+        .options label:hover {
+            background: #f0f0f0;
+        }
+        .options input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #b31b1b;
+            cursor: pointer;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0 20px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: #b31b1b;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 3px 8px rgba(179,27,27,0.3);
+        }
+        .btn:hover {
+            background: #8f1515;
+        }
+        .btn-secondary {
+            background: #444;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+        .btn-secondary:hover {
+            background: #222;
+        }
+        .result-box {
+            display: none;
+            margin-top: 30px;
+            border-top: 2px solid #ddd;
+            padding-top: 25px;
+        }
+        .result-box.show {
+            display: block;
+        }
+        .score-summary {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        .score-item {
+            text-align: center;
+        }
+        .score-item .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #b31b1b;
+        }
+        .score-item .label {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .leccion-feedback {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .leccion-card {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 12px 16px;
+            border-left: 4px solid #28a745;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        .leccion-card.repaso {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+        .leccion-card .nombre {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .leccion-card .stats {
+            font-size: 0.85rem;
+            color: #444;
+            margin-top: 4px;
+        }
+        .leccion-card .stats span {
+            font-weight: 600;
+        }
+        .review-answers {
+            margin-top: 30px;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .review-answers .respuesta-item {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            padding: 4px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95rem;
+        }
+        .review-answers .correcta {
+            color: #28a745;
+            font-weight: 600;
+        }
+        .review-answers .incorrecta {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        .review-answers .tu-resp {
+            font-weight: 500;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #888;
+            font-size: 0.85rem;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .question-block { padding: 12px 15px; }
+            .btn { padding: 12px 25px; font-size: 1rem; }
+            .score-item .number { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🧯 Simulacro Examen Final</h1>
+    <div class="subtitle">Curso de Formación Básica de Bomberos (CFBB) · 100 preguntas</div>
+
+    <div id="examen"></div>
+
+    <div class="btn-container">
+        <button class="btn" id="btnCalificar">✅ Calificar examen</button>
+        <button class="btn btn-secondary" id="btnReiniciar">🔄 Reiniciar</button>
+    </div>
+
+    <div id="resultados" class="result-box"></div>
+
+    <div class="footer">Basado en el Manual del CFBB · DIGEFA · CGBVP</div>
+</div>
+
+<script>
+    // ============================================================
+    //  BASE DE PREGUNTAS (100) – extraídas fielmente del PDF
+    // ============================================================
+    const preguntas = [
+        // LECCIÓN 01
+        { id: 1, leccion: "Lección 01", tema: "Introducción", pregunta: "¿Cuántas lecciones teóricas tiene el Curso de Formación Básica de Bomberos (CFBB)?", opciones: ["24 lecciones", "30 lecciones", "34 lecciones", "40 lecciones"], respuesta: 2 },
+        { id: 2, leccion: "Lección 01", tema: "Introducción", pregunta: "¿Cuántas tardanzas constituyen una falta durante el CFBB?", opciones: ["2 tardanzas", "3 tardanzas", "4 tardanzas", "5 tardanzas"], respuesta: 1 },
+        { id: 3, leccion: "Lección 01", tema: "Introducción", pregunta: "¿Cuál es la nota mínima aprobatoria por módulo en el CFBB?", opciones: ["10", "12", "14", "15"], respuesta: 2 },
+        { id: 4, leccion: "Lección 01", tema: "Introducción", pregunta: "¿Cuántas faltas no consecutivas en un módulo ameritan la separación del aspirante?", opciones: ["2 faltas", "3 faltas", "4 faltas", "5 faltas"], respuesta: 2 },
+        // LECCIÓN 02
+        { id: 5, leccion: "Lección 02", tema: "Doctrina y Mística", pregunta: "¿Qué representa el lema 'Dios – Patria – Humanidad' en el CGBVP?", opciones: ["La razón de ser y actuar del bombero", "Un lema religioso exclusivo", "El nombre de una compañía", "Un eslogan político"], respuesta: 0 },
+        { id: 6, leccion: "Lección 02", tema: "Doctrina y Mística", pregunta: "¿Cuál de los siguientes es un valor del bombero voluntario según el Manual de Ética?", opciones: ["Honestidad", "Competitividad", "Individualismo", "Riqueza"], respuesta: 0 },
+        { id: 7, leccion: "Lección 02", tema: "Doctrina y Mística", pregunta: "¿Qué es la mística según la lección?", opciones: ["Lo secreto e inexplicable", "Una doctrina religiosa", "Un método de combate", "Un reglamento interno"], respuesta: 0 },
+        { id: 8, leccion: "Lección 02", tema: "Doctrina y Mística", pregunta: "¿Cuál es uno de los símbolos institucionales del CGBVP?", opciones: ["La bandera roja y blanca", "El escudo con casco de bombero", "El sol de mayo", "La cruz de fuego"], respuesta: 1 },
+        // LECCIÓN 03
+        { id: 9, leccion: "Lección 03", tema: "Historia", pregunta: "¿En qué fecha se fundó la primera compañía de bomberos sin receso en el Perú, la Unión Chalaca N°1?", opciones: ["5 de diciembre de 1860", "2 de mayo de 1866", "14 de febrero de 1931", "2 de diciembre de 1953"], respuesta: 0 },
+        { id: 10, leccion: "Lección 03", tema: "Historia", pregunta: "¿Quién es considerado el primer héroe del Cuerpo de Bomberos del Perú?", opciones: ["Giuseppe Perfumo", "Juan Antonio Alarco Espinosa", "Oreste Del Sante Molfino", "Delfín Puccio Ulloa"], respuesta: 1 },
+        { id: 11, leccion: "Lección 03", tema: "Historia", pregunta: "¿En qué año ocurrió el incendio de la calle Plumereros, donde cayeron cinco mártires?", opciones: ["1866", "1913", "1931", "1948"], respuesta: 2 },
+        { id: 12, leccion: "Lección 03", tema: "Historia", pregunta: "¿Cuándo se creó el Comando Nacional del CGBVP (fecha de unificación)?", opciones: ["2 de diciembre de 1953", "26 de diciembre de 1953", "30 de enero de 1954", "5 de diciembre de 1951"], respuesta: 0 },
+        // LECCIÓN 04
+        { id: 13, leccion: "Lección 04", tema: "Organización", pregunta: "¿Qué es el Cuerpo General de Bomberos Voluntarios del Perú (CGBVP)?", opciones: ["Una organización cívica nacional", "Una entidad gubernamental", "Un sindicato de bomberos", "Una empresa privada"], respuesta: 0 },
+        { id: 14, leccion: "Lección 04", tema: "Organización", pregunta: "¿Cuáles son los grados de los Oficiales Generales en el CGBVP?", opciones: ["Brigadier y Teniente Brigadier", "Brigadier General y Brigadier Mayor", "Capitán y Teniente", "Subteniente y Seccionario"], respuesta: 1 },
+        { id: 15, leccion: "Lección 04", tema: "Organización", pregunta: "¿Qué órgano del CGBVP es el encargado de la administración de justicia?", opciones: ["Inspectoría General", "Consejo Nacional de Disciplina", "Dirección General de Operaciones", "Comandancia General"], respuesta: 1 },
+        { id: 16, leccion: "Lección 04", tema: "Organización", pregunta: "¿Quién es designado como Intendente Nacional de la INBP?", opciones: ["El Ministro del Interior", "El Comandante General del CGBVP o quien este proponga", "El Presidente de la República", "El Director de la Escuela de Bomberos"], respuesta: 1 },
+        // LECCIÓN 05
+        { id: 17, leccion: "Lección 05", tema: "Comunicaciones", pregunta: "¿Qué norma NFPA califica al operador de la Central de Emergencias (CEEM)?", opciones: ["NFPA 1001", "NFPA 1061", "NFPA 1500", "NFPA 1983"], respuesta: 1 },
+        { id: 18, leccion: "Lección 05", tema: "Comunicaciones", pregunta: "¿Qué es la Central de Emergencias (CEEM) del CGBVP?", opciones: ["El lugar donde se reciben llamadas y se despachan unidades", "El cuartel general de bomberos", "El centro de capacitación", "La oficina de prensa"], respuesta: 0 },
+        { id: 19, leccion: "Lección 05", tema: "Comunicaciones", pregunta: "¿Cuáles son los números de emergencia del CGBVP mencionados en el manual?", opciones: ["105 y 116", "116 y 3991111", "911 y 3991111", "105 y 3991111"], respuesta: 1 },
+        { id: 20, leccion: "Lección 05", tema: "Comunicaciones", pregunta: "¿Qué banda de frecuencia utiliza el CGBVP para sus radiocomunicaciones?", opciones: ["HF (onda corta)", "VHF (Megahercios)", "UHF (Gigahercios)", "Frecuencia modulada (FM)"], respuesta: 1 },
+        // LECCIÓN 06
+        { id: 21, leccion: "Lección 06", tema: "Seguridad", pregunta: "¿Qué es un peligro según la lección de seguridad en emergencias?", opciones: ["Situación con capacidad de causar daño", "Probabilidad de que ocurra un daño", "Un accidente inesperado", "Un estado de ausencia de riesgo"], respuesta: 0 },
+        { id: 22, leccion: "Lección 06", tema: "Seguridad", pregunta: "¿Qué es un riesgo?", opciones: ["Situación con capacidad de causar daño", "Probabilidad de que un peligro se materialice", "Suceso repentino que causa daño", "Estado de seguridad total"], respuesta: 1 },
+        { id: 23, leccion: "Lección 06", tema: "Seguridad", pregunta: "En la jerarquía de controles, ¿cuál es el control más efectivo?", opciones: ["Eliminación", "Sustitución", "Controles de ingeniería", "Equipos de protección personal"], respuesta: 0 },
+        { id: 24, leccion: "Lección 06", tema: "Seguridad", pregunta: "¿Cuántos pasos debe seguir el primer respondedor según el SCI al llegar a la escena?", opciones: ["5 pasos", "6 pasos", "8 pasos", "10 pasos"], respuesta: 2 },
+        // LECCIÓN 07
+        { id: 25, leccion: "Lección 07", tema: "Manejo Psicológico", pregunta: "Según el perfil del bombero, ¿cuáles son características de alto riesgo?", opciones: ["Aburren fácilmente y alta necesidad de estimulación", "Son muy meticulosos y organizados", "Evitan el riesgo y la variedad", "Tienen baja motivación"], respuesta: 0 },
+        { id: 26, leccion: "Lección 07", tema: "Manejo Psicológico", pregunta: "¿Qué es un incidente crítico?", opciones: ["Un incendio de gran magnitud", "Evento que sobrepasa la capacidad de afrontamiento normal", "Un simulacro de emergencia", "Una reunión de personal"], respuesta: 1 },
+        { id: 27, leccion: "Lección 07", tema: "Manejo Psicológico", pregunta: "¿Qué es el 'EPRA emocional'?", opciones: ["Un equipo de respiración autónoma", "Un instrumento para identificar factores de riesgo emocional", "Una técnica de respiración", "Un protocolo de comunicación"], respuesta: 1 },
+        { id: 28, leccion: "Lección 07", tema: "Manejo Psicológico", pregunta: "¿Cuál es una estrategia recomendada para prevenir el estrés?", opciones: ["Callar y soportar", "Buscar apoyo profesional", "Aislarse de la familia", "Consumir alcohol"], respuesta: 1 },
+        // LECCIÓN 08
+        { id: 29, leccion: "Lección 08", tema: "SCI", pregunta: "¿Qué es el Sistema de Comando de Incidentes (SCI)?", opciones: ["Un sistema de comunicaciones", "Un sistema de administración estandarizada para incidentes", "Un plan de evacuación", "Un tipo de extintor"], respuesta: 1 },
+        { id: 30, leccion: "Lección 08", tema: "SCI", pregunta: "¿Cuál de las siguientes es una característica del SCI?", opciones: ["Terminología común", "Uso de códigos secretos", "Estructura fija", "Comunicaciones dispersas"], respuesta: 0 },
+        { id: 31, leccion: "Lección 08", tema: "SCI", pregunta: "¿Cuál es el primer paso que debe seguir el efectivo al mando si llega primero a la escena?", opciones: ["Asumir el mando", "Informar a su base del arribo", "Establecer un perímetro", "Evaluar la situación"], respuesta: 1 },
+        { id: 32, leccion: "Lección 08", tema: "SCI", pregunta: "¿Qué es la contabilidad de personal (SCP)?", opciones: ["Un registro financiero", "Una herramienta del SCI para controlar el personal", "Un sistema de alarmas", "Un procedimiento de rescate"], respuesta: 1 },
+        // LECCIÓN 09
+        { id: 33, leccion: "Lección 09", tema: "EPRA", pregunta: "¿Qué es una atmósfera peligrosa?", opciones: ["Ambiente con riesgo para la salud o la vida", "Lugar con mucha humedad", "Zona con temperatura alta", "Área con presencia de agua"], respuesta: 0 },
+        { id: 34, leccion: "Lección 09", tema: "EPRA", pregunta: "¿Cuál es el porcentaje normal de oxígeno en el aire?", opciones: ["18%", "21%", "23%", "25%"], respuesta: 1 },
+        { id: 35, leccion: "Lección 09", tema: "EPRA", pregunta: "Ante la pérdida de suministro de aire del EPRA, ¿qué debe hacer el bombero?", opciones: ["Quitarse la máscara", "Abrir la válvula by-pass y respirar controladamente", "Correr hacia la salida", "Gritar pidiendo ayuda"], respuesta: 1 },
+        { id: 36, leccion: "Lección 09", tema: "EPRA", pregunta: "Según la NFPA 1404, ¿cuándo debe salir el bombero de una atmósfera peligrosa?", opciones: ["Cuando suene la alarma de aire bajo", "Antes de que inicie el consumo de la reserva de emergencia", "Cuando el cilindro esté al 25%", "Cuando el oficial lo ordene"], respuesta: 1 },
+        // LECCIÓN 10
+        { id: 37, leccion: "Lección 10", tema: "Comportamiento del Fuego I", pregunta: "¿Qué es la energía potencial?", opciones: ["Energía en movimiento", "Energía almacenada que puede liberarse", "Energía térmica", "Energía eléctrica"], respuesta: 1 },
+        { id: 38, leccion: "Lección 10", tema: "Comportamiento del Fuego I", pregunta: "¿Cuáles son las formas de transferencia de calor?", opciones: ["Conducción, convección y radiación", "Conducción, convección y reflexión", "Radiación, reflexión y refracción", "Convección, radiación y evaporación"], respuesta: 0 },
+        { id: 39, leccion: "Lección 10", tema: "Comportamiento del Fuego I", pregunta: "¿Qué es la pirolisis?", opciones: ["Combustión con llama", "Descomposición química por la acción del calor", "Evaporación de líquidos", "Reacción de oxidación lenta"], respuesta: 1 },
+        { id: 40, leccion: "Lección 10", tema: "Comportamiento del Fuego I", pregunta: "¿Cuáles son los elementos del tetraedro del fuego?", opciones: ["Combustible, oxígeno, calor y reacción en cadena", "Combustible, oxígeno, calor y humo", "Oxígeno, calor, llama y humo", "Combustible, calor, llama y gases"], respuesta: 0 },
+        // LECCIÓN 11
+        { id: 41, leccion: "Lección 11", tema: "Comportamiento del Fuego II", pregunta: "¿Cuáles son los métodos de extinción de incendios?", opciones: ["Enfriamiento, separación, sofocación e inhibición", "Enfriamiento, dilución, barrido y aislamiento", "Agua, espuma, polvo y CO2", "Conducción, convección y radiación"], respuesta: 0 },
+        { id: 42, leccion: "Lección 11", tema: "Comportamiento del Fuego II", pregunta: "¿Qué clase de incendio involucra metales combustibles como magnesio y titanio?", opciones: ["Clase A", "Clase B", "Clase D", "Clase K"], respuesta: 2 },
+        { id: 43, leccion: "Lección 11", tema: "Comportamiento del Fuego II", pregunta: "¿Qué es el flashover?", opciones: ["Explosión de humo", "Combustión súbita generalizada en un espacio cerrado", "Inflamación de gases en el techo", "Aumento rápido de la temperatura"], respuesta: 1 },
+        { id: 44, leccion: "Lección 11", tema: "Comportamiento del Fuego II", pregunta: "¿Qué es el backdraft?", opciones: ["Fenómeno de combustión súbita", "Explosión causada por entrada de aire a gases calientes", "Inflamación de la capa de humo", "Rápido crecimiento del fuego"], respuesta: 1 },
+        // LECCIÓN 12
+        { id: 45, leccion: "Lección 12", tema: "Extintores", pregunta: "¿Qué es un extintor portátil?", opciones: ["Un dispositivo fijo para incendios", "Un dispositivo portátil para fuegos en etapa inicial", "Un sistema de rociadores", "Una manguera contra incendios"], respuesta: 1 },
+        { id: 46, leccion: "Lección 12", tema: "Extintores", pregunta: "¿Cuál de los siguientes extintores NO está permitido según la NTP?", opciones: ["Polvo químico seco", "CO2", "Soda-ácida", "Espuma"], respuesta: 2 },
+        { id: 47, leccion: "Lección 12", tema: "Extintores", pregunta: "¿Qué agente extintor es adecuado para fuegos clase C (equipos eléctricos energizados)?", opciones: ["Agua", "Espuma", "CO2 o polvo químico seco", "Polvo de metal"], respuesta: 2 },
+        { id: 48, leccion: "Lección 12", tema: "Extintores", pregunta: "¿Cuál es el primer paso en el manejo de un extintor?", opciones: ["Apuntar a la base del fuego", "Descargar una prueba", "Descolgar el extintor y retirar el pasador", "Aproximarse al fuego"], respuesta: 2 },
+        // LECCIÓN 13
+        { id: 49, leccion: "Lección 13", tema: "Abastecimiento", pregunta: "¿Qué es un hidrante?", opciones: ["Una bomba de agua", "Un aparato conectado a la red de agua para suministro contra incendios", "Un tanque de almacenamiento", "Una manguera de gran diámetro"], respuesta: 1 },
+        { id: 50, leccion: "Lección 13", tema: "Abastecimiento", pregunta: "¿Cuál es la presión recomendada de entrada a la bomba desde un hidrante?", opciones: ["10-30 psi", "20-80 psi", "50-100 psi", "100-150 psi"], respuesta: 1 },
+        { id: 51, leccion: "Lección 13", tema: "Abastecimiento", pregunta: "¿Cuál es la altura máxima teórica de succión para una bomba?", opciones: ["7.5 m", "10.33 m", "15 m", "20 m"], respuesta: 1 },
+        { id: 52, leccion: "Lección 13", tema: "Abastecimiento", pregunta: "¿Qué es la cavitación en una bomba?", opciones: ["Cuando la bomba succiona aire", "Formación de burbujas de vapor por baja presión", "Sobrecalentamiento del motor", "Obstrucción de la manguera"], respuesta: 1 },
+        // LECCIÓN 14
+        { id: 53, leccion: "Lección 14", tema: "Hidráulica", pregunta: "¿Qué es el caudal?", opciones: ["La presión del agua", "La cantidad de líquido que circula por unidad de tiempo", "La velocidad del agua", "La fuerza del chorro"], respuesta: 1 },
+        { id: 54, leccion: "Lección 14", tema: "Hidráulica", pregunta: "¿Qué unidad de presión se usa comúnmente en sistemas contra incendios?", opciones: ["Pascal", "PSI (libras por pulgada cuadrada)", "Bar", "Atmósfera"], respuesta: 1 },
+        { id: 55, leccion: "Lección 14", tema: "Hidráulica", pregunta: "¿Qué describe el efecto Venturi?", opciones: ["Aumento de presión al reducir la velocidad", "Disminución de presión al aumentar la velocidad en un estrechamiento", "Cambio de densidad del agua", "Aumento de temperatura"], respuesta: 1 },
+        { id: 56, leccion: "Lección 14", tema: "Hidráulica", pregunta: "¿Qué es el golpe de ariete?", opciones: ["Un tipo de válvula", "Aumento brusco de presión por cierre rápido de una válvula", "Una onda de choque en el aire", "Una vibración normal en las mangueras"], respuesta: 1 },
+        // LECCIÓN 15
+        { id: 57, leccion: "Lección 15", tema: "Chorros de extinción", pregunta: "¿Cuáles son las principales propiedades extintoras del agua?", opciones: ["Enfriamiento y sofocación", "Inhibición y separación", "Dilución y absorción", "Conducción y convección"], respuesta: 0 },
+        { id: 58, leccion: "Lección 15", tema: "Chorros de extinción", pregunta: "¿Qué caracteriza a un chorro sólido?", opciones: ["Alta absorción de calor", "Compacto, con gran alcance y penetración", "Nebulización fina", "Gran capacidad de ventilación"], respuesta: 1 },
+        { id: 59, leccion: "Lección 15", tema: "Chorros de extinción", pregunta: "¿Para qué se usa el chorro de ventilación (media neblina)?", opciones: ["Para enfriar estructuras", "Para extraer humo mediante efecto Venturi", "Para ataque directo a líquidos inflamables", "Para protección personal"], respuesta: 1 },
+        { id: 60, leccion: "Lección 15", tema: "Chorros de extinción", pregunta: "¿Cuál es la ventaja del chorro nebulizado (3D) en ataques interiores?", opciones: ["Mayor alcance", "Mayor absorción de calor y enfriamiento de gases", "Menos vapor de agua", "Mayor penetración"], respuesta: 1 },
+        // LECCIÓN 16
+        { id: 61, leccion: "Lección 16", tema: "Técnicas de extinción", pregunta: "¿En qué consiste el ataque indirecto?", opciones: ["Aplicar agua directamente al fuego", "Inundar el recinto con vapor de agua desde el exterior", "Usar espuma para sofocar", "Ventilar el área"], respuesta: 1 },
+        { id: 62, leccion: "Lección 16", tema: "Técnicas de extinción", pregunta: "¿Qué es el ataque directo?", opciones: ["Aplicación de agua sobre la superficie del combustible en llamas", "Aplicación de agua a la capa de humo", "Uso de ventilación forzada", "Ataque exterior con monitores"], respuesta: 0 },
+        { id: 63, leccion: "Lección 16", tema: "Técnicas de extinción", pregunta: "¿Qué es el enfriamiento de gases?", opciones: ["Técnica para reducir la inflamabilidad de los gases calientes", "Enfriar las paredes del compartimento", "Aplicar agua al techo", "Ventilar el techo"], respuesta: 0 },
+        { id: 64, leccion: "Lección 16", tema: "Técnicas de extinción", pregunta: "En un incendio, ¿cuál es la primera prioridad táctica?", opciones: ["Conservación de la propiedad", "Control del incendio", "Búsqueda y rescate", "Ventilación"], respuesta: 2 },
+        // LECCIÓN 17
+        { id: 65, leccion: "Lección 17", tema: "Entrada forzada", pregunta: "¿Qué es la entrada forzada?", opciones: ["Ingresar a una estructura usando la fuerza cuando los accesos están bloqueados", "Usar una llave maestra", "Romper una ventana sin precaución", "Ingresar por una puerta abierta"], respuesta: 0 },
+        { id: 66, leccion: "Lección 17", tema: "Entrada forzada", pregunta: "¿Cuál es una herramienta de palanca utilizada en entrada forzada?", opciones: ["Motosierra", "Halligan", "Extractor", "Bichero"], respuesta: 1 },
+        { id: 67, leccion: "Lección 17", tema: "Entrada forzada", pregunta: "¿Cómo se debe transportar un hacha de forma segura?", opciones: ["Con el filo hacia el cuerpo", "Con el filo lejos del cuerpo", "Sobre el hombro", "Colgando de la cintura"], respuesta: 1 },
+        { id: 68, leccion: "Lección 17", tema: "Entrada forzada", pregunta: "Antes de forzar una puerta en un incendio, ¿qué condición debe verificarse?", opciones: ["Que no haya personas dentro", "Ausencia de signos de backdraft", "Que la puerta no esté asegurada", "Que haya agua disponible"], respuesta: 1 },
+        // LECCIÓN 18
+        { id: 69, leccion: "Lección 18", tema: "Ventilación", pregunta: "¿Qué es la ventilación táctica?", opciones: ["Abrir ventanas para refrescar", "Remoción sistemática de humo y gases calientes", "Instalación de extractores", "Uso de ventiladores para enfriar"], respuesta: 1 },
+        { id: 70, leccion: "Lección 18", tema: "Ventilación", pregunta: "¿Cuáles son los métodos de ventilación?", opciones: ["Natural y forzada", "Mecánica y química", "Vertical y horizontal", "Presión positiva y negativa"], respuesta: 0 },
+        { id: 71, leccion: "Lección 18", tema: "Ventilación", pregunta: "¿Qué es la ventilación vertical?", opciones: ["Apertura en el techo para dejar salir el humo", "Apertura de puertas y ventanas en el mismo nivel", "Uso de ventiladores", "Extracción con chorro de agua"], respuesta: 0 },
+        { id: 72, leccion: "Lección 18", tema: "Ventilación", pregunta: "¿Qué es la ventilación hidráulica?", opciones: ["Uso de agua a presión para crear niebla y extraer humo", "Uso de motobombas", "Inyección de aire comprimido", "Uso de extractores eléctricos"], respuesta: 0 },
+        // LECCIÓN 19
+        { id: 73, leccion: "Lección 19", tema: "Escaleras", pregunta: "¿Cuáles son tipos de escaleras usadas por bomberos?", opciones: ["Simples, de extensión, de techo, plegables", "Metálicas, de madera, de aluminio", "Fijas, móviles, aéreas", "Telescópicas, articuladas, de gancho"], respuesta: 0 },
+        { id: 74, leccion: "Lección 19", tema: "Escaleras", pregunta: "¿Cómo se determina el ángulo óptimo de una escalera apoyada en un edificio?", opciones: ["La base a 1/4 de la altura", "Los pies tocan la base y los brazos en 90° tocan los largueros", "La escalera debe estar vertical", "El ángulo debe ser de 45°"], respuesta: 1 },
+        { id: 75, leccion: "Lección 19", tema: "Escaleras", pregunta: "¿Cuántos bomberos se recomiendan para bajar una víctima por una escalera?", opciones: ["1 bombero", "2 bomberos", "3 bomberos", "5 bomberos (2 arriba, 1 en la escalera, 2 abajo)"], respuesta: 3 },
+        { id: 76, leccion: "Lección 19", tema: "Escaleras", pregunta: "Al subir una línea de manguera por una escalera, ¿qué precaución se debe tomar?", opciones: ["Llevarla con agua a presión", "Llevarla sobre el hombro sin agua", "Colgarla del cuello", "Arrastrarla por los peldaños"], respuesta: 1 },
+        // LECCIÓN 20
+        { id: 77, leccion: "Lección 20", tema: "Conservación de la propiedad", pregunta: "¿Qué es el salvamento en la lucha contra incendios?", opciones: ["Conjunto de métodos para reducir daños primarios y secundarios", "Rescate de personas", "Remoción de escombros", "Ventilación del área"], respuesta: 0 },
+        { id: 78, leccion: "Lección 20", tema: "Conservación de la propiedad", pregunta: "¿Qué son los daños secundarios?", opciones: ["Daños causados por el fuego", "Daños causados por las operaciones de extinción", "Daños por humo", "Daños por agua"], respuesta: 1 },
+        { id: 79, leccion: "Lección 20", tema: "Conservación de la propiedad", pregunta: "¿Qué es el reacondicionamiento?", opciones: ["Reparar la estructura", "Buscar y extinguir fuegos ocultos y proteger la escena", "Limpiar los escombros", "Ventilar el edificio"], respuesta: 1 },
+        { id: 80, leccion: "Lección 20", tema: "Conservación de la propiedad", pregunta: "¿Cuál es el objetivo de la remoción de escombros?", opciones: ["Limpiar el área", "Evitar la reignición", "Recuperar objetos", "Facilitar la investigación"], respuesta: 1 },
+        // LECCIÓN 21
+        { id: 81, leccion: "Lección 21", tema: "Evaluación de estructuras", pregunta: "¿Cuáles son elementos estructurales básicos según el RNE?", opciones: ["Columnas, vigas, losas, muros, cimentación", "Techos, pisos, paredes, puertas", "Acero, concreto, madera, adobe", "Cimientos, sobrecimientos, vigas, columnas"], respuesta: 0 },
+        { id: 82, leccion: "Lección 21", tema: "Evaluación de estructuras", pregunta: "¿Qué es el spalling en el concreto expuesto al fuego?", opciones: ["Fisuración superficial", "Despostillamiento de la superficie por presión interna", "Pérdida de resistencia", "Cambio de color"], respuesta: 1 },
+        { id: 83, leccion: "Lección 21", tema: "Evaluación de estructuras", pregunta: "¿Qué sistema estructural utiliza muros de ductilidad limitada (EMDL) para edificios de hasta 8 pisos?", opciones: ["Concreto armado", "Albañilería confinada", "Estructuras de acero", "Madera"], respuesta: 0 },
+        { id: 84, leccion: "Lección 21", tema: "Evaluación de estructuras", pregunta: "En albañilería, ¿qué nivel de daño se considera severo?", opciones: ["Grietas finas", "Grietas diagonales con desplome o inclinación", "Fisuras imperceptibles", "Desprendimiento de pintura"], respuesta: 1 },
+        // LECCIÓN 22
+        { id: 85, leccion: "Lección 22", tema: "Incendios en edificios", pregunta: "¿A partir de cuántos pisos se considera un incendio en estructura elevada?", opciones: ["3 pisos", "4 pisos", "5 pisos", "6 pisos"], respuesta: 1 },
+        { id: 86, leccion: "Lección 22", tema: "Incendios en edificios", pregunta: "¿Cuál es un problema específico para los bomberos en incendios de edificios altos?", opciones: ["Falta de agua", "Dificultad de acceso y tiempo de evacuación", "Exceso de ventilación", "Poca carga de fuego"], respuesta: 1 },
+        { id: 87, leccion: "Lección 22", tema: "Incendios en edificios", pregunta: "¿Qué presión se recomienda para la siamesa de la red privada en un edificio?", opciones: ["50 psi + 5 psi por piso", "100 psi + 5 psi por piso hasta el piso del incendio", "150 psi fijo", "Depende del hidrante"], respuesta: 1 },
+        { id: 88, leccion: "Lección 22", tema: "Incendios en edificios", pregunta: "En incendios de edificios, ¿cuál es la recomendación sobre el uso de ascensores?", opciones: ["Usarlos hasta el piso del incendio", "No usarlos, subir por escaleras", "Usarlos solo hasta dos pisos por debajo del fuego", "Usarlos solo para equipos"], respuesta: 2 },
+        // LECCIÓN 23
+        { id: 89, leccion: "Lección 23", tema: "Incendios en sótanos", pregunta: "¿Qué es un sótano según la definición?", opciones: ["Parte de edificación con techo hasta 0.50 m por encima del nivel de vereda", "Cualquier piso subterráneo", "Área de estacionamiento", "Depósito de materiales"], respuesta: 0 },
+        { id: 90, leccion: "Lección 23", tema: "Incendios en sótanos", pregunta: "¿Cuál es una característica de los incendios en sótanos?", opciones: ["Buena ventilación", "Altas temperaturas y difícil acceso", "Rápida extinción", "Poco humo"], respuesta: 1 },
+        { id: 91, leccion: "Lección 23", tema: "Incendios en sótanos", pregunta: "¿Qué tipo de sótano se destina al estacionamiento de vehículos?", opciones: ["Sótano técnico", "Sótano habitacional", "Sótano de estacionamiento", "Sótano de laboratorio"], respuesta: 2 },
+        { id: 92, leccion: "Lección 23", tema: "Incendios en sótanos", pregunta: "¿Qué medida preventiva se recomienda para evitar incendios en sótanos?", opciones: ["Instalar detectores de humo y no almacenar combustibles", "Usar alfombras", "Cerrar todas las ventanas", "Apagar las luces"], respuesta: 0 },
+        // LECCIÓN 24
+        { id: 93, leccion: "Lección 24", tema: "Incendios en vehículos", pregunta: "¿Cuáles son peligros en incendios de vehículos?", opciones: ["Gases tóxicos, explosión de neumáticos y airbags", "Falta de agua", "Poca visibilidad", "Caída de estructuras"], respuesta: 0 },
+        { id: 94, leccion: "Lección 24", tema: "Incendios en vehículos", pregunta: "¿Qué es el GLP (Gas Licuado de Petróleo)?", opciones: ["Un gas más liviano que el aire", "Una mezcla de propano y butano", "Un combustible diesel", "Un gas natural"], respuesta: 1 },
+        { id: 95, leccion: "Lección 24", tema: "Incendios en vehículos", pregunta: "¿Qué es el GNV (Gas Natural Vehicular)?", opciones: ["Compuesto principalmente por metano", "Una mezcla de butano y propano", "Un líquido inflamable", "Un gas licuado"], respuesta: 0 },
+        { id: 96, leccion: "Lección 24", tema: "Incendios en vehículos", pregunta: "Ante un incendio en un vehículo eléctrico, ¿qué se debe hacer con la batería auxiliar de 12V?", opciones: ["Desconectarla después de apagar el fuego", "Desconectarla antes de cualquier operación", "Cortar los cables naranja", "No hacer nada"], respuesta: 1 },
+        // LECCIÓN 25
+        { id: 97, leccion: "Lección 25", tema: "Líquidos inflamables", pregunta: "Según la NFPA 30, ¿qué es un líquido inflamable?", opciones: ["Punto de inflamación < 37.8°C", "Punto de inflamación ≥ 37.8°C", "Punto de ebullición > 37.8°C", "Cualquier líquido que arde"], respuesta: 0 },
+        { id: 98, leccion: "Lección 25", tema: "Líquidos inflamables", pregunta: "¿Qué es un líquido combustible según la NFPA?", opciones: ["Punto de inflamación ≥ 37.8°C", "Punto de inflamación < 37.8°C", "Punto de ebullición < 37.8°C", "Líquido con vapor inflamable"], respuesta: 0 },
+        { id: 99, leccion: "Lección 25", tema: "Líquidos inflamables", pregunta: "¿Qué es el Boilover?", opciones: ["Rebasamiento superficial", "Rebasamiento por ebullición explosiva", "Rebosamiento espumoso", "Explosión de vapor"], respuesta: 1 },
+        { id: 100, leccion: "Lección 25", tema: "Líquidos inflamables", pregunta: "¿Qué es el Slopover?", opciones: ["Rebasamiento superficial parcial", "Explosión de tanque", "Incendio de gas", "Derrame de combustible"], respuesta: 0 },
+        // (Algunas lecciones adicionales pueden quedar con menos preguntas, pero cubrimos 100)
+        // Ajuste: ya hay 100 preguntas exactas.
+    ];
+
+    // ============================================================
+    //  RENDERIZADO Y LÓGICA DEL EXAMEN
+    // ============================================================
+    const examenDiv = document.getElementById('examen');
+    const resultadosDiv = document.getElementById('resultados');
+
+    function renderExamen() {
+        let html = '';
+        preguntas.forEach((p, idx) => {
+            const num = idx + 1;
+            html += `<div class="question-block" data-id="${p.id}">
+                        <div class="q-tag">${p.leccion} · ${p.tema}</div>
+                        <div class="q-title">${num}. ${p.pregunta}</div>
+                        <div class="options">`;
+            const letras = ['A', 'B', 'C', 'D'];
+            p.opciones.forEach((opt, oi) => {
+                const value = oi;
+                html += `<label>
+                            <input type="radio" name="q${p.id}" value="${value}">
+                            <span><strong>${letras[oi]}.</strong> ${opt}</span>
+                         </label>`;
+            });
+            html += `</div></div>`;
+        });
+        examenDiv.innerHTML = html;
+    }
+
+    function calificar() {
+        let correctas = 0;
+        let total = preguntas.length;
+        let resultadosPorLeccion = {};
+
+        // Inicializar contadores por lección
+        preguntas.forEach(p => {
+            if (!resultadosPorLeccion[p.leccion]) {
+                resultadosPorLeccion[p.leccion] = { total: 0, correctas: 0 };
+            }
+            resultadosPorLeccion[p.leccion].total++;
+        });
+
+        // Recorrer preguntas y verificar respuestas
+        preguntas.forEach(p => {
+            const radios = document.querySelectorAll(`input[name="q${p.id}"]`);
+            let seleccionado = null;
+            radios.forEach(r => { if (r.checked) seleccionado = parseInt(r.value); });
+            const esCorrecta = (seleccionado === p.respuesta);
+            if (esCorrecta) {
+                correctas++;
+                resultadosPorLeccion[p.leccion].correctas++;
+            }
+        });
+
+        const porcentaje = Math.round((correctas / total) * 100);
+
+        // Mostrar resultados
+        resultadosDiv.innerHTML = '';
+        resultadosDiv.className = 'result-box show';
+
+        let resumenHTML = `
+            <div class="score-summary">
+                <div class="score-item"><span class="number">${correctas}</span><div class="label">Respuestas correctas</div></div>
+                <div class="score-item"><span class="number">${total - correctas}</span><div class="label">Respuestas incorrectas</div></div>
+                <div class="score-item"><span class="number">${porcentaje}%</span><div class="label">Porcentaje de acierto</div></div>
+            </div>
+            <h3>📊 Feedback por lección</h3>
+            <p style="color:#555; margin-bottom:12px;">Las lecciones con menos del 70% de acierto requieren repaso.</p>
+            <div class="leccion-feedback">
+        `;
+
+        let leccionesOrdenadas = Object.keys(resultadosPorLeccion).sort();
+        leccionesOrdenadas.forEach(leccion => {
+            const datos = resultadosPorLeccion[leccion];
+            const pct = Math.round((datos.correctas / datos.total) * 100);
+            const repaso = pct < 70;
+            const clase = repaso ? 'leccion-card repaso' : 'leccion-card';
+            resumenHTML += `
+                <div class="${clase}">
+                    <div class="nombre">${leccion}</div>
+                    <div class="stats">${datos.correctas}/${datos.total} correctas (${pct}%) ${repaso ? '🔴 Repasar' : '✅ OK'}</div>
+                </div>
+            `;
+        });
+
+        resumenHTML += `</div>`;
+
+        // Revisión de respuestas (solo las incorrectas)
+        resumenHTML += `<div class="review-answers"><h3>🔍 Revisión de respuestas</h3>`;
+        preguntas.forEach((p, idx) => {
+            const num = idx + 1;
+            const radios = document.querySelectorAll(`input[name="q${p.id}"]`);
+            let seleccionado = null;
+            radios.forEach(r => { if (r.checked) seleccionado = parseInt(r.value); });
+            const esCorrecta = (seleccionado === p.respuesta);
+            if (!esCorrecta) {
+                const tuResp = (seleccionado !== null) ? p.opciones[seleccionado] : 'No respondida';
+                const correcta = p.opciones[p.respuesta];
+                resumenHTML += `
+                    <div class="respuesta-item">
+                        <span><strong>${num}.</strong> ${p.pregunta.substring(0, 80)}${p.pregunta.length > 80 ? '…' : ''}</span>
+                        <span class="incorrecta">❌ Tu respuesta: ${tuResp}</span>
+                        <span class="correcta">✅ Correcta: ${correcta}</span>
+                        <span style="font-size:0.8rem; color:#888;"> (${p.leccion})</span>
+                    </div>
+                `;
+            }
+        });
+        resumenHTML += `</div>`;
+
+        // Botón para volver a intentar
+        resumenHTML += `<div style="text-align:center; margin-top:20px;">
+                            <button class="btn btn-secondary" onclick="window.location.reload()">🔄 Intentar de nuevo</button>
+                        </div>`;
+
+        resultadosDiv.innerHTML = resumenHTML;
+
+        // Desplazar hacia resultados
+        resultadosDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function reiniciar() {
+        // Desmarcar todos los radio buttons
+        document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+        resultadosDiv.className = 'result-box';
+        resultadosDiv.innerHTML = '';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Eventos
+    document.getElementById('btnCalificar').addEventListener('click', calificar);
+    document.getElementById('btnReiniciar').addEventListener('click', reiniciar);
+
+    // Renderizar al cargar
+    renderExamen();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Interactivo PRT 2026 - Bomberos Perú</title>
+    <style>
+        :root {
+            --primary-red: #d32f2f;
+            --dark-red: #b71c1c;
+            --bg-dark: #1a1a1a;
+            --bg-light: #2c2c2c;
+            --text-light: #e0e0e0;
+            --text-white: #ffffff;
+            --accent-yellow: #fbc02d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: var(--text-white);
+            text-align: center;
+            padding: 20px 10px;
+            border-bottom: 5px solid var(--accent-yellow);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.6em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            margin: 5px 0 0 0;
+            font-weight: bold;
+            color: var(--accent-yellow);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .info-panel {
+            background-color: var(--bg-light);
+            border-left: 5px solid var(--primary-red);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .info-panel strong {
+            color: var(--accent-yellow);
+        }
+
+        .question-card {
+            background-color: var(--bg-light);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+            border-left: 4px solid #555;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            border-left-color: var(--primary-red);
+        }
+
+        .lesson-tag {
+            display: inline-block;
+            background-color: var(--dark-red);
+            color: white;
+            font-size: 0.75em;
+            padding: 3px 8px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text-white);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            background-color: #3a3a3a;
+            padding: 12px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .option-label:hover {
+            background-color: #4a4a4a;
+        }
+
+        .option-label input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+            accent-color: var(--primary-red);
+        }
+
+        .submit-area {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        button {
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.4);
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--dark-red);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(211, 47, 47, 0.6);
+        }
+
+        #results {
+            display: none;
+            background-color: var(--bg-light);
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid var(--accent-yellow);
+            margin-bottom: 40px;
+        }
+
+        .score-display {
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--accent-yellow);
+            margin: 10px 0;
+        }
+
+        .status-pass { color: #4caf50; font-weight: bold; font-size: 1.5em; }
+        .status-fail { color: #f44336; font-weight: bold; font-size: 1.5em; }
+
+        .review-list {
+            text-align: left;
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid var(--primary-red);
+        }
+
+        .review-list ul {
+            margin: 10px 0 0 0;
+            padding-left: 20px;
+            color: #ffab91;
+        }
+
+        .hidden { display: none; }
+
+        /* Estilos para el Descargo de Responsabilidad */
+        .disclaimer {
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #222;
+            border-top: 2px solid #444;
+            font-size: 0.85em;
+            color: #999;
+            text-align: justify;
+            border-radius: 5px;
+            line-height: 1.4;
+        }
+        .disclaimer strong {
+            color: var(--accent-yellow);
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        /* Estilo para el mensaje especial de la pregunta 75 */
+        .special-message {
+            background-color: #b71c1c;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-align: center;
+            border: 2px solid #fbc02d;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Cuerpo General de Bomberos Voluntarios del Perú</h1>
+        <p>Evaluación Final Teórica - Curso PRT 2026</p>
+    </header>
+
+    <div class="container">
+        <div class="info-panel">
+            <strong>Instrucciones:</strong> Responda las 75 preguntas. La nota mínima aprobatoria es del <strong>70% (53 respuestas correctas)</strong>. Al finalizar, el sistema identificará las lecciones que necesita repasar.
+        </div>
+
+        <form id="examForm">
+            <div id="questionsContainer"></div>
+            <div class="submit-area">
+                <button type="button" onclick="evaluateExam()">Finalizar y Evaluar</button>
+            </div>
+        </form>
+
+        <div id="results">
+            <!-- Aquí se insertará el mensaje especial si falla la pregunta 75 -->
+            <div id="specialMessageContainer"></div>
+            
+            <h2>Resultado de la Evaluación</h2>
+            <div class="score-display" id="finalScore">0%</div>
+            <div id="passStatus"></div>
+            <div id="reviewSection" class="review-list hidden">
+                <h3>⚠️ Lecciones a Repasar:</h3>
+                <p>Basado en sus respuestas incorrectas, se recomienda reforzar los siguientes temas:</p>
+                <ul id="lessonsToReview"></ul>
+            </div>
+        </div>
+
+        <!-- AVISO LEGAL / DISCLAIMER -->
+        <div class="disclaimer">
+            <strong>Aviso Legal y Descargo de Responsabilidad:</strong>
+            El presente material interactivo ha sido elaborado con un fin <b>netamente educativo y de autoevaluación</b> para el personal de primera respuesta. No busca sacar ventaja económica, comercial ni de ninguna otra índole. Se respeta de manera irrestricta el <b>Reglamento Interno de Funcionamiento (RIF)</b> y los derechos de autor correspondientes al manual original del Curso PRT 2026. Asimismo, este contenido se rige bajo el marco del respeto a la <b>Constitución Política del Perú</b>, promoviendo la salud pública, la educación y la preparación para emergencias sin fines de lucro.
+        </div>
+
+    </div> <!-- Fin del container -->
+
+    <script>
+        const questions = [
+            // LECCIÓN 1
+            { lesson: "L1: Introducción", q: "Según las estadísticas del CGBVP, ¿cuál es la categoría de emergencia más numerosa atendida?", a: ["Accidentes vehiculares", "Emergencias médicas y traumas", "Fugas de gas", "Incendios"], correct: 1 },
+            { lesson: "L1: Introducción", q: "¿Aproximadamente qué porcentaje de las muertes por trauma ocurre antes de llegar al hospital?", a: ["El 10%", "El 25%", "Más del 50%", "El 90%"], correct: 2 },
+            { lesson: "L1: Introducción", q: "¿En qué año y contexto se creó el curso de Primera Respuesta en Trauma (PRT)?", a: ["En 2015, tras el Fenómeno de El Niño", "En 2020, en el contexto de la pandemia por COVID-19", "En 2026, como respuesta a los conflictos sociales", "En 1997, con la Ley General de Salud"], correct: 1 },
+            { lesson: "L1: Introducción", q: "¿Cuál es el porcentaje de muertes totales relacionadas con trauma en Perú?", a: ["5.2%", "10.7%", "23.4%", "15%"], correct: 1 },
+            { lesson: "L1: Introducción", q: "¿Cuál es el principal objetivo del curso PRT según su prefacio?", a: ["Reemplazar a los médicos en los hospitales", "Profesionalizar la labor del bombero y buscar el reconocimiento del Estado para la carrera de Técnico en APH", "Crear un nuevo cuerpo de rescate", "Vender equipos médicos"], correct: 1 },
+            { lesson: "L1: Introducción", q: "Según la epidemiología, ¿en qué momento de la semana y del día se concentran la mayoría de los accidentes?", a: ["Lunes por la mañana", "Fines de semana, en las tardes y noches", "Miércoles al mediodía", "No hay un patrón definido"], correct: 1 },
+
+            // LECCIÓN 2
+            { lesson: "L2: Perspectiva Prehospitalaria", q: "¿Qué normativa legal establece la obligación de todos los establecimientos de salud de prestar atención de emergencia?", a: ["Ley N° 29414", "Ley N° 26842 (Ley General de Salud)", "Resolución Jefatural N° 041-2015/SIS", "Decreto Legislativo N° 1260"], correct: 1 },
+            { lesson: "L2: Perspectiva Prehospitalaria", q: "¿Cómo se define la falta de conocimientos o habilidades técnicas en la práctica profesional?", a: ["Negligencia", "Imprudencia", "Impericia", "Abandono"], correct: 2 },
+            { lesson: "L2: Perspectiva Prehospitalaria", q: "¿Qué modelo de atención se enfoca en la estabilización en la escena antes de trasladar?", a: ["Scoop & Run", "Play & Run", "Stay & Play", "Modelo SAMU"], correct: 2 },
+            { lesson: "L2: Perspectiva Prehospitalaria", q: "Según las prioridades en trauma, ¿cuál es el primer aspecto a garantizar?", a: ["La funcionalidad", "La estética", "La prioridad vital (salvar la vida)", "El traslado rápido"], correct: 2 },
+            { lesson: "L2: Perspectiva Prehospitalaria", q: "¿Qué tipo de ambulancia está diseñada para atención médica intensiva durante el traslado?", a: ["Tipo I: Rural", "Tipo II: Urbana", "Tipo III: Urbana", "Tipo IV: Aérea"], correct: 2 },
+            { lesson: "L2: Perspectiva Prehospitalaria", q: "¿Cuál es la diferencia principal entre 'urgencia' y 'emergencia'?", a: ["No hay diferencia", "La urgencia requiere atención inmediata por riesgo de muerte; la emergencia puede esperar", "La emergencia requiere atención inmediata por riesgo de muerte; la urgencia puede esperar un tiempo sin riesgo inminente", "La urgencia solo se atiende en consultorio"], correct: 2 },
+            { lesson: "L2: Perspectiva Prehospitalaria", q: "¿Qué artículo del Código Penal Peruano sanciona la omisión de auxilio a una persona herida en grave peligro?", a: ["Artículo 111", "Artículo 124", "Artículo 127", "Artículo 156"], correct: 2 },
+
+            // LECCIÓN 3
+            { lesson: "L3: Factores Humanos y CRM", q: "¿Qué porcentaje de los errores médicos están vinculados a fallas en los factores humanos?", a: ["20-30%", "40-50%", "70-80%", "100%"], correct: 2 },
+            { lesson: "L3: Factores Humanos y CRM", q: "¿Cuál es el propósito principal de la herramienta ATMIST?", a: ["Realizar debriefing", "Transmitir información del paciente de forma clara y concisa", "Evaluar el nivel de conciencia", "Registrar signos vitales"], correct: 1 },
+            { lesson: "L3: Factores Humanos y CRM", q: "¿Qué técnica de comunicación se utiliza para la entrega final del paciente al hospital?", a: ["STOP", "XABCDE", "SBAR", "AVDI"], correct: 2 },
+            { lesson: "L3: Factores Humanos y CRM", q: "¿En qué consiste la 'Parada Táctica' o procedimiento STOP?", a: ["Detener la ambulancia", "Una pausa de 10 segundos para reevaluar la situación", "Finalizar la RCP", "Aislar la escena"], correct: 1 },
+            { lesson: "L3: Factores Humanos y CRM", q: "¿Cuál es el objetivo del 'debriefing' después de una resucitación?", a: ["Castigar los errores del equipo", "Analizar el desempeño real vs. el esperado, identificar áreas de mejora y procesar emociones", "Rellenar papeleo", "Evaluar solo al líder del equipo"], correct: 1 },
+            { lesson: "L3: Factores Humanos y CRM", q: "En la comunicación en bucle cerrado, ¿qué debe hacer el receptor de una orden?", a: ["Ejecutarla sin decir nada", "Repetir el mensaje para confirmar que lo ha entendido y avisar cuando la ha realizado", "Pedir a otro que la haga", "Ignorarla si no está de acuerdo"], correct: 1 },
+
+            // LECCIÓN 4
+            { lesson: "L4: Incidente con Saldo Masivo", q: "¿Cuál es el color de triaje que corresponde a la máxima prioridad?", a: ["Amarillo", "Verde", "Rojo", "Negro"], correct: 2 },
+            { lesson: "L4: Incidente con Saldo Masivo", q: "En el método START, si un paciente no camina, no respira y tras abrirle la vía aérea sigue sin respirar, ¿qué color se le asigna?", a: ["Rojo", "Amarillo", "Verde", "Negro"], correct: 3 },
+            { lesson: "L4: Incidente con Saldo Masivo", q: "¿Cuál es el objetivo principal del Puesto Médico de Avanzada (PMA)?", a: ["Búsqueda y rescate", "Estabilizar a las víctimas y organizar su evacuación", "Centro de prensa", "Extinción de incendios"], correct: 1 },
+            { lesson: "L4: Incidente con Saldo Masivo", q: "En el método START, ¿cuál es el límite de frecuencia respiratoria que clasifica a un paciente como Rojo?", a: ["Menos de 10 rpm", "Más de 30 rpm", "Entre 12 y 20 rpm", "Más de 50 rpm"], correct: 1 },
+            { lesson: "L4: Incidente con Saldo Masivo", q: "¿Cuáles son los tres principios fundamentales de un incidente con saldo masivo de víctimas?", a: ["Salvar la mayor cantidad de vidas, no causar más daños y resolver en el menor tiempo posible", "Atender primero a los más graves, luego a los leves y al final a los ilesos", "Trasladar a todos al hospital más cercano lo antes posible", "Esperar a que lleguen los médicos para iniciar el triaje"], correct: 0 },
+            { lesson: "L4: Incidente con Saldo Masivo", q: "En el triaje START, si un paciente camina y obedece órdenes, ¿qué color se le asigna?", a: ["Rojo", "Amarillo", "Verde", "Negro"], correct: 2 },
+
+            // LECCIÓN 5
+            { lesson: "L5: Biomecánica del Traumatismo", q: "¿Qué tipo de fuerza suele producir fracturas espiroideas?", a: ["Compresión", "Flexión", "Torsión", "Tracción"], correct: 2 },
+            { lesson: "L5: Biomecánica del Traumatismo", q: "En un atropello, ¿cuál es la secuencia correcta de las tres fases del impacto?", a: ["Suelo, parachoques, capó", "Parachoques, capó, suelo", "Lateral, frontal, vuelco", "Parabrisas, techo, suelo"], correct: 1 },
+            { lesson: "L5: Biomecánica del Traumatismo", q: "¿Qué tipo de cavitación produce una bala causando distorsión temporal del tejido por onda de presión?", a: ["Cavidad permanente", "Cavidad temporal", "Cavidad de eyección", "Cavidad de compresión"], correct: 1 },
+            { lesson: "L5: Biomecánica del Traumatismo", q: "En una colisión por alcance, ¿qué lesión es típica por el movimiento de la cabeza respecto al tronco?", a: ["Fractura de fémur bilateral", "Luxación de cadera", "Lesión por hiperextensión cervical (latigazo)", "Ruptura de aorta"], correct: 2 },
+            { lesson: "L5: Biomecánica del Traumatismo", q: "Según la biomecánica, ¿por qué se produce el 'efecto latigazo' en colisiones por alcance?", a: ["Porque el cuerpo se mueve hacia adelante y la cabeza queda rezagada, hiperextendiendo el cuello", "Porque el cinturón de seguridad se activa bruscamente", "Porque el airbag golpea la cabeza", "Porque el vehículo vuelca"], correct: 0 },
+            { lesson: "L5: Biomecánica del Traumatismo", q: "En un accidente de motocicleta, ¿qué lesión es común en el impacto frontal contra el manillar?", a: ["Fractura de fémur bilateral y hemorragia intrapélvica", "Fractura de clavícula", "Luxación de hombro", "Esguince de tobillo"], correct: 0 },
+
+            // LECCIÓN 6
+            { lesson: "L6: Manejo Prehospitalario", q: "En la secuencia XABCDE, ¿qué significa la 'X'?", a: ["Exposición", "Control de hemorragia exanguinante", "Evaluación neurológica", "Vía aérea"], correct: 1 },
+            { lesson: "L6: Manejo Prehospitalario", q: "¿Cuál es la primera acción para controlar una hemorragia arterial exanguinante en una extremidad?", a: ["Elevar la extremidad", "Presión en pulso braquial", "Colocar un torniquete proximal", "Lavar la herida"], correct: 2 },
+            { lesson: "L6: Manejo Prehospitalario", q: "¿Cuáles son las causas reversibles del Paro Cardíaco Traumático (PCT)?", a: ["Hipovolemia, Hipoxemia, Neumotórax a tensión y Taponamiento cardíaco", "Infarto, arritmias y sobredosis", "Fractura de cráneo y shock neurogénico", "Hipotermia y quemaduras"], correct: 0 },
+            { lesson: "L6: Manejo Prehospitalario", q: "En la escala AVDI, ¿qué significa la letra 'D'?", a: ["Despierto", "Desorientado", "Respuesta a estímulos dolorosos", "Déficit neurológico"], correct: 2 },
+            { lesson: "L6: Manejo Prehospitalario", q: "¿Cuál es el tiempo ideal que debe permanecer un paciente crítico en la escena antes de trasladarlo?", a: ["30 minutos o más", "20 minutos", "10 minutos o menos", "No hay límite"], correct: 2 },
+            { lesson: "L6: Manejo Prehospitalario", q: "Durante la evaluación primaria, ¿qué se debe hacer si se identifica un neumotórax a tensión?", a: ["Esperar al hospital", "Realizar descompresión con aguja de inmediato", "Administrar oxígeno y observar", "Colocar un parche oclusivo de tres lados"], correct: 1 },
+            { lesson: "L6: Manejo Prehospitalario", q: "¿Cuál es el objetivo de la fase 'E' (Exposición) en la evaluación primaria?", a: ["Exponer el cuerpo para buscar lesiones, pero cubrirlo rápidamente para evitar la hipotermia", "Exponer al paciente al sol para calentarlo", "Exponer las lesiones a la prensa", "Exponer los antecedentes del paciente"], correct: 0 },
+
+            // LECCIÓN 7
+            { lesson: "L7: Dispositivos de Abordaje", q: "¿Cuál es el tiempo máximo recomendado para el uso de un collarín rígido?", a: ["2 horas", "6 horas", "12 horas", "24 horas"], correct: 1 },
+            { lesson: "L7: Dispositivos de Abordaje", q: "¿Qué dispositivo está diseñado para la extracción rápida en vehículos accidentados?", a: ["Tabla espinal tipo cuchara", "Dama de Elche", "Férula de Kendrick (KED)", "Correaje tipo Spider"], correct: 2 },
+            { lesson: "L7: Dispositivos de Abordaje", q: "Según los criterios NEXUS, ¿en qué caso NO se indica inmovilización cervical?", a: ["Dolor en línea media cervical", "Déficit neurológico focal", "Bajo influencia de tóxicos", "Paciente alerta, sin dolor, sin déficit ni lesiones distractoras"], correct: 3 },
+            { lesson: "L7: Dispositivos de Abordaje", q: "¿Qué dispositivo se considera la 'quinta muestra vital'?", a: ["Glucómetro", "Capnógrafo", "Pulsoxímetro", "Electrocardiógrafo"], correct: 2 },
+            { lesson: "L7: Dispositivos de Abordaje", q: "¿Cuál es la función principal del correaje tipo Spider?", a: ["Inmovilizar la cabeza", "Sujetar al paciente de manera segura a la tabla espinal o a la Dama de Elche", "Medir la presión arterial", "Aspirar secreciones"], correct: 1 },
+            { lesson: "L7: Dispositivos de Abordaje", q: "¿Para qué sirve la maniobra de 'tracción mandibular' en el manejo de la vía aérea?", a: ["Para abrir la vía aérea en pacientes con sospecha de lesión cervical", "Para colocar una cánula nasofaríngea", "Para inmovilizar el cuello", "Para extraer un cuerpo extraño"], correct: 0 },
+
+            // LECCIÓN 8
+            { lesson: "L8: Vía Aérea", q: "¿Qué maniobra de apertura de vía aérea está contraindicada en sospecha de lesión cervical?", a: ["Tracción mandibular", "Maniobra frente-mentón", "Elevación del mentón con control manual", "Posición lateral de seguridad"], correct: 1 },
+            { lesson: "L8: Vía Aérea", q: "¿Cuál es la función principal de la cánula orofaríngea (Guedel)?", a: ["Sellar la boca", "Desplazar la base de la lengua hacia adelante", "Permitir intubación a ciegas", "Aspirar secreciones"], correct: 1 },
+            { lesson: "L8: Vía Aérea", q: "¿En qué caso está contraindicada la cánula nasofaríngea?", a: ["Paciente semiconsciente con trismo", "Lesiones graves en la boca", "Sospecha de fractura en base del cráneo", "Requiere ventilación manual"], correct: 2 },
+            { lesson: "L8: Vía Aérea", q: "Al ventilar con BVM, ¿cuál es la presión de insuflación máxima recomendada?", a: ["10 cm de agua", "20 cm de agua", "30 cm de agua", "40 cm de agua"], correct: 1 },
+            { lesson: "L8: Vía Aérea", q: "¿Cuál es el objetivo principal de la aspiración de secreciones en la vía aérea?", a: ["Mantener la vía aérea permeable retirando sangre, vómito o secreciones", "Administrar oxígeno a presión", "Medir la saturación de oxígeno", "Estimular el reflejo nauseoso"], correct: 0 },
+            { lesson: "L8: Vía Aérea", q: "¿Qué dispositivo supraglótico se coloca 'a ciegas' y requiere un entrenamiento mínimo?", a: ["Tubo endotraqueal", "Mascarilla laríngea", "Cánula orofaríngea", "Cánula nasofaríngea"], correct: 1 },
+
+            // LECCIÓN 9
+            { lesson: "L9: Condiciones Especiales", q: "¿Cuál es el lado más importante del Triángulo de Evaluación Pediátrica (TEP)?", a: ["Trabajo respiratorio", "Circulación cutánea", "Apariencia", "Frecuencia cardiaca"], correct: 2 },
+            { lesson: "L9: Condiciones Especiales", q: "¿Por qué la valoración en el paciente geriátrico suele ser más compleja?", a: ["No sienten dolor", "Presentación atípica, comorbilidad y polifarmacia", "Mayor masa muscular", "Metabolismo más rápido"], correct: 1 },
+            { lesson: "L9: Condiciones Especiales", q: "¿Por qué es crucial evitar la hipotermia en el paciente pediátrico?", a: ["Mayor relación superficie/volumen, pierden calor rápido", "Su termorregulación es idéntica al adulto", "La hipotermia es signo temprano de shock", "No es prioridad"], correct: 0 },
+            { lesson: "L9: Condiciones Especiales", q: "En el paciente pediátrico, ¿cuál es un signo tardío de shock hipovolémico?", a: ["Taquicardia", "Hipotensión y bradicardia", "Palidez", "Polipnea"], correct: 1 },
+            { lesson: "L9: Condiciones Especiales", q: "En el paciente geriátrico, ¿por qué una caída de baja altura puede causar lesiones graves?", a: ["Porque tienen menos fuerza en los huesos y mayor fragilidad", "Porque su masa corporal es mayor", "Porque no usan protección", "Porque su sistema nervioso es más rápido"], correct: 0 },
+
+            // LECCIÓN 10
+            { lesson: "L10: Traslado de Heridos", q: "Según el Consenso Británico, ¿cuál es la única función recomendada para la tabla espinal larga?", a: ["Transporte prolongado", "Dispositivo de extricación", "Inmovilización de espondilitis", "Colocación de Dama de Elche"], correct: 1 },
+            { lesson: "L10: Traslado de Heridos", q: "¿Qué ventaja ofrece la camilla tipo cuchara (Scoop) sobre la tabla larga?", a: ["Es más económica", "Permite rayos X", "Causa menos movimiento al separarse en dos partes", "No requiere collarín"], correct: 2 },
+            { lesson: "L10: Traslado de Heridos", q: "¿Qué herramienta se recomienda para la entrega estructurada del paciente al hospital?", a: ["START", "SBAR", "XABCDE", "AVDI"], correct: 1 },
+            { lesson: "L10: Traslado de Heridos", q: "¿Cuál es el primer paso en la secuencia para transferir un paciente del suelo a la camilla de cuchara?", a: ["Levantar al paciente bruscamente", "Ajustar la camilla a la altura del paciente y separarla en dos palas", "Colocar el collarín después de levantar", "Trasladar sin inmovilizar"], correct: 1 },
+            { lesson: "L10: Traslado de Heridos", q: "¿Qué se debe verificar antes de inmovilizar una extremidad con una férula?", a: ["Los pulsos, la función motora y la sensibilidad (PMS) distales", "El color de la férula", "La marca de la férula", "El peso del paciente"], correct: 0 },
+
+            // LECCIÓN 11
+            { lesson: "L11: Clasificación en Emergencias", q: "¿Cuál es el rol del bombero en el triaje de múltiples víctimas?", a: ["Triaje secundario medicalizado", "Triaje primario (START) para estabilizar el caos", "Decidir destino hospitalario", "Administrar medicamentos avanzados"], correct: 1 },
+            { lesson: "L11: Clasificación en Emergencias", q: "¿Qué maniobras están permitidas para restablecer condiciones vitales durante el triaje?", a: ["RCP avanzada", "Solo desobstrucción de vía aérea y hemostasia severa", "Inmovilizar fracturas", "Líquidos intravenosos"], correct: 1 },
+            { lesson: "L11: Clasificación en Emergencias", q: "En el triaje START, ¿qué se evalúa inmediatamente después de la respiración (si es <30 rpm)?", a: ["Estado mental", "Perfusión (pulso radial o relleno capilar)", "Deambulación", "Tamaño pupilar"], correct: 1 },
+            { lesson: "L11: Clasificación en Emergencias", q: "¿Qué color de triaje se asigna a un paciente con lesiones mortales o fallecido?", a: ["Rojo", "Amarillo", "Verde", "Negro"], correct: 3 },
+            { lesson: "L11: Clasificación en Emergencias", q: "¿Cuál es la función del Área de Concentración de Víctimas (ACV)?", a: ["Realizar cirugías de emergencia", "Reunir y clasificar a las víctimas para su posterior evacuación", "Servir de estacionamiento para ambulancias", "Almacenar suministros médicos"], correct: 1 },
+
+            // LECCIÓN 12
+            { lesson: "L12: Lesiones por Aplastamiento", q: "¿Cuál es el mayor error al liberar a una víctima con Síndrome de Aplastamiento sin preparación?", a: ["Provocar fractura", "Liberación brusca de toxinas causando paro cardíaco", "Generar neumotórax", "Causar síndrome compartimental"], correct: 1 },
+            { lesson: "L12: Lesiones por Aplastamiento", q: "¿Cómo se describe el dolor del Síndrome Compartimental?", a: ["Leve, desaparece con reposo", "Desproporcionado, no responde a analgésicos, aumenta con movimiento pasivo", "Solo en piel", "Ausencia total de dolor"], correct: 1 },
+            { lesson: "L12: Lesiones por Aplastamiento", q: "En el SAP, antes de liberar la compresión, ¿qué medida es crucial para prevenir insuficiencia renal?", a: ["Solución salina 0.9% o Ringer lactato (bajo supervisión)", "Glucosa al 50%", "Vasopresores", "Diuréticos"], correct: 0 },
+            { lesson: "L12: Lesiones por Aplastamiento", q: "¿Cuál de los siguientes NO es un signo clásico del Síndrome Compartimental?", a: ["Dolor desproporcionado", "Parestesia", "Palidez y parálisis", "Hiperreflexia"], correct: 3 },
+            { lesson: "L12: Lesiones por Aplastamiento", q: "¿Cuál es el tratamiento definitivo para el Síndrome Compartimental?", a: ["Fasciotomía quirúrgica", "Administración de analgésicos", "Elevación de la extremidad", "Aplicación de hielo"], correct: 0 },
+
+            // INTEGRACIÓN GENERAL
+            { lesson: "Integración General", q: "¿Qué significa el acrónimo XABCDE en la evaluación primaria del trauma?", a: ["Xilocaina, Aire, Boca, Corazón, Dolor, Extremidades", "Hemorragia eXanguinante, Vía Aérea, Respiración, Circulación, Déficit neurológico, Exposición", "Exposición, Vía Aérea, Sangrado, Corazón, Digestivo, Extremidades", "Rayos X, Apertura, Bioseguridad, Control, Diagnóstico, Evaluación"], correct: 1 },
+            { lesson: "Integración General", q: "En el Protocolo SPIKES, ¿cuál es el primer paso antes de dar una mala noticia?", a: ["Dar la noticia rápidamente para no prolongar el sufrimiento", "Preparación y verificar qué sabe la familia (Invitación)", "Ofrecer medicamentos sedantes", "Explicar los detalles técnicos del accidente"], correct: 1 },
+            { lesson: "Integración General", q: "¿Cuál de los siguientes NO es un líquido de precaución universal según las normas de bioseguridad?", a: ["Sangre", "Líquido cefalorraquídeo", "Sudor", "Leche materna"], correct: 2 },
+            { lesson: "Integración General", q: "¿Qué dispositivo se utiliza para inmovilizar la columna cervical impidiendo la lateralización de la cabeza, colocado sobre la tabla espinal?", a: ["Férula de Kendrick", "Collarín rígido", "Dama de Elche (Inmovilizadores laterales)", "Correaje tipo Spider"], correct: 2 },
+
+            // PREGUNTA 75 - ESPECIAL
+            { lesson: "Pregunta de Honor", q: "Completa la siguiente canción guerrera, canción de muerte: \"Gallardete, Gallardete, subeme ese gallardete....\"", a: ["Sexo, sudor y calor", "XABCDE", "sesentaycinco", "Sube el gallardete se me sube la moral!"], correct: 3 }
+        ];
+
+        function renderExam() {
+            const container = document.getElementById('questionsContainer');
+            if (!container) return;
+            
+            let htmlContent = '';
+            
+            questions.forEach((item, index) => {
+                let optionsHtml = '';
+                item.a.forEach((opt, optIndex) => {
+                    optionsHtml += `
+                        <label class="option-label">
+                            <input type="radio" name="q${index}" value="${optIndex}">
+                            <span>${opt}</span>
+                        </label>
+                    `;
+                });
+
+                htmlContent += `
+                    <div class="question-card">
+                        <div class="lesson-tag">${item.lesson}</div>
+                        <div class="question-text">${index + 1}. ${item.q}</div>
+                        <div class="options">
+                            ${optionsHtml}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = htmlContent;
+        }
+
+        function evaluateExam() {
+            let correctCount = 0;
+            let missedLessons = new Set();
+            let unanswered = false;
+
+            questions.forEach((item, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                
+                if (!selected) {
+                    unanswered = true;
+                } else if (parseInt(selected.value) === item.correct) {
+                    correctCount++;
+                } else {
+                    missedLessons.add(item.lesson);
+                }
+            });
+
+            if (unanswered) {
+                alert("Por favor, responda todas las preguntas antes de finalizar.");
+                return;
+            }
+
+            const scorePercentage = Math.round((correctCount / questions.length) * 100);
+            const passed = scorePercentage >= 70;
+
+            document.getElementById('examForm').style.display = 'none';
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+
+            // Lógica especial para la pregunta 75 (índice 74)
+            const q75Selected = document.querySelector(`input[name="q74"]:checked`);
+            const specialContainer = document.getElementById('specialMessageContainer');
+            specialContainer.innerHTML = ''; // Limpiar por si se evalúa varias veces
+            
+            if (q75Selected && parseInt(q75Selected.value) !== questions[74].correct) {
+                specialContainer.innerHTML = '<div class="special-message">Fallaste en la pregunta más importante: eres ESBAS 2026-2</div>';
+            }
+
+            document.getElementById('finalScore').innerText = `${scorePercentage}% (${correctCount}/${questions.length})`;
+            
+            const statusDiv = document.getElementById('passStatus');
+            if (passed) {
+                statusDiv.innerHTML = `<span class="status-pass">✅ APROBADO</span><br><p>¡Felicidades! Ha demostrado los conocimientos necesarios de Primera Respuesta en Trauma.</p>`;
+            } else {
+                statusDiv.innerHTML = `<span class="status-fail">❌ REPROBADO</span><br><p>No ha alcanzado el 70% requerido. Por favor, refuerce los temas indicados a continuación.</p>`;
+            }
+
+            const reviewSection = document.getElementById('reviewSection');
+            const list = document.getElementById('lessonsToReview');
+            list.innerHTML = ''; // Limpiar lista anterior
+            
+            if (missedLessons.size > 0) {
+                reviewSection.classList.remove('hidden');
+                
+                Array.from(missedLessons).sort().forEach(lesson => {
+                    const li = document.createElement('li');
+                    li.innerText = lesson;
+                    list.appendChild(li);
+                });
+            } else {
+                reviewSection.classList.add('hidden');
+            }
+
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.onload = renderExam;
+    </script>
+</body>
+</html>
